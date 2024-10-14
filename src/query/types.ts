@@ -150,7 +150,7 @@ export interface Synset {
 export interface Node {
   id: string;
   key: string;
-  type: string;
+  type: string; // 节点类型：1. 单词, 2.话题, 3. 近义词结合, 4. 词根词缀
   label: string;
 }
 
@@ -158,7 +158,7 @@ export interface Edge {
   id: string;
   type: string;
   label: string;
-  source: string;
-  target: string;
+  source: string; // source节点的id
+  target: string; // target节点的id
 }
 
