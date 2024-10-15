@@ -4,7 +4,7 @@
 
 /* //**----------------------------Gerneral----------------------------------------------------- */
 * {
-	@apply select-none
+	@apply select-none font-sans font-serif
 }
 
 button {
@@ -17,8 +17,12 @@ button {
 }
 
 /* //**----------------------------Button----------------------------------------------------- */
+.btn-common-hover {
+	@apply transition-all hover:brightness-90 active:brightness-75
+}
+
 .btn-grey {
-	@apply rounded-lg bg-gray-200 hover:bg-gray-300 active:bg-gray-400
+	@apply rounded-lg bg-gray-200 transition-all hover:bg-gray-300 active:bg-gray-400
 }
 
 .btn-scale {

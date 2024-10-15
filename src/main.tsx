@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Query from "./query";
 import Chat from "./chat";
 
@@ -11,15 +11,16 @@ const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App/>,
+    element: <App />,
     children: [
       {
         path: 'query',
-        element: <Query/>
+        element: <Query />,
+        children: []
       },
       {
         path: '/chat',
-        element: <Chat/>
+        element: <Chat />
       }
     ]
   }
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>
 )
