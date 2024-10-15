@@ -3,6 +3,10 @@ import QueryGraph from "./graph";
 import QueryData from "./data";
 import { Edge, Node } from "./types.ts";
 
+/**
+ * 单词查询页面
+ * @constructor
+ */
 export default function Query() {
   // 当前查询单词
   const [curWord, setCurWord] = useState<string>('');

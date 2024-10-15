@@ -718,6 +718,10 @@ video {
   max-height: 100vh;
 }
 
+.max-h-28 {
+  max-height: 7rem;
+}
+
 .min-h-\[calc\(100vh-200px\)\] {
   min-height: calc(100vh - 200px);
 }
@@ -909,6 +913,11 @@ video {
 .bg-yellow-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
+}
+
+.bg-teal-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(20 184 166 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-t {

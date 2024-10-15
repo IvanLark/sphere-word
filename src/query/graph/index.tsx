@@ -6,6 +6,11 @@ interface History {
   edges: Array<Edge>;
 }
 
+/**
+ * 单词图谱页面
+ * @param history
+ * @constructor
+ */
 export default function QueryGraph({ history }: { history: History }) {
   const elements = [
     ...history.nodes.map(nodeItem => ({ data: nodeItem })),

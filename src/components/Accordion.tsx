@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { AccordionDetails, AccordionSummary, Accordion as MuiAccordion } from '@mui/material';
 import { ExpandMoreRounded } from '@mui/icons-material';
-export default function Accordion({ title, child, titleColor = 'black', bgColor = 'rgb(220,220,220)' }: { title: string, child: JSX.Element | JSX.Element[] | undefined, titleColor?: string, bgColor?: string }) {
+interface AccordionProps {
+	title: string;
+	child: JSX.Element | JSX.Element[] | undefined;
+	titleColor?: string;
+	bgColor?: string;
+}
+export default function Accordion({ title, child, titleColor = 'black', bgColor = 'rgb(220,220,220)' }: AccordionProps) {
 	// !对不起以为这个React.HtmlHTMLAttributes<HTMLDivElement>.className?是类型……
 	const [isOpen, setIsOpen] = React.useState(false);
 	return (
@@ -23,7 +29,7 @@ export default function Accordion({ title, child, titleColor = 'black', bgColor 
 				{title}
 			</AccordionSummary>
 			<AccordionDetails >
-				<div className={` px-4 p-4 text-ellipsis transition-all duration-300`} >{child}</div>
+				<ul className={` px-4 p-4 text-ellipsis transition-all duration-300`} >{child}</ul>
 			</AccordionDetails>
 		</MuiAccordion >
 	)

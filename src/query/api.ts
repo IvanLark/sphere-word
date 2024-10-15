@@ -1,6 +1,6 @@
 import {Result} from "../types.ts";
 import {BASE_URL} from "../constants.ts";
-import {Synset, Topic, WordCore, WordRelation} from "./types.ts";
+import {Synset, Topic, WordAi, WordCore, WordRelation} from "./types.ts";
 import {QueryObserverResult, useQuery} from "@tanstack/react-query";
 import {handleAxiosError} from "../api.ts";
 import axios from "axios";
@@ -18,6 +18,19 @@ export const useGetWordCore =
       queryKey: ['getWordCore', word],
       queryFn: async (): Promise<WordCore> => {
         return client.get<Result<WordCore>>(`/word/${word}/core`)
+          .then(response => response.data.data)
+          .catch(handleAxiosError)
+      },
+      staleTime: Infinity
+    })
+  }
+
+export const useGetWordAi =
+  (word: string): QueryObserverResult<WordAi, Error> => {
+    return useQuery<WordAi, Error>({
+      queryKey: ['getWordAi', word],
+      queryFn: async (): Promise<WordAi> => {
+        return client.get<Result<WordAi>>(`/word/${word}/ai`)
           .then(response => response.data.data)
           .catch(handleAxiosError)
       },

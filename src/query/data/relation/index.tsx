@@ -9,6 +9,11 @@ interface SemanticRelationItem {
   detail: object;
 }
 
+/**
+ * 单词关系页面
+ * @param word
+ * @constructor
+ */
 export default function QueryDataRelation({ word }: { word: string }) {
   // td to delete
   word = 'make';
@@ -75,7 +80,7 @@ export default function QueryDataRelation({ word }: { word: string }) {
         <Accordion title="近义词辨析" child={wordRelation.data?.Synset.slice(0, 10).map((word, index) => <li key={index}>{word.key}</li>)} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
         <Accordion title="短语" child={wordRelation.data?.Phrase.slice(0, 10).map((phrase, index) => <li key={index}>{phrase.phrase} {phrase.meaning}</li>)} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
         <Accordion title="固定搭配" child={wordRelation.data?.Collocation.map((colect, index) =>
-          <div className="flex">
+          <div key={index} className="flex">
             {/* <div className="p-3 font-bold"><span className="m-auto">{colect.collocation}</span></div> */}
             <div className="p-3 font-bold">{colect.collocation}</div>
             <ul className="border-l-2 border-gray-500 flex-1 my-3">
