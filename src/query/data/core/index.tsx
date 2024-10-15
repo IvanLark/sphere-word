@@ -94,6 +94,8 @@ export default function QueryDataCore({ word }: { word: string }) {
             <Markdown>{wordCoreData.data.ai.DictionaryByGPT4}</Markdown>
             {/* <p className="">{wordCoreData.data.ai.DictionaryByGPT4}</p> */}
           </div>
+        </div>
+        <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white">
           {["例句", "助记", "单词新解", "同义词", "形近词", "搭配", "替换", "派生词", "词根", "词源"].map((title, index) =>
             <div key={index} className="w-full mt-4">
               <h3 className="text-lg text-yellow-300 font-bold">{title}</h3>

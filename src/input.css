@@ -28,3 +28,15 @@ button {
 .btn-scale {
 	@apply transition-all hover:scale-105 active:scale-95
 }
+
+/* //**----------------------------Markdown----------------------------------------------------- */
+li {
+	@apply list-disc list-inside
+}
+
+/* !az这才解决…… */
+li>p {
+	@apply inline-block
+}
+
+/* //**----------------------------Others----------------------------------------------------- */
