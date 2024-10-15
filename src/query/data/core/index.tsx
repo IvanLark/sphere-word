@@ -2,6 +2,7 @@ import { useGetWordCore } from "../../api.ts";
 import { useState } from "react";
 import { testWordCoreData } from "../../../constants.ts";
 import Markdown from "react-markdown";
+import Accordion from "../../../components/Accordion.tsx";
 type WordChangeTypes = '复数' | '现在分词' | '第三人称单数' | '过去分词' | '过去式'
 // !这个是单纯为了解决报错设的不放到另一个文件了
 type AiEudicTypes = "例句" | "助记" | "单词新解" | "同义词" | "形近词" | "搭配" | "替换" | "派生词" | "词根" | "词源"
@@ -87,6 +88,7 @@ export default function QueryDataCore({ word }: { word: string }) {
           </div>
         </div>
         {/* // ** AI解析 */}
+        <Accordion title="AI解析" child={<Markdown>{wordCoreData.data.ai.DictionaryByGPT4}</Markdown>} titleClass="bg-blue-400 text-yellow-300 font-bold" childClass="bg-blue-400 text-white" />
         <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white">
           <h2 className="text-xl text-yellow-300 font-bold">AI解析</h2>
           <div className="w-full mt-4">
