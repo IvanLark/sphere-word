@@ -1,5 +1,5 @@
-import {Edge, Node} from "../types.ts";
-import cytoscape, {NodeSingular} from 'cytoscape';
+import { Edge, Node } from "../types.ts";
+import cytoscape, { NodeSingular } from 'cytoscape';
 
 interface History {
   nodes: Array<Node>;
@@ -17,7 +17,7 @@ export default function QueryGraph({ history }: { history: History }) {
       // 假设每个节点都有一个 'level' 属性，用于确定节点的位置
       return -node.data('level');
     },
-    levelWidth: function(nodes: cytoscape.CollectionReturnValue) {
+    levelWidth: function (nodes: cytoscape.CollectionReturnValue) {
       // 默认宽度的两倍
       return nodes.maxDegree(false) / 6; // 例如，这里将每一层的宽度设置为最大度数的两倍
     },

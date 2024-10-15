@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Woisol's Personal Ignores
+Personal-Woisol
