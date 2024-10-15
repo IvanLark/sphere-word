@@ -66,7 +66,6 @@ export default function Query() {
   // 单词查询页面
   return (
     <div className="w-screen h-[calc(100vh-200px)] snap-y snap-mandatory overflow-y-auto">
-      {/* //!不能用h-full没有具体数值无法snap */}
       {/* <QueryGraph history={history}></QueryGraph> */}
       <div className="w-screen h-[calc(100vh-200px)] fixed bg-gradient-to-tr from-yellow-400 to-yellow-200"><div className="w-screen text-center text-5xl">QueryGraph</div><button className="btn-scale btn-grey px-4 py-2 m-auto">Test Click</button></div>
       <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>

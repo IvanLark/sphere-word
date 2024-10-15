@@ -8,7 +8,6 @@ interface AccordionProps {
 	bgColor?: string;
 }
 export default function Accordion({ title, child, titleColor = 'black', bgColor = 'rgb(220,220,220)' }: AccordionProps) {
-	// !对不起以为这个React.HtmlHTMLAttributes<HTMLDivElement>.className?是类型……
 	const [isOpen, setIsOpen] = React.useState(false);
 	return (
 		// <div className={`w-full rounded-3xl overflow-hidden ${childClass}`} onClick={() => { if (!isOpen) setIsOpen(true) }}>
