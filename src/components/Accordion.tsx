@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AccordionDetails, AccordionSummary, Accordion as MuiAccordion } from '@mui/material';
 import { ExpandMoreRounded } from '@mui/icons-material';
-export default function Accordion_word_core({ title, child }: { title: string, child: JSX.Element }) {
+export default function Accordion({ title, child, titleColor = 'black', bgColor = 'rgb(220,220,220)' }: { title: string, child: JSX.Element | JSX.Element[] | undefined, titleColor?: string, bgColor?: string }) {
 	// !对不起以为这个React.HtmlHTMLAttributes<HTMLDivElement>.className?是类型……
 	const [isOpen, setIsOpen] = React.useState(false);
 	return (
@@ -12,11 +12,11 @@ export default function Accordion_word_core({ title, child }: { title: string, c
 		// 	{/* //dtd @IvanLark 因为用了child无法使用text-ellipsis，所以擅自主张加了这种效果，看看如何 */}
 		// 	{/* <div className={`w-full h-16 relative z-10 bg-gradient-to-t from-black to-transparent transition-all duration-300 ${isOpen ? 'opacity-0' : 'opacity-50'}`}><span className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>还有更多内容</span></div> */}
 		// </div>
-		<MuiAccordion style={{ borderRadius: '10px' }}>
+		<MuiAccordion style={{ borderRadius: '24px', backgroundColor: bgColor, }}>
 			{/* className={`w-full rounded-3xl overflow-hidden ${childClass}`} */}
 			<AccordionSummary
 				expandIcon={<ExpandMoreRounded />}
-				style={{ color: 'rgb(253,224,71)', fontWeight: 'bold', backgroundColor: 'rgb(96,160,250)', borderRadius: '10px' }}
+				style={{ color: titleColor, fontWeight: 'bold', borderRadius: '10px' }}
 				// className={`p-4 pb-2 relative text-2xl font-bold rounded-3xl overflow-hidden ${titleClass} `}
 				onClick={() => setIsOpen(!isOpen)}
 			>
