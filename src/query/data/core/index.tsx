@@ -7,14 +7,19 @@ type WordChangeTypes = '复数' | '现在分词' | '第三人称单数' | '过�
 // !这个是单纯为了解决报错设的不放到另一个文件了
 type AiEudicTypes = "例句" | "助记" | "单词新解" | "同义词" | "形近词" | "搭配" | "替换" | "派生词" | "词根" | "词源"
 
+/**
+ * 单词详情页面
+ * @param word
+ * @constructor
+ */
 export default function QueryDataCore({ word }: { word: string }) {
   // td to deletee
   word = 'make';
   const wordCoreData = testWordCoreData;
-  // const wordCoreData = useGetWordCore(word);
+  //const { isPending, isError, isSuccess, data, error } = useGetWordCore(word);
 
   const [detailedMeaningTabIndex, setDetailedMeaningTabIndex] = useState(0);
-  // td @IvanLark好像又把所有东西写到一个文件了……你想改就分一下吧哈哈
+
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
       <div className="flex flex-col gap-5">

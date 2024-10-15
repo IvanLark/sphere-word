@@ -1,3 +1,7 @@
+/**
+ * AI对话页面
+ * @constructor
+ */
 export default function Chat() {
   return (
     <div className="w-screen h-[calc(100vh-200px)]">

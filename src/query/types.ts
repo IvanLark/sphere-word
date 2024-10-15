@@ -32,7 +32,10 @@ interface WordCoreTags {
   other?: Array<string>;
 }
 
-interface WordCoreAi {
+/**
+ * 单词AI解析
+ */
+export interface WordAi {
   DictionaryByGPT4?: string;
   Eudic?: Record<string, string>;
 }
@@ -42,15 +45,38 @@ interface WordCoreDefinition {
   en: Array<string>;
 }
 
+/**
+ * 单词详情
+ */
 export interface WordCore {
+  /**
+   * 发音
+   */
   pron: WordCorePron;
+  /**
+   * 词频
+   */
   freq: WordCoreFreq;
+  /**
+   * 变形
+   */
   exchange: Record<string, string>;
+  /**
+   * 标签
+   */
   tags: WordCoreTags;
+  /**
+   * 简单意思
+   */
   simpleMeaning?: string;
+  /**
+   * 释义
+   */
   definition: WordCoreDefinition;
+  /**
+   * 义项比例
+   */
   proportion: WordCoreProportion;
-  ai: WordCoreAi;
 }
 
 interface SemanticRelationItem {
@@ -102,22 +128,70 @@ interface SetRelationItem {
   score: number;
 }
 
+/**
+ * 单词关系
+ */
 export interface WordRelation {
-  Synonym: Array<SemanticRelationItem>; // 同义词
-  Similar: Array<SemanticRelationItem>; // 近义词
-  Antonym: Array<SemanticRelationItem>; // 反义词
-  ClassOf: Array<SemanticRelationItem>; // 上位词
-  InstanceOf: Array<SemanticRelationItem>; // 下位词
-  RelatedTo: Array<SemanticRelationItem>; // 相关词
-  Collocation: Array<CollocationItem>; // 固定搭配
-  Phrase: Array<PhraseItem>; // 短语
-  Example: Array<ExampleItem>; // 例句
-  Etymology: Array<EtymologyItem>; // 词源
-  Topic: Array<SetRelationItem>; // 话题
-  Synset: Array<SetRelationItem>; // 近义词辨析
-  Mother: Array<SetRelationItem>; // 母词/词根
-  Prefix: Array<SetRelationItem>; // 前缀
-  Postfix: Array<SetRelationItem>; // 后缀
+  /**
+   * 同义词
+   */
+  Synonym: Array<SemanticRelationItem>;
+  /**
+   * 近义词
+   */
+  Similar: Array<SemanticRelationItem>;
+  /**
+   * 反义词
+   */
+  Antonym: Array<SemanticRelationItem>;
+  /**
+   * 上位词
+   */
+  ClassOf: Array<SemanticRelationItem>;
+  /**
+   * 下位词
+   */
+  InstanceOf: Array<SemanticRelationItem>;
+  /**
+   * 相关词
+   */
+  RelatedTo: Array<SemanticRelationItem>;
+  /**
+   * 固定搭配
+   */
+  Collocation: Array<CollocationItem>;
+  /**
+   * 短语
+   */
+  Phrase: Array<PhraseItem>;
+  /**
+   * 例句
+   */
+  Example: Array<ExampleItem>;
+  /**
+   * 词源
+   */
+  Etymology: Array<EtymologyItem>;
+  /**
+   * 话题
+   */
+  Topic: Array<SetRelationItem>;
+  /**
+   * 近义词辨析
+   */
+  Synset: Array<SetRelationItem>;
+  /**
+   * 母词/词根
+   */
+  Mother: Array<SetRelationItem>;
+  /**
+   * 前缀
+   */
+  Prefix: Array<SetRelationItem>;
+  /**
+   * 后缀
+   */
+  Postfix: Array<SetRelationItem>;
 }
 
 interface TopicRelation {
