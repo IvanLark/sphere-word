@@ -2,6 +2,7 @@ import { useGetWordCore } from "../../api.ts";
 import { useState } from "react";
 import { testWordCoreData } from "../../../constants.ts";
 import Markdown from "react-markdown";
+import Accordion from "../../../components/Accordion.tsx";
 type WordChangeTypes = '复数' | '现在分词' | '第三人称单数' | '过去分词' | '过去式'
 // !这个是单纯为了解决报错设的不放到另一个文件了
 type AiEudicTypes = "例句" | "助记" | "单词新解" | "同义词" | "形近词" | "搭配" | "替换" | "派生词" | "词根" | "词源"
@@ -87,6 +88,7 @@ export default function QueryDataCore({ word }: { word: string }) {
           </div>
         </div>
         {/* // ** AI解析 */}
+        <Accordion title="AI解析" child={<Markdown>{wordCoreData.data.ai.DictionaryByGPT4}</Markdown>} titleClass="bg-blue-400 text-yellow-300 font-bold" childClass="bg-blue-400 text-white" />
         <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white">
           <h2 className="text-xl text-yellow-300 font-bold">AI解析</h2>
           <div className="w-full mt-4">
@@ -95,15 +97,16 @@ export default function QueryDataCore({ word }: { word: string }) {
             {/* <p className="">{wordCoreData.data.ai.DictionaryByGPT4}</p> */}
           </div>
         </div>
-        <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white">
-          {["例句", "助记", "单词新解", "同义词", "形近词", "搭配", "替换", "派生词", "词根", "词源"].map((title, index) =>
-            <div key={index} className="w-full mt-4">
-              <h3 className="text-lg text-yellow-300 font-bold">{title}</h3>
-              {/* // td @IvanLark 这个属性警告你危险了/汗 */}
-              <p className="" dangerouslySetInnerHTML={{ __html: wordCoreData.data.ai.Eudic[title as AiEudicTypes] }}></p>
-            </div>
-          )}
-        </div>
+        {/* <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white"> */}
+        {["例句", "助记", "单词新解", "同义词", "形近词", "搭配", "替换", "派生词", "词根", "词源"].map((title, index) =>
+          <Accordion key={index} title={title} child={<p className="" dangerouslySetInnerHTML={{ __html: wordCoreData.data.ai.Eudic[title as AiEudicTypes] }}></p>} titleClass="bg-blue-400 text-yellow-300 font-bold" childClass="bg-blue-400 text-white" />
+          // <div key={index} className="w-full mt-4">
+          //   <h3 className="text-lg text-yellow-300 font-bold">{title}</h3>
+          //   {/* // td @IvanLark 这个属性警告你危险了/汗 */}
+
+          // </div>
+        )}
+        {/* </div> */}
       </div>
     </div>
   );
