@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { AccordionDetails, AccordionSummary, Accordion as MuiAccordion } from '@mui/material';
 import { ExpandMoreRounded } from '@mui/icons-material';
+
 interface AccordionProps {
 	title: string;
 	child: JSX.Element | JSX.Element[] | undefined;
 	titleColor?: string;
 	bgColor?: string;
 }
+
 export default function Accordion({ title, child, titleColor = 'black', bgColor = 'rgb(220,220,220)' }: AccordionProps) {
 	const [isOpen, setIsOpen] = React.useState(false);
 	return (

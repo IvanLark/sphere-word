@@ -31,11 +31,14 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
     }
   }
 
-  const TabOptions: string[] = ['单词详情', '单词关系', 'AI解析', '阅读材料',
-  ]
+  const TabOptions: string[] = ['单词详情', '单词关系', 'AI解析', '阅读材料']
+
+  const { isPending, isError, isSuccess, data, error } = useGetWordCore(word);
 
   return (
     <>
+      {/* 在这里展示部分的WordCore数据 */}
+
       {/* <div className="w-screen h-[calc(100vh-280px)] bg-transparent snap-end pointer-events-none"></div> */}
       {/* // **snap占位div */}
       <div className="w-screen h-[45vh] bg-transparent snap-start pointer-events-none"></div>
@@ -45,6 +48,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
           <div className="w-56 h-9 rounded-full bg-gray-200 absolute left-1/2
           top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
         </div>
+
         {/* Tabs选项 */}
         <ul className="w-full flex">
           {
