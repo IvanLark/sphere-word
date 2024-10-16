@@ -4,6 +4,8 @@ import { testWordCoreData } from "../../../constants.ts";
 import Markdown from "react-markdown";
 import Accordion from "../../../components/Accordion.tsx";
 import { Word } from "./Word.tsx";
+import TabCard from "../../../components/TabCard.tsx";
+import { WordCore } from "../../types.ts";
 
 type WordChangeTypes = '复数' | '现在分词' | '第三人称单数' | '过去分词' | '过去式'
 // !这个是单纯为了解决报错设的不放到另一个文件了
@@ -15,104 +17,52 @@ type AiEudicTypes = "例句" | "助记" | "单词新解" | "同义词" | "形近
  * @constructor
  */
 // td @IvanLark 给data赋个类型……
-export default function QueryDataCore({ word, data }: { word: string, data: any }) {
-  // td to deletee
-
+export default function QueryDataCore({ word, data }: { word: string, data: WordCore }) {
+  const [definitionTabIndex, setDefinitionTabIndex] = useState(0);
   const [detailedMeaningTabIndex, setDetailedMeaningTabIndex] = useState(0);
 
+  // td to delete
+  // data.Etymology = {}
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
       <div className="flex flex-col gap-5">
-        {/* // ** 单词 */}
-        {/* <div className="flex">
-          <div className="flex-1 flex flex-col">
-            <div className="">
-              <span className="text-5xl text-green-700 font-bold">{word}</span>
-              <span className="ml-3 text-sm text-gray-400">【{wordCoreData.data?.tags.basic.slice(0, 3).join(', ')}】</span>
-            </div>
-            <div className="flex items-center gap-8 mt-5 ml-2">
-              <span className="text-gray-400 text-sm">英 {'[' + wordCoreData.data?.pron.ukPron + ']'}</span>
-              <span className="text-gray-400 text-sm">美 {'[' + wordCoreData.data?.pron.usPron + ']'}</span>
-            </div>
-            <div className="w-full h-5"></div>
-            <div className="w-full  mt-5">
-              <span className="font-bold text-lime-400">最简释义: </span>
-              <span className="font-bold">{wordCoreData.data?.simpleMeaning}</span>
-            </div>
+        <TabCard title="标签" >
+          <div className="mt-2 flex gap-2 text-black">
+            {data.tags.basic.slice(0, 3).map((tag, index) => <span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">{tag}</span>)}
           </div>
-          <div className="size-[200px] rounded-full bg-white shadow-xl flex items-center justify-center">
-            <span className="text-xl font-bold">义项比例</span>
-          </div>
-        </div> */}
-        {/* //td @IvanLark 这里按html的是270px但是和设计图比感觉太大了不知道具体数值 */}
-        {/* // td @IvanLark 这个其实不太知道是什么东西 */}
-        {/* // ** 详细释义 */}
-        {/* // td @IvanLark 这里默认的阴影效果是朝下的……看看是否一定要朝上 */}
-        <div className="w-full p-4 relative bg-gray-100 rounded-lg shadow-lg shadow-blue-300">
-          <div className="px-2 py-1 absolute -top-8 left-0 rounded-t-xl bg-yellow-200 text-lime-500 font-bold">
-            详细释义
-          </div>
-          <div className="flex gap-2">
-            {['中英', '英英'].map((item, index) =>
-              <button className={`px-4 py-1 rounded-full text-xs transition-all ${detailedMeaningTabIndex === index ? 'bg-lime-400 text-white' : 'bg-white text-lime-400'}`} onClick={() => setDetailedMeaningTabIndex(index)} key={index}>{item}</button>
-            )}
-          </div>
-          <ul className="">
-            {(detailedMeaningTabIndex === 0 ? data.definition.cn : data.definition.en).map((item, index) =>
-              <li key={index} className="">{item}</li>
-            )}
-          </ul>
-        </div>
+        </TabCard>
+        <TabCard tabs={['中英', '英英']} tabIndex={definitionTabIndex} setTabIndex={setDefinitionTabIndex} type="list" listItems={definitionTabIndex === 0 ? data.definition.cn : data.definition.en} />
         {/* // ** 单词变形 & 词频分析 */}
-        <div className="w-full flex gap-4">
-          {/* // td @IvanLark 相比设计图这里圆角缩小了，除了tailwind最大就这么大以外，原本的圆角也感觉有点大到影响文字排版了 */}
-          <div className="p-5 bg-teal-400 rounded-3xl shadow-xl flex-1 text-white">
-            {/* // ~~ @IvanLark 这里考虑居中吗？ */}
-            <div className="text-lime-400 font-bold">单词变形</div>
-            {['复数', '现在分词', '第三人称单数', '过去分词', '过去式'].map((exchangeType, index) =>
-              <div key={index}>
-                {/* // @ts-expect-error wrong type */}
-                <span className="">{exchangeType}: </span><span className="">{data?.exchange[exchangeType as WordChangeTypes]}</span>
-              </div>
-            )}
+        <TabCard title="词频">
+          <WordFrequencyBuilder title="真题" content={data.freq.examFrequency.toString()} />
+          <WordFrequencyBuilder title="BNC" content={data.freq.bncFrequency.toString()} />
+          <WordFrequencyBuilder title="COCA" content={data.freq.cocaFrequency.toString()} />
+          <WordFrequencyBuilder title="柯林" content={data.freq.collinsStar + '星'} />
+        </TabCard>
+        <TabCard title="义项比例">
+          <div className="w-full h-40 rounded-md bg-gradient-to-tr from-gray-600 to-gray-300 text-center">To Implement</div>
+        </TabCard>
+        {/* //td @IvanLark 搞出来以后自己写一下词源这里吧，就吧 */}
+        <TabCard title="词源" type="list" showMoreButton={false} listItems={['', ''].map((ehy, index) =>
+          <div >
+            <h3 className="px-2 py-1 border-2 border-black rounded-full font-bold w-fit">{'做，制造'}</h3>
+            <p className="">{'来自古英语macian,制造，形成，安排，来自PIE*mag,捏，揉，形成，词源同match,massage.最早可能是来自人类始祖捏泥土以建房，后引申多种词义。'}</p>
           </div>
-          <div className="p-5 bg-teal-400 rounded-3xl shadow-xl flex-1 text-white">
-            <div className="text-lime-400 font-bold">词频分析</div>
-            <div>
-              <span>BNC词频: </span><span>{data?.freq.bncFrequency}</span>
-            </div>
-            <div>
-              <span>COCA词频: </span><span>{data?.freq.cocaFrequency}</span>
-            </div>
-            <div>
-              <span>柯林星级: </span><span>{data?.freq.collinsStar}</span>
-            </div>
-            <div>
-              <span>考试出现次数: </span><span>{data?.freq.examFrequency}</span>
-            </div>
-          </div>
-        </div>
-        {/* // ** AI解析 */}
-        <Accordion title="AI解析" child={<Markdown>{data.ai.DictionaryByGPT4}</Markdown>} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' />
-        {/* <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white">
-          <h2 className="text-xl text-yellow-300 font-bold">AI解析</h2>
-          <div className="w-full mt-4">
-            <h3 className="text-lg text-yellow-300 font-bold">分析词义</h3>
-            <Markdown>{wordCoreData.data.ai.DictionaryByGPT4}</Markdown>
-            <p className="">{wordCoreData.data.ai.DictionaryByGPT4}</p>
-          </div>
-        </div> */}
-        {/* <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white"> */}
-        {["例句", "助记", "单词新解", "同义词", "形近词", "搭配", "替换", "派生词", "词根", "词源"].map((title, index) =>
-          <Accordion key={index} title={title} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' child={<p className="" dangerouslySetInnerHTML={{ __html: data.ai.Eudic[title as AiEudicTypes] }}></p>} />
-          // <div key={index} className="w-full mt-4">
-          //   <h3 className="text-lg text-yellow-300 font-bold">{title}</h3>
-          //   {/* // td @IvanLark 这个属性警告你危险了/汗 */}
+        )} />
 
-          // </div>
-        )}
+        {/* // ** AI解析 */}
+        {/* {["例句", "助记", "单词新解", "同义词", "形近词", "搭配", "替换", "派生词", "词根", "词源"].map((title, index) =>
+          <Accordion key={index} title={title} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' child={<p className="" dangerouslySetInnerHTML={{ __html: data.ai.Eudic[title as AiEudicTypes] }}></p>} />
+          <div key={index} className="w-full mt-4">
+            <h3 className="text-lg text-yellow-300 font-bold">{title}</h3>
+          </div>
+        )} */}
         {/* </div> */}
       </div>
-    </div>
+    </div >
   );
 }
+function WordFrequencyBuilder({ title, content }: { title: string, content: string }) {
+  return (<span className="px-2 py-1 m-1 border-2 border-black rounded-md font-bold">{title} {content}</span>)
+}
+// function Word

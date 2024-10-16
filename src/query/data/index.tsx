@@ -5,6 +5,7 @@ import QueryDataRelation from "./relation";
 import QueryDataAi from "./ai";
 import { Word } from "./core/Word.tsx";
 import { testWordCoreData } from "../../constants.ts";
+import { useGetWordCore } from "../api.ts";
 
 interface QueryDataProps {
   word: string;
@@ -45,10 +46,12 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
       {/* // **snap占位div */}
       <div className="w-screen h-[calc(100vh-400px)] flex- bg-transparent snap-start pointer-events-none"></div>
       {/* <div className="w-screen min-h-[calc(100vh-100px)] px- relative bg-gray-100 snap-start"> */}
-      <div className="relative bg-gray-100">
-        {/* //!fc为什么不生效className="bg-gray-100 " md漏了relative呗背景覆盖了……*/}
-        <div className="h-[300px] relative snap-start">
-          {/* 分割 */}
+      {/* <div className="relative"> */}
+      {/* //!fc为什么不生效className="bg-gray-100 " md漏了relative呗背景覆盖了……*/}
+      <div className="h-[300px relative bg-gray-100 snap-start">
+        {/* // !好像兜回到一开始的设计了…… */}
+        {/* 分割 */}
+        <div className="h-[300px] snap-end">
           <div className="w-full h-8 relative">
             <div className="w-56 h-4 rounded-full bg-gray-200 absolute left-1/2
           top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
@@ -59,21 +62,23 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
         {/* Tabs选项 */}
         <ul className="w-full flex">
-          {
-            TabOptions.map((tab, index) =>
-              <li
-                className={`btn-common-hover text-xl py-3 flex-1 text-center rounded-md list-none transition-all duration-300 ${index === pickedPageIndex ? 'text-white bg-black' : ''} `}
-                onClick={() => { setPickedPageIndex(index) }}>
-                {tab}
-              </li>
-            )
-          }
+          <div className="rounded-md bg-black absolute pointer-events-none transition-all duration-300" style={{ width: '25vw', height: '40px', left: `${pickedPageIndex * 25}%` }}></div>
+          {TabOptions.map((tab, index) =>
+            <li
+              className={`btn-common-hover text-xl h-10 py-2 relative flex-1 text-center rounded-md list-none transition-all duration-300 ${index === pickedPageIndex ? 'text-white bg-blac' : ''} `}
+              onClick={() => { setPickedPageIndex(index) }}>
+              {tab}
+            </li>
+          )}
           {/* //~~这个居然要手动指定h-fit……咳咳是上面ul搞了h-24…… */}
         </ul>
         {/* Tab页面 */}
-        <TabPage />
+        <div className="min-h-[calc(100vh-100px)]">
+          <TabPage />
+        </div>
         {/* </div> */}
       </div>
     </div >
+    // </div >
   );
 }
