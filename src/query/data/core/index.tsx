@@ -14,7 +14,8 @@ type AiEudicTypes = "例句" | "助记" | "单词新解" | "同义词" | "形近
  * @param word
  * @constructor
  */
-export default function QueryDataCore({ word, data }: { word: string }) {
+// td @IvanLark 给data赋个类型……
+export default function QueryDataCore({ word, data }: { word: string, data: any }) {
   // td to deletee
 
   const [detailedMeaningTabIndex, setDetailedMeaningTabIndex] = useState(0);

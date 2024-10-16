@@ -77,6 +77,10 @@ export interface WordCore {
    * 义项比例
    */
   proportion: WordCoreProportion;
+  /**
+   * 词源
+   */
+  Etymology: Array<EtymologyItem>;
 }
 
 interface SemanticRelationItem {
@@ -168,10 +172,6 @@ export interface WordRelation {
    * 例句
    */
   Example: Array<ExampleItem>;
-  /**
-   * 词源
-   */
-  Etymology: Array<EtymologyItem>;
   /**
    * 话题
    */

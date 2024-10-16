@@ -36,8 +36,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
     }
   }
 
-  const TabOptions: string[] = ['单词详情', '单词关系', 'AI解析', '阅读材料',
-  ]
+  const TabOptions: string[] = ['单词详情', '单词关系', 'AI解析', '阅读材料']
 
   return (
     <div className="w-screen h-[calc(100vh-100px)] snap-y snap-mandatory overflow-y-auto">
@@ -57,6 +56,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
           <Word word={word} pron={data?.pron} meanings={data?.simpleMeaning} tags={data?.tags} exchange={data?.exchange} favourite={false} />
         </div>
 
+
         {/* Tabs选项 */}
         <ul className="w-full flex">
           {
@@ -74,6 +74,6 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
         <TabPage />
         {/* </div> */}
       </div>
-    </div>
+    </div >
   );
 }
