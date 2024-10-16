@@ -11,7 +11,7 @@ function App() {
       <Outlet />
       {/* </div> */}
       {/* //td to implement */}
-      <div className="w-screen h-[200px] fixed bottom-0 bg-white flex items-center justify-center gap-10 shrink-0">
+      <div className="w-screen h-[100px] fixed bottom-0 bg-white flex items-center justify-center gap-10 shrink-0">
         {testRoute.map((route, index) =>
           <button className="btn-scale btn-grey px-4 py-2 text-5xl" onClick={() => navigate(`/${route}`)} key={index}>{route}</button>
         )}

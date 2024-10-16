@@ -4,7 +4,7 @@
  */
 export default function Chat() {
   return (
-    <div className="w-screen h-[calc(100vh-200px)]">
+    <div className="w-screen h-[calc(100vh-100px)]">
       <div className="w-screen h-screen bg-gradient-to-tr from-green-400 to bg-green-200"></div>
 
       <div>对话头部</div>

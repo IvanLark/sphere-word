@@ -3,7 +3,6 @@ import { useState } from "react";
 import { testWordCoreData } from "../../../constants.ts";
 import Markdown from "react-markdown";
 import Accordion from "../../../components/Accordion.tsx";
-import { Word } from "./Word.tsx";
 
 type WordChangeTypes = '复数' | '现在分词' | '第三人称单数' | '过去分词' | '过去式'
 // !这个是单纯为了解决报错设的不放到另一个文件了
@@ -14,8 +13,11 @@ type AiEudicTypes = "例句" | "助记" | "单词新解" | "同义词" | "形近
  * @param word
  * @constructor
  */
-export default function QueryDataCore({ word, data }: { word: string }) {
+export default function QueryDataCore({ word }: { word: string }) {
   // td to deletee
+  word = 'make';
+  const wordCoreData = testWordCoreData;
+  //const { isPending, isError, isSuccess, data, error } = useGetWordCore(word);
 
   const [detailedMeaningTabIndex, setDetailedMeaningTabIndex] = useState(0);
 
@@ -23,7 +25,7 @@ export default function QueryDataCore({ word, data }: { word: string }) {
     <div className="w-full rounded-b-xl bg-white p-4">
       <div className="flex flex-col gap-5">
         {/* // ** 单词 */}
-        {/* <div className="flex">
+        <div className="flex">
           <div className="flex-1 flex flex-col">
             <div className="">
               <span className="text-5xl text-green-700 font-bold">{word}</span>
@@ -39,12 +41,12 @@ export default function QueryDataCore({ word, data }: { word: string }) {
               <span className="font-bold">{wordCoreData.data?.simpleMeaning}</span>
             </div>
           </div>
+          {/* //td @IvanLark 这里按html的是270px但是和设计图比感觉太大了不知道具体数值 */}
           <div className="size-[200px] rounded-full bg-white shadow-xl flex items-center justify-center">
+            {/* // td @IvanLark 这个其实不太知道是什么东西 */}
             <span className="text-xl font-bold">义项比例</span>
           </div>
-        </div> */}
-        {/* //td @IvanLark 这里按html的是270px但是和设计图比感觉太大了不知道具体数值 */}
-        {/* // td @IvanLark 这个其实不太知道是什么东西 */}
+        </div>
         {/* // ** 详细释义 */}
         {/* // td @IvanLark 这里默认的阴影效果是朝下的……看看是否一定要朝上 */}
         <div className="w-full p-4 relative bg-gray-100 rounded-lg shadow-lg shadow-blue-300">
@@ -57,7 +59,7 @@ export default function QueryDataCore({ word, data }: { word: string }) {
             )}
           </div>
           <ul className="">
-            {(detailedMeaningTabIndex === 0 ? data.definition.cn : data.definition.en).map((item, index) =>
+            {(detailedMeaningTabIndex === 0 ? wordCoreData.data.definition.cn : wordCoreData.data.definition.en).map((item, index) =>
               <li key={index} className="">{item}</li>
             )}
           </ul>
@@ -71,28 +73,28 @@ export default function QueryDataCore({ word, data }: { word: string }) {
             {['复数', '现在分词', '第三人称单数', '过去分词', '过去式'].map((exchangeType, index) =>
               <div key={index}>
                 {/* // @ts-expect-error wrong type */}
-                <span className="">{exchangeType}: </span><span className="">{data?.exchange[exchangeType as WordChangeTypes]}</span>
+                <span className="">{exchangeType}: </span><span className="">{wordCoreData.data?.exchange[exchangeType as WordChangeTypes]}</span>
               </div>
             )}
           </div>
           <div className="p-5 bg-teal-400 rounded-3xl shadow-xl flex-1 text-white">
             <div className="text-lime-400 font-bold">词频分析</div>
             <div>
-              <span>BNC词频: </span><span>{data?.freq.bncFrequency}</span>
+              <span>BNC词频: </span><span>{wordCoreData.data?.freq.bncFrequency}</span>
             </div>
             <div>
-              <span>COCA词频: </span><span>{data?.freq.cocaFrequency}</span>
+              <span>COCA词频: </span><span>{wordCoreData.data?.freq.cocaFrequency}</span>
             </div>
             <div>
-              <span>柯林星级: </span><span>{data?.freq.collinsStar}</span>
+              <span>柯林星级: </span><span>{wordCoreData.data?.freq.collinsStar}</span>
             </div>
             <div>
-              <span>考试出现次数: </span><span>{data?.freq.examFrequency}</span>
+              <span>考试出现次数: </span><span>{wordCoreData.data?.freq.examFrequency}</span>
             </div>
           </div>
         </div>
         {/* // ** AI解析 */}
-        <Accordion title="AI解析" child={<Markdown>{data.ai.DictionaryByGPT4}</Markdown>} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' />
+        <Accordion title="AI解析" child={<Markdown>{wordCoreData.data.ai.DictionaryByGPT4}</Markdown>} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' />
         {/* <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white">
           <h2 className="text-xl text-yellow-300 font-bold">AI解析</h2>
           <div className="w-full mt-4">
@@ -103,7 +105,7 @@ export default function QueryDataCore({ word, data }: { word: string }) {
         </div> */}
         {/* <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white"> */}
         {["例句", "助记", "单词新解", "同义词", "形近词", "搭配", "替换", "派生词", "词根", "词源"].map((title, index) =>
-          <Accordion key={index} title={title} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' child={<p className="" dangerouslySetInnerHTML={{ __html: data.ai.Eudic[title as AiEudicTypes] }}></p>} />
+          <Accordion key={index} title={title} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' child={<p className="" dangerouslySetInnerHTML={{ __html: wordCoreData.data.ai.Eudic[title as AiEudicTypes] }}></p>} />
           // <div key={index} className="w-full mt-4">
           //   <h3 className="text-lg text-yellow-300 font-bold">{title}</h3>
           //   {/* // td @IvanLark 这个属性警告你危险了/汗 */}

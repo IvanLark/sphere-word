@@ -21,6 +21,10 @@ button {
 	@apply transition-all hover:brightness-90 active:brightness-75
 }
 
+.btn-trans {
+	@apply hover:bg-gray-100 active:bg-gray-200
+}
+
 .btn-grey {
 	@apply bg-gray-200 transition-all hover:bg-gray-300 active:bg-gray-400
 }
@@ -31,6 +35,10 @@ button {
 
 .btn-scale {
 	@apply transition-all hover:scale-105 active:scale-95
+}
+
+.btn-scale-xl {
+	@apply transition-all hover:scale-110 active:scale-90
 }
 
 /* //**----------------------------Markdown----------------------------------------------------- */

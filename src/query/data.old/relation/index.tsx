@@ -16,9 +16,9 @@ interface SemanticRelationItem {
  */
 export default function QueryDataRelation({ word }: { word: string }) {
   // td to delete
-  // word = 'make';
-  const wordRelation = testWordRelation;
-  // const wordRelation = useGetWordRelation(word)
+  word = 'make';
+  // const wordRelation = testWordRelation;
+  const wordRelation = useGetWordRelation(word)
 
   const [wordRelationTabIndex, setWordRelationTabIndex] = useState(0);
   function wordListBuilder(title: string, wordDataList: SemanticRelationItem[] | undefined) {
