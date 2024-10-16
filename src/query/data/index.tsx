@@ -3,7 +3,7 @@ import { useState } from "react";
 import QueryDataCore from "./core";
 import QueryDataRelation from "./relation";
 import QueryDataAi from "./ai";
-import { Word } from "./core/Word.tsx";
+import { Word } from "./Word.tsx";
 import { testWordCoreData } from "../../constants.ts";
 import { useGetWordCore } from "../api.ts";
 

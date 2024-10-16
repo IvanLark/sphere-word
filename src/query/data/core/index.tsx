@@ -3,7 +3,7 @@ import { useState } from "react";
 import { testWordCoreData } from "../../../constants.ts";
 import Markdown from "react-markdown";
 import Accordion from "../../../components/Accordion.tsx";
-import { Word } from "./Word.tsx";
+import { Word } from "../Word.tsx";
 import TabCard from "../../../components/TabCard.tsx";
 import { WordCore } from "../../types.ts";
 
