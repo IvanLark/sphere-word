@@ -1,7 +1,7 @@
 import * as React from 'react';
-export default function WordCard({ word, className }: { word: string, className?: string }) {
+export default function WordCard({ word, className, onClick }: { word: string, className?: string, onClick?: (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void }) {
 	// !注意不能取名class……
 	return (
-		<span className={`px-2 border-2 border-black rounded-full shrink-0 ${className}`}>{word}</span>
+		<span className={`px-2 border-2 border-black rounded-full overflow-hidden shrink-0 ${className}`} onClick={onClick}>{word}</span>
 	)
 }

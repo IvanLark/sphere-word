@@ -4,11 +4,15 @@
 
 /* //**----------------------------Gerneral----------------------------------------------------- */
 * {
-	@apply select-none font-sans font-serif
+	@apply font-sans font-serif
 }
 
 button {
-	@apply focus-visible:outline-none
+	@apply select-none focus-visible:outline-none
+}
+
+img {
+	@apply select-none
 }
 
 /* //**----------------------------Scrollbar----------------------------------------------------- */
@@ -22,7 +26,7 @@ button {
 }
 
 .btn-trans {
-	@apply hover:bg-gray-100 active:bg-gray-200
+	@apply transition-all hover:bg-gray-100 active:bg-gray-200
 }
 
 .btn-grey {
@@ -34,11 +38,11 @@ button {
 }
 
 .btn-scale {
-	@apply transition-all hover:scale-105 active:scale-95
+	@apply transition-all hover:scale-105 active:scale-95 group-hover:scale-105 group-active:scale-95
 }
 
 .btn-scale-xl {
-	@apply transition-all hover:scale-110 active:scale-90
+	@apply transition-all hover:scale-110 active:scale-90 group-hover:scale-110 group-active:scale-90
 }
 
 /* //**----------------------------Markdown----------------------------------------------------- */

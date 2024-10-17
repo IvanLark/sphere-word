@@ -8,7 +8,7 @@ interface TabsProps {
 }
 export default function Tabs({ tabs, tabIndex, setTabIndex, loading }: TabsProps) {
 	return (loading ? <Skeleton variant="rectangular" height="40px" /> :
-		<ul className="w-full flex">
+		<ul className="w-full flex select-none">
 			<div className="rounded-md bg-black absolute pointer-events-none transition-all duration-300" style={{ width: `${100 / tabs.length}%`, height: '40px', left: `${tabIndex * 100 / tabs.length}%` }}></div>
 			{tabs.map((tab, index) =>
 				<li
