@@ -17,33 +17,33 @@ type AiEudicTypes = "例句" | "助记" | "单词新解" | "同义词" | "形近
  * @constructor
  */
 // td @IvanLark 给data赋个类型……
-export default function QueryDataCore({ word, data }: { word: string, data: WordCore }) {
+export default function QueryDataCore({ word, data, isPending }: { word: string, data: WordCore | undefined, isPending: boolean }) {
   const [definitionTabIndex, setDefinitionTabIndex] = useState(0);
-  const [detailedMeaningTabIndex, setDetailedMeaningTabIndex] = useState(0);
+  // const [detailedMeaningTabIndex, setDetailedMeaningTabIndex] = useState(0);
 
   // td to delete
   // data.Etymology = {}
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
       <div className="flex flex-col gap-5">
-        <TabCard title="标签" >
+        <TabCard title="标签" loading={isPending}>
           <div className="mt-2 flex gap-2 text-black">
-            {data.tags.basic.slice(0, 3).map((tag, index) => <span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">{tag}</span>)}
+            {data?.tags.basic.slice(0, 3).map((tag, index) => <span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">{tag}</span>)}
           </div>
         </TabCard>
-        <TabCard tabs={['中英', '英英']} tabIndex={definitionTabIndex} setTabIndex={setDefinitionTabIndex} type="list" listItems={definitionTabIndex === 0 ? data.definition.cn : data.definition.en} />
+        <TabCard tabs={['中英', '英英']} tabIndex={definitionTabIndex} setTabIndex={setDefinitionTabIndex} loading={isPending} type="list" listItems={definitionTabIndex === 0 ? data?.definition.cn : data?.definition.en} />
         {/* // ** 单词变形 & 词频分析 */}
-        <TabCard title="词频">
-          <WordFrequencyBuilder title="真题" content={data.freq.examFrequency.toString()} />
-          <WordFrequencyBuilder title="BNC" content={data.freq.bncFrequency.toString()} />
-          <WordFrequencyBuilder title="COCA" content={data.freq.cocaFrequency.toString()} />
-          <WordFrequencyBuilder title="柯林" content={data.freq.collinsStar + '星'} />
+        <TabCard title="词频" loading={isPending}>
+          <WordFrequencyBuilder title="真题" content={data?.freq.examFrequency.toString()} />
+          <WordFrequencyBuilder title="BNC" content={data?.freq.bncFrequency.toString()} />
+          <WordFrequencyBuilder title="COCA" content={data?.freq.cocaFrequency.toString()} />
+          <WordFrequencyBuilder title="柯林" content={data?.freq.collinsStar + '星'} />
         </TabCard>
-        <TabCard title="义项比例">
+        <TabCard title="义项比例" loading={isPending}>
           <div className="w-full h-40 rounded-md bg-gradient-to-tr from-gray-600 to-gray-300 text-center">To Implement</div>
         </TabCard>
         {/* //td @IvanLark 搞出来以后自己写一下词源这里吧，就吧 */}
-        <TabCard title="词源" type="list" showMoreButton={false} listItems={['', ''].map((ehy, index) =>
+        <TabCard title="词源" type="list" showMoreButton={false} loading={isPending} listItems={['', ''].map((_ehy, _index) =>
           <div >
             <h3 className="px-2 py-1 border-2 border-black rounded-full font-bold w-fit">{'做，制造'}</h3>
             <p className="">{'来自古英语macian,制造，形成，安排，来自PIE*mag,捏，揉，形成，词源同match,massage.最早可能是来自人类始祖捏泥土以建房，后引申多种词义。'}</p>
@@ -62,7 +62,7 @@ export default function QueryDataCore({ word, data }: { word: string, data: Word
     </div >
   );
 }
-function WordFrequencyBuilder({ title, content }: { title: string, content: string }) {
+function WordFrequencyBuilder({ title, content }: { title: string, content?: string }) {
   return (<span className="px-2 py-1 m-1 border-2 border-black rounded-md font-bold">{title} {content}</span>)
 }
 // function Word

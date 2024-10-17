@@ -7,6 +7,7 @@ import { Word } from "./Word.tsx";
 import { testWordCoreData } from "../../constants.ts";
 import { useGetWordCore } from "../api.ts";
 import Tabs from "../../components/Tabs.tsx";
+import { toast } from "../../utils/toast.ts";
 
 interface QueryDataProps {
   word: string;
@@ -21,14 +22,20 @@ interface QueryDataProps {
  */
 export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   word = 'make';
-  const { isPending, isError, isSuccess, data, error } = testWordCoreData;
-  // const { isPending, isError, isSuccess, data, error } = useGetWordCore(word);
+  // const data: typeof testWordCoreData | undefined = undefined;
+  // const { isPending, isError, isSuccess, data, error } = testWordCoreData;
+  const { isPending: not, isError, isSuccess, data, error } = useGetWordCore(word);
   const [pickedPageIndex, setPickedPageIndex] = useState(0);
+  const isPending = false;
+  // td to delete
+
+  // td to delete
+  if (true || isError) toast('无法获取单词数据', 'error')
 
   function TabPage() {
     switch (pickedPageIndex) {
       case 0: // 单词详情页面
-        return <QueryDataCore word={word} data={data}></QueryDataCore>;
+        return <QueryDataCore word={word} data={data} isPending={isPending}></QueryDataCore>;
       case 1: // 单词关系页面
         return <QueryDataRelation word={word}></QueryDataRelation>;
       case 2:
@@ -56,14 +63,14 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
             <div className="w-56 h-4 rounded-full bg-gray-200 absolute left-1/2
           top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
           </div>
-          <Word word={word} pron={data?.pron} meanings={data?.simpleMeaning} tags={data?.tags} exchange={data?.exchange} favourite={false} />
+          <Word word={word} pron={data?.pron} meanings={data?.simpleMeaning} tags={data?.tags} exchange={data?.exchange} favourite={false} loading={isPending} />
         </div>
 
 
         {/* Tabs选项 */}
         {/* // td 暂时搞不了sticky…… */}
         {/* <div className="sticky"> */}
-        <Tabs tabs={['单词详情', '单词关系', 'AI解析', '阅读材料']} tabIndex={pickedPageIndex} setTabIndex={setPickedPageIndex} />
+        <Tabs tabs={['单词详情', '单词关系', 'AI解析', '阅读材料']} tabIndex={pickedPageIndex} setTabIndex={setPickedPageIndex} loading={isPending} />
         {/* </div> */}
         {/* Tab页面 */}
         <div className="min-h-[calc(100vh-100px)]">

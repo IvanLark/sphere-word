@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { testWordRelation } from "../../../constants.ts";
-import { useGetWordRelation } from "../../api.ts";
-import Accordion from "../../../components/Accordion.tsx";
 import TabCard, { listItemsType } from "../../../components/TabCard.tsx";
 import SubTab from "../../../components/SubTab.tsx";
 import WordCard from "../../../components/WordCard.tsx";
-import { Divider } from "@mui/material";
+import { toast } from "../../../utils/toast.ts";
+import { useGetWordRelation } from "../../api.ts";
 interface SemanticRelationItem {
   word: string;
   score: number;
@@ -27,41 +26,42 @@ export default function QueryDataRelation({ word }: { word: string }) {
 
   // td to delete
   // word = 'make';
-  const wordRelation = testWordRelation;
-  // const wordRelation = useGetWordRelation(word)
+  // let data: typeof testWordRelation | undefined;
+  const { isPending: not, isError, isSuccess, data, error } = useGetWordRelation(word)
+  if (isError) toast('无法获取单词数据', 'error')
+  const isPending = true;
 
-  const [wordRelationTabIndex, setWordRelationTabIndex] = useState(0);
-  function wordListBuilder(title: string, wordDataList: SemanticRelationItem[] | undefined) {
-    return (<>
-      <h2 className="text-lg">{title}</h2>
-      {wordDataList ? wordDataList.map((word, index) => <li key={index}>{word.word}</li>) : <p>暂无数据</p>}
-    </>
-
-    )
-  }
-  function wordRelationListBuilder(words: string[]) {
+  // const [wordRelationTabIndex, setWordRelationTabIndex] = useState(0);
+  // function wordListBuilder(title: string, wordDataList: SemanticRelationItem[] | undefined) {
+  //   return (<>
+  //     <h2 className="text-lg">{title}</h2>
+  //     {wordDataList ? wordDataList.map((word, index) => <li key={index}>{word.word}</li>) : <p>暂无数据</p>}
+  //   </>
+  //   )
+  // }
+  function wordRelationListBuilder(words?: string[]) {
     return (
       <div className="flex flex-wrap gap-2">
-        {words.map((word, index) => <WordCard key={index} word={word} />)}
+        {words?.map((word, index) => <WordCard key={index} word={word} />)}
       </div>
     )
   }
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
       <div className="flex flex-col gap-5">
-        <TabCard tabs={['同义', '近义', '反义', '相关', '上位', '下位']} tabIndex={relationTabIndex} setTabIndex={setRelationTabIndex} >
+        <TabCard tabs={['同义', '近义', '反义', '相关', '上位', '下位']} tabIndex={relationTabIndex} setTabIndex={setRelationTabIndex} loading={isPending} >
           {/* // td @IvanLark 数据结构可能有误 */}
-          {relationTabIndex === 0 ? wordRelationListBuilder(wordRelation.Antonym.slice(0, 10).map(ant => ant.word)) :
-            relationTabIndex === 1 ? wordRelationListBuilder(wordRelation.Synset.slice(0, 10).map(sim => sim.key)) :
-              relationTabIndex === 2 ? wordRelationListBuilder(wordRelation.Antonym.slice(0, 10).map(opp => opp.word)) :
-                relationTabIndex === 3 ? wordRelationListBuilder(wordRelation.RelatedTo.slice(0, 10).map(rel => rel.word)) :
-                  relationTabIndex === 4 ? wordRelationListBuilder(wordRelation.InstanceOf.slice(0, 10).map(ins => ins.word)) :
-                    relationTabIndex === 10 ? wordRelationListBuilder(wordRelation.InstanceOf.slice(0, 10).map(sub => sub.word)) : <></>
+          {relationTabIndex === 0 ? wordRelationListBuilder(data?.Antonym.slice(0, 10).map(ant => ant.word)) :
+            relationTabIndex === 1 ? wordRelationListBuilder(data?.Synset.slice(0, 10).map(sim => sim.key)) :
+              relationTabIndex === 2 ? wordRelationListBuilder(data?.Antonym.slice(0, 10).map(opp => opp.word)) :
+                relationTabIndex === 3 ? wordRelationListBuilder(data?.RelatedTo.slice(0, 10).map(rel => rel.word)) :
+                  relationTabIndex === 4 ? wordRelationListBuilder(data?.InstanceOf.slice(0, 10).map(ins => ins.word)) :
+                    relationTabIndex === 10 ? wordRelationListBuilder(data?.InstanceOf.slice(0, 10).map(sub => sub.word)) : <></>
           }
         </TabCard>
-        <TabCard tabs={['短语', '例句', '搭配']} tabIndex={wordGroupTabIndex} setTabIndex={setWordGroupTabIndex} type={wordGroupTabIndex === 2 ? 'none' : 'list'} listItems={
-          wordGroupTabIndex === 0 ? wordRelation.Phrase.slice(0, 5).map(phrase => `${phrase.phrase} | ${phrase.meaning}`) :
-            wordGroupTabIndex === 1 ? wordRelation.Example.slice(0, 5).map(example =>
+        <TabCard tabs={['短语', '例句', '搭配']} tabIndex={wordGroupTabIndex} setTabIndex={setWordGroupTabIndex} loading={isPending} type={wordGroupTabIndex === 2 ? 'none' : 'list'} listItems={
+          wordGroupTabIndex === 0 ? data?.Phrase.slice(0, 5).map(phrase => `${phrase.phrase} | ${phrase.meaning}`) :
+            wordGroupTabIndex === 1 ? data?.Example.slice(0, 5).map(example =>
               <>
                 <p>{example.example}</p>
                 <p>{example.translation}</p>
@@ -69,14 +69,14 @@ export default function QueryDataRelation({ word }: { word: string }) {
             ) : undefined} >
           {wordGroupTabIndex === 2 && <>
             <div className="w-full h-[1px] bg-black mb-2"></div>
-            <SubTab titles={wordRelation.Collocation.map(colect => colect.collocation)} tabIndex={wordCollectionTabIndex} setTabIndex={setWordCollectionTabIndex} />
-            {wordRelation.Collocation[wordCollectionTabIndex].phrases.map((phrase, index) =>
+            <SubTab titles={data?.Collocation.map(colect => colect.collocation)} tabIndex={wordCollectionTabIndex} setTabIndex={setWordCollectionTabIndex} />
+            {data?.Collocation[wordCollectionTabIndex].phrases.map((phrase, index) =>
               wordCollectionTabIndex === index && <p className="">{phrase.phrase} | {phrase.translation}</p>
             )}
           </>}
         </TabCard>
-        <TabCard tabs={['话题', '近义词辨析']} tabIndex={wordRelatedTabIndex} setTabIndex={setWordRelatedTabIndex} type="accordion"
-          listItems={wordRelatedTabIndex === 0 ? wordRelation.Topic.slice(0, 5).map(topic => {
+        <TabCard tabs={['话题', '近义词辨析']} tabIndex={wordRelatedTabIndex} setTabIndex={setWordRelatedTabIndex} loading={isPending} type="accordion"
+          listItems={wordRelatedTabIndex === 0 ? data?.Topic.slice(0, 5).map(topic => {
             return {
               title: topic.key,
               content: [
@@ -88,7 +88,7 @@ export default function QueryDataRelation({ word }: { word: string }) {
               ]
             } as listItemsType
           }) :
-            wordRelation.Synset.slice(0, 5).map(synset => {
+            data?.Synset.slice(0, 5).map(synset => {
               return {
                 title: synset.key,
                 // dtd 这里元素数量有点问题额这能bug……

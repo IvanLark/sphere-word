@@ -14,7 +14,8 @@ export default function QueryDataAi({ word }: { word: string }) {
   const [aiTabIndex, setAiTabIndex] = useState(0);
   const [Tab1Index, setTab1Index] = useState(0);
 
-  const { isPending, isError, isSuccess, data, error } = useGetWordAi(word);
+  const data = undefined, isPending = true
+  // const { isPending, isError, isSuccess, data, error } = useGetWordAi(word);
 
   let content: JSX.Element | null = null;
   if (aiTabIndex === 0)
@@ -34,10 +35,10 @@ export default function QueryDataAi({ word }: { word: string }) {
 
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
-      <Tabs tabs={['AI解析1', 'AI解析2']} tabIndex={aiTabIndex} setTabIndex={setAiTabIndex} />
+      <Tabs tabs={['AI解析1', 'AI解析2']} tabIndex={aiTabIndex} setTabIndex={setAiTabIndex} loading={isPending} />
       <div className="w-full h-2"></div>
       {/* {<SubTab titles={['例句', '助记', '单词新解', '同义词', '形近词', '搭配', '替换', '派生词', '词根', '词源']} tabIndex={Tab1Index} setTabIndex={setTab1Index} />} */}
-      <TabCard tabs={aiTabIndex === 0 ? ['例句', '助记', '单词新解', '同义词', '形近词', '搭配', '替换', '派生词', '词根', '词源'] : []} tabIndex={Tab1Index} setTabIndex={setTab1Index} showMoreButton={false} >
+      <TabCard tabs={aiTabIndex === 0 ? ['例句', '助记', '单词新解', '同义词', '形近词', '搭配', '替换', '派生词', '词根', '词源'] : []} tabIndex={Tab1Index} setTabIndex={setTab1Index} loading={isPending} showMoreButton={false} >
         {content}
       </TabCard>
 

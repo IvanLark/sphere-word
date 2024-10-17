@@ -1,11 +1,13 @@
+import { Skeleton } from '@mui/material';
 import * as React from 'react';
 interface TabsProps {
 	tabs: string[];
 	tabIndex: number;
 	setTabIndex: (index: number) => void;
+	loading: boolean;
 }
-export default function Tabs({ tabs, tabIndex, setTabIndex }: TabsProps) {
-	return (
+export default function Tabs({ tabs, tabIndex, setTabIndex, loading }: TabsProps) {
+	return (loading ? <Skeleton variant="rectangular" height="40px" /> :
 		<ul className="w-full flex">
 			<div className="rounded-md bg-black absolute pointer-events-none transition-all duration-300" style={{ width: `${100 / tabs.length}%`, height: '40px', left: `${tabIndex * 100 / tabs.length}%` }}></div>
 			{tabs.map((tab, index) =>

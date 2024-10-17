@@ -1,5 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import './MainView.css'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/ReactToastify.css'
 function App() {
 
   const navigate = useNavigate()
@@ -16,6 +18,7 @@ function App() {
           <button className="btn-scale btn-grey px-4 py-2 text-5xl" onClick={() => navigate(`/${route}`)} key={index}>{route}</button>
         )}
       </div>
+      <ToastContainer />
     </div>
   )
 }
