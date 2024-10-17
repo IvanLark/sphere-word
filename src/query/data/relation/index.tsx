@@ -46,19 +46,17 @@ export default function QueryDataRelation({ word }: { word: string }) {
       </div>
     )
   }
-  console.log(wordRelatedTabIndex === 0 ? wordRelation.Topic.slice(0, 5).map(topic => { return { title: topic.key, content: [topic.key] } as listItemsType }) :
-    wordRelation.Synset.slice(0, 5).map(synset => { return { title: synset.key, content: <div className=""><span className="w-10">{synset.key}</span><span>{synset.key}</span></div> } }))
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
       <div className="flex flex-col gap-5">
         <TabCard tabs={['同义', '近义', '反义', '相关', '上位', '下位']} tabIndex={relationTabIndex} setTabIndex={setRelationTabIndex} >
           {/* // td @IvanLark 数据结构可能有误 */}
-          {relationTabIndex === 0 ? wordRelationListBuilder(wordRelation.Antonym.map(ant => ant.word)) :
-            relationTabIndex === 1 ? wordRelationListBuilder(wordRelation.Synset.map(sim => sim.key)) :
-              relationTabIndex === 2 ? wordRelationListBuilder(wordRelation.Antonym.map(opp => opp.word)) :
-                relationTabIndex === 3 ? wordRelationListBuilder(wordRelation.RelatedTo.map(rel => rel.word)) :
-                  relationTabIndex === 4 ? wordRelationListBuilder(wordRelation.InstanceOf.map(ins => ins.word)) :
-                    relationTabIndex === 5 ? wordRelationListBuilder(wordRelation.InstanceOf.map(sub => sub.word)) : <></>
+          {relationTabIndex === 0 ? wordRelationListBuilder(wordRelation.Antonym.slice(0, 10).map(ant => ant.word)) :
+            relationTabIndex === 1 ? wordRelationListBuilder(wordRelation.Synset.slice(0, 10).map(sim => sim.key)) :
+              relationTabIndex === 2 ? wordRelationListBuilder(wordRelation.Antonym.slice(0, 10).map(opp => opp.word)) :
+                relationTabIndex === 3 ? wordRelationListBuilder(wordRelation.RelatedTo.slice(0, 10).map(rel => rel.word)) :
+                  relationTabIndex === 4 ? wordRelationListBuilder(wordRelation.InstanceOf.slice(0, 10).map(ins => ins.word)) :
+                    relationTabIndex === 10 ? wordRelationListBuilder(wordRelation.InstanceOf.slice(0, 10).map(sub => sub.word)) : <></>
           }
         </TabCard>
         <TabCard tabs={['短语', '例句', '搭配']} tabIndex={wordGroupTabIndex} setTabIndex={setWordGroupTabIndex} type={wordGroupTabIndex === 2 ? 'none' : 'list'} listItems={

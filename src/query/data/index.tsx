@@ -6,6 +6,7 @@ import QueryDataAi from "./ai";
 import { Word } from "./Word.tsx";
 import { testWordCoreData } from "../../constants.ts";
 import { useGetWordCore } from "../api.ts";
+import Tabs from "../../components/Tabs.tsx";
 
 interface QueryDataProps {
   word: string;
@@ -37,7 +38,6 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
     }
   }
 
-  const TabOptions: string[] = ['单词详情', '单词关系', 'AI解析', '阅读材料']
 
   return (
     <div className="w-screen h-[calc(100vh-100px)] snap-y snap-mandatory overflow-y-auto">
@@ -61,17 +61,10 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
 
         {/* Tabs选项 */}
-        <ul className="w-full flex">
-          <div className="rounded-md bg-black absolute pointer-events-none transition-all duration-300" style={{ width: '25vw', height: '40px', left: `${pickedPageIndex * 25}%` }}></div>
-          {TabOptions.map((tab, index) =>
-            <li
-              className={`btn-common-hover text-xl h-10 py-2 relative flex-1 text-center rounded-md list-none transition-all duration-300 ${index === pickedPageIndex ? 'text-white bg-blac' : ''} `}
-              onClick={() => { setPickedPageIndex(index) }}>
-              {tab}
-            </li>
-          )}
-          {/* //~~这个居然要手动指定h-fit……咳咳是上面ul搞了h-24…… */}
-        </ul>
+        {/* // td 暂时搞不了sticky…… */}
+        {/* <div className="sticky"> */}
+        <Tabs tabs={['单词详情', '单词关系', 'AI解析', '阅读材料']} tabIndex={pickedPageIndex} setTabIndex={setPickedPageIndex} />
+        {/* </div> */}
         {/* Tab页面 */}
         <div className="min-h-[calc(100vh-100px)]">
           <TabPage />

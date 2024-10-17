@@ -604,6 +604,10 @@ video {
   position: relative;
 }
 
+.sticky {
+  position: sticky;
+}
+
 .-top-8 {
   top: -2rem;
 }
@@ -768,6 +772,10 @@ video {
   height: 100vh;
 }
 
+.h-2 {
+  height: 0.5rem;
+}
+
 .max-h-6 {
   max-height: 1.5rem;
 }
@@ -910,6 +918,14 @@ video {
 
 .text-ellipsis {
   text-overflow: ellipsis;
+}
+
+.whitespace-normal {
+  white-space: normal;
+}
+
+.whitespace-pre-line {
+  white-space: pre-line;
 }
 
 .text-wrap {
