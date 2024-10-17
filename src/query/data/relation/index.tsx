@@ -4,6 +4,8 @@ import { useGetWordRelation } from "../../api.ts";
 import Accordion from "../../../components/Accordion.tsx";
 import TabCard, { listItemsType } from "../../../components/TabCard.tsx";
 import SubTab from "../../../components/SubTab.tsx";
+import WordCard from "../../../components/WordCard.tsx";
+import { Divider } from "@mui/material";
 interface SemanticRelationItem {
   word: string;
   score: number;
@@ -40,7 +42,7 @@ export default function QueryDataRelation({ word }: { word: string }) {
   function wordRelationListBuilder(words: string[]) {
     return (
       <div className="flex flex-wrap gap-2">
-        {words.map((word, index) => <span key={index} className="px-2 border-2 border-black rounded-full">{word}</span>)}
+        {words.map((word, index) => <WordCard key={index} word={word} />)}
       </div>
     )
   }
@@ -76,23 +78,26 @@ export default function QueryDataRelation({ word }: { word: string }) {
           </>}
         </TabCard>
         <TabCard tabs={['话题', '近义词辨析']} tabIndex={wordRelatedTabIndex} setTabIndex={setWordRelatedTabIndex} type="accordion"
-          // @ts-expect-error wrong type
-          listItems={wordRelatedTabIndex === 0 ? wordRelation.Topic.slice(0, 5).map(topic => { return { title: topic.key, content: [topic.key] } as listItemsType }) :
-            wordRelation.Synset.slice(0, 5).map(synset => { return { title: synset.key, content: <div className=""><span className="w-10">{synset.key}</span><span>{synset.key}</span></div> } })} />
-        <Accordion title="话题" child={wordRelation.Topic.slice(0, 10).map((topic, index) => <li key={index}>{topic.key}</li>)} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
-        <Accordion title="近义词辨析" child={wordRelation.Synset.slice(0, 10).map((word, index) => <li key={index}>{word.key}</li>)} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
-        <Accordion title="短语" child={wordRelation.Phrase.slice(0, 10).map((phrase, index) => <li key={index}>{phrase.phrase} {phrase.meaning}</li>)} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
-        <Accordion title="固定搭配" child={wordRelation.Collocation.map((colect, index) =>
-          <div key={index} className="flex">
-            {/* <div className="p-3 font-bold"><span className="m-auto">{colect.collocation}</span></div> */}
-            <div className="p-3 font-bold">{colect.collocation}</div>
-            <ul className="border-l-2 border-gray-500 flex-1 my-3">
-              {colect.phrases.slice(0, 10).map((phrase, index) => <li key={index} className="ml-2">{phrase.phrase} {phrase.translation}</li>)}
-            </ul>
-          </div>
-        )} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
-        <Accordion title="例句" child={wordRelation.Example.slice(0, 10).map((sentence, index) => <li key={index}>{sentence.example} {sentence.translation}</li>)} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
-
+          listItems={wordRelatedTabIndex === 0 ? wordRelation.Topic.slice(0, 5).map(topic => {
+            return {
+              title: topic.key,
+              content: [
+                <div className="flex flex-wrap gap-2">
+                  {Array(5).fill(0).map((_v, index) =>
+                    // !注意不能用数组的index不然key都相同会出现切换tab元素不断增加的bug
+                    <WordCard key={index} word={topic.key.slice(0, 2)} />)}
+                </div>
+              ]
+            } as listItemsType
+          }) :
+            wordRelation.Synset.slice(0, 5).map(synset => {
+              return {
+                title: synset.key,
+                // dtd 这里元素数量有点问题额这能bug……
+                // td @IvanLark 这里数据不准确，换行可能存在问题
+                content: Array(5).fill(0).map((_v, index) => <div key={index} className="flex flex-wra gap-2 max-w-full overflow-hidden text-ellipsis"><WordCard word={synset.key.slice(0, 5)} className="max-w-32 text-ellipsis overflow-hidden" />{synset.key}</div>)
+              }
+            })} />
       </div>
     </div>
   );

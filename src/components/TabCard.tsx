@@ -1,6 +1,6 @@
 import * as React from 'react';
 import SubTab from './SubTab';
-import { KeyboardArrowRight } from '@mui/icons-material';
+import { ExpandMore, KeyboardArrowRight } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 export type listItemsType = string | JSX.Element | { title: string, content: (string | JSX.Element)[] };
 interface TabCardProps {
@@ -29,8 +29,9 @@ export default function TabCard({ tabs, title, type = 'none', listItems, showMor
 				type === 'accordion' ?
 					// @ts-expect-error wrong type
 					listItems?.map((item: { title: string, content: (string | JSX.Element)[] }, index) =>
-						<Accordion key={index}>
-							<AccordionSummary title={item.title}>
+						<Accordion key={index} >
+							<AccordionSummary expandIcon={<ExpandMore />} style={{ borderBottom: '1px solid #e5e5e5' }}>
+								{item.title}
 							</AccordionSummary>
 							<AccordionDetails>{item.content}</AccordionDetails>
 						</Accordion>
