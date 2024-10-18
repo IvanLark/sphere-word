@@ -17,7 +17,7 @@ interface TabCardProps {
 export default function TabCard({ tabs, title, type = 'none', listItems, showMoreButton = true, tabIndex, setTabIndex, loading, children }: TabCardProps) {
 	return (loading ? <Skeleton variant='rectangular' animation='wave' height={200} /> :
 		<div className="bg-white rounded-md p-2 pb-4 border-2 border-black">
-			<div className="w-full h-full py-2 flex items-center">
+			<div className="w-full h-full py-2 flex items-start">
 				<div className="flex-1">
 					{title && <h2 className="text-xl font-bold">{title}</h2>}
 					{tabs && <SubTab titles={tabs} tabIndex={tabIndex!} setTabIndex={setTabIndex!} />}

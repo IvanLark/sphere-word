@@ -2,6 +2,7 @@ import { useState } from "react";
 import QueryGraph from "./graph";
 import QueryData from "./data";
 import { Edge, Node } from "./types.ts";
+import QueryHeader from "../chat/QueryHeader.tsx";
 
 /**
  * 单词查询页面
@@ -9,7 +10,8 @@ import { Edge, Node } from "./types.ts";
  */
 export default function Query() {
   // 当前查询单词
-  const [curWord, setCurWord] = useState<string>('');
+  // td to delete
+  const [curWord, setCurWord] = useState<string>('make');
   // 历史查询单词
   const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>({
     nodes: [], edges: []
@@ -65,9 +67,15 @@ export default function Query() {
 
   // 单词查询页面
   return (
-    <div className="w-screen h-[calc(100vh-100px)] ">
+    <div className="w-screen h-screen ">
       {/* <QueryGraph history={history}></QueryGraph> */}
-      <div className="w-screen h-[calc(100vh-100px)] fixed bg-gradient-to-tr from-yellow-400 to-yellow-200"><div className="w-screen text-center text-5xl">QueryGraph</div><button className="btn-scale btn-grey px-4 py-2 m-auto">Test Click</button></div>
+      <div className="w-screen h-screen fixed bg-gradient-to-tr from-gray-400 to-gray-200">
+        <QueryHeader word={curWord} />
+        <div className="w-screen text-center text-5xl">
+          QueryGraph
+        </div>
+        <button className="btn-scale btn-grey px-4 py-2 m-auto">Test Click</button>
+      </div>
       <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
     </div>
   );
