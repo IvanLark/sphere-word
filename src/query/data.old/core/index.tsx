@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useGetWordCore } from "../../api.ts";
 import { useState } from "react";
 import { testWordCoreData } from "../../../constants.ts";

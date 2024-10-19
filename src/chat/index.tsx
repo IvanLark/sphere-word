@@ -2,6 +2,7 @@ import { ArrowBack, Close, Home, HomeOutlined, Menu, Send, Stop, StopCircle } fr
 import { useState } from "react";
 import ChatArea from "./chat_area/ChatArea";
 import WordCard from "../components/WordCard";
+import { useNavigate } from "react-router-dom";
 
 /**
  * AI对话页面
@@ -9,6 +10,8 @@ import WordCard from "../components/WordCard";
  */
 type ChatState = 'empty' | 'inputing' | 'gernerating' | 'error';
 export default function Chat() {
+  const navigate = useNavigate();
+
   const [chatState, setChatState] = useState<ChatState>("empty");
   const [inputText, setInputText] = useState("");
 
@@ -39,20 +42,20 @@ export default function Chat() {
   }
 
   return (
-    <div className="w-screen h-[calc(100vh-100px)] flex flex-col">
+    <div className="w-screen h-screen flex flex-col">
       <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex overflow-hidden">
-        <button className="btn-trans size-16 rounded-md border-r-2 border-black group"><div className="btn-scale-xl"><ArrowBack style={{ fontSize: "40px" }} /></div></button>
+        <button className="btn-trans size-16 rounded-md border-r-2 border-black group" onClick={() => { navigate(-1) }}><div className="btn-scale-xl"><ArrowBack style={{ fontSize: "40px" }} /></div></button>
         <div className="flex-1">
           {/* // td to fill */}
         </div>
-        <button className="btn-trans size-16 rounded-md border-l-2 border-black group"><div className="btn-scale-xl"><HomeOutlined style={{ fontSize: "40px" }} /></div></button>
+        <button className="btn-trans size-16 rounded-md border-l-2 border-black group"><div className="btn-scale-xl" onClick={() => navigate('/home')}><HomeOutlined style={{ fontSize: "40px" }} /></div></button>
       </div>
       <div className="w-screen h-16 shrink-0">nothing here</div>
       <ChatArea />
       {/* // ! 哇趣这里向上展开有点难实现……用了取巧的方式 */}
       {/* // ! md想起来fixed以后又花了大力气才回到现在这个效果 */}
       <div className="w-screen h-44 shrink-0">nothing here</div>
-      <div className={`w-full fixed bottom-[100px] px-4 py-2 bg-white z-10 `}>
+      <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
         <div className={`py-1 flex gap-2 overflow-hidden transition-all duration-300 ${promptTabOpen ? 'w-full h-8' : 'size-0'}`}>
           {Object.entries(prompts).map(([key, value]) => <WordCard key={key} word={key} className={`btn-scale btn-trans ${!promptTabOpen && 'border-0'}`} onClick={() => {
             if (promptTabElements.length === 0) return

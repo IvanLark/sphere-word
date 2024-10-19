@@ -41,7 +41,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
       {/* <div className="w-screen h-[calc(100vh-280px)] bg-transparent snap-end pointer-events-none"></div> */}
       {/* // **snap占位div */}
       <div className="w-screen h-[45vh] bg-transparent snap-start pointer-events-none"></div>
-      <div className="w-screen min-h-[calc(100vh-100px)] px- relative bg-gray-100 snap-start">
+      <div className="w-screen min-h-screen px- relative bg-gray-100 snap-start">
         {/* 分割 */}
         <div className="w-full h-20 relative">
           <div className="w-56 h-9 rounded-full bg-gray-200 absolute left-1/2

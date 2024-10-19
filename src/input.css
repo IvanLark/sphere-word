@@ -29,6 +29,10 @@ img {
 	@apply transition-all hover:bg-gray-100 active:bg-gray-200
 }
 
+.btn-white {
+	@apply bg-white transition-all hover:bg-gray-200 active:bg-gray-300
+}
+
 .btn-grey {
 	@apply bg-gray-200 transition-all hover:bg-gray-300 active:bg-gray-400
 }
