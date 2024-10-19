@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { testWordRelation } from "../../../constants.ts";
 import { useGetWordRelation } from "../../api.ts";
-import Accordion from "../../../components/Accordion.tsx";
+import Accordion from "../../../components.old/Accordion.tsx";
 interface SemanticRelationItem {
   word: string;
   score: number;

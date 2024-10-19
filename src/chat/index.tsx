@@ -1,7 +1,7 @@
 import { ArrowBack, Close, Home, HomeOutlined, Menu, Send, Stop, StopCircle } from "@mui/icons-material";
 import { useState } from "react";
 import ChatArea from "./chat_area/ChatArea";
-import WordCard from "../components/WordCard";
+import WordCard from "../components.old/WordCard";
 import { useNavigate } from "react-router-dom";
 
 /**

@@ -3,7 +3,7 @@ import { useGetWordCore } from "../../api.ts";
 import { useState } from "react";
 import { testWordCoreData } from "../../../constants.ts";
 import Markdown from "react-markdown";
-import Accordion from "../../../components/Accordion.tsx";
+import Accordion from "../../../components.old/Accordion.tsx";
 
 type WordChangeTypes = '复数' | '现在分词' | '第三人称单数' | '过去分词' | '过去式'
 // !这个是单纯为了解决报错设的不放到另一个文件了
