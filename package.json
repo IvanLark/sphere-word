@@ -20,13 +20,15 @@
     "@types/node": "^22.7.5",
     "axios": "^1.7.7",
     "cytoscape": "^3.30.2",
-    "cytoscape-cola": "^2.5.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
     "react-router-dom": "^6.27.0",
     "react-toastify": "^10.0.6",
-    "tailwindcss": "^3.4.13"
+    "tailwindcss": "^3.4.13",
+    "@gsap/react": "^2.1.1",
+    "gsap": "^3.12.5",
+    "cytoscape-cola": "^2.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
