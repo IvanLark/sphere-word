@@ -11,7 +11,7 @@ interface WordCoreFreq {
   examFrequency: number;
 }
 
-interface MeaningProportionItem {
+export interface MeaningProportionItem {
   meaning: string;
   proportion: number;
 }

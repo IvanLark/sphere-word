@@ -26,24 +26,25 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
     ...history.edges.map(edgeItem => ({ data: edgeItem }))
   ];
   const layoutData = {
-    name: 'cola'
+    name: 'cola',
+    nodeSpacing: 25 // 节点间最小距离
   };
   const styleData = [
     // 单词节点样式
     {
       selector: 'node[type="Word"]',
       style: {
-        'shape': 'ellipse', // 圆形节点
+        'shape': 'ellipse' as cytoscape.Css.NodeShape, // 圆形节点
         'background-color': 'white', // 白色背景
         'border-color': 'black', // 黑色边框
         'border-width': 3, // 边框宽度
         'color': 'black', // 标签颜色
-        'text-valign': 'center', // 标签垂直居中
-        'text-halign': 'center', // 标签水平居中
+        'text-valign': 'center' as "center" | "top" | "bottom", // 标签垂直居中
+        'text-halign': 'center' as "center" | "left" | "right", // 标签水平居中
         'label': 'data(label)', // 使用节点的label属性作为标签
         'font-size': 15, // 设置字体大小为12px
         'padding': 10, // 设置节点内边距为10px
-        'width': function (node) {
+        'width': function (node: cytoscape.NodeSingular) {
           // 动态计算节点的宽度
           const label = node.data('label');
           const fontSize = 15; // 字体大小
@@ -73,7 +74,7 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
         'text-background-color': 'white', // 标签背景为白色
         'text-background-opacity': 0.8, // 标签背景透明度
         'text-background-padding': '3px', // 标签背景内边距
-        'text-background-shape': 'roundrectangle', // 标签背景形状为圆角矩形
+        'text-background-shape': 'roundrectangle' as "rectangle" | "roundrectangle", // 标签背景形状为圆角矩形
         'curve-style': 'bezier', // 使用贝塞尔曲线样式
         'width': 2 // 边宽度为2px
       }
@@ -94,6 +95,7 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
     });
 
     // 动态调整节点大小以适应标签长度
+    /*
     cy.nodes().forEach(function (node) {
       const labelText = node.data('label');
       const fontSize = node.style('font-size');
@@ -107,6 +109,7 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
         'min-height': labelHeight + 'px'
       });
     });
+    */
 
     // 设置选中单词为黑色背景白色字
     // 遍历每个节点并更新样式
@@ -116,6 +119,7 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
           'background-color': 'black', // 黑色背景
           'color': 'white' // 白色字
         });
+        cy.center(node);
       }
     });
 

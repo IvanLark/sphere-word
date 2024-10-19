@@ -34,10 +34,10 @@ export function WordCard({ word, data, isCollected, isLoading }: WordCardProps) 
 				{/* 发音 */}
 				<div className="flex items-center gap-2	">
 					<PronBuilder title="英" pron={data?.pron.ukPron}
-						onClick={() => {/** //td to implement */ }}
+						onClick={() => { new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${word}`).play(); }}
 					/>
 					<PronBuilder title="美" pron={data?.pron.usPron}
-						onClick={() => {/** //td to implement */ }}
+						onClick={() => { new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${word}`).play(); }}
 					/>
 				</div>
 				{/* 意思 */}

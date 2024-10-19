@@ -4,9 +4,9 @@ import ChatArea from "./chat_area/ChatArea";
 import WordCard from "../components.old/WordCard";
 import { useNavigate } from "react-router-dom";
 import { ChatMessage } from "./types.ts";
-import axios from "axios";
+//import axios from "axios";
 import { BASE_URL } from "../constants.ts";
-import { Result } from "../types.ts";
+import { SSE } from 'sse.js';
 
 /**
  * AI对话页面
@@ -38,13 +38,14 @@ export default function Chat() {
       ...chatData, inputText: text, chatState: text.trim() === '' ? 'empty' : 'inputing'
     });
   }
-
+  /*
   const client = axios.create({
     baseURL: BASE_URL,
     headers: {
       'Content-Type': 'application/json'
     }
   })
+  */
   function handleInputButtonClick() {
     if (chatData.chatState === "empty") {
       setPromptTabOpen(!promptTabOpen);
@@ -59,6 +60,7 @@ export default function Chat() {
         ]
       } as ChatData;
       setChatData(newChatData);
+      /*
       client.post<Result<string>>('/chat', {
         messages: newChatData.messages
       }).then(response => {
@@ -71,13 +73,34 @@ export default function Chat() {
           ]
         })
       })
+      */
+      let responseContent = '';
+      const source = new SSE(
+        `${BASE_URL}/chat`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          payload: JSON.stringify({ 'messages': newChatData.messages })
+        }
+      );
+      source.addEventListener("message", (event: MessageEvent) => {
+        responseContent += JSON.parse(event.data).content;
+        setChatData({
+          chatState: 'inputing',
+          inputText: '',
+          messages: [
+            ...newChatData.messages,
+            { role: 'assistant', content: responseContent }
+          ]
+        })
+      });
     }
     //else if (chatState === "gernerating")
     //  setChatState("inputing");
   }
 
-  function promptTabElementCard(word: string) {
-    return <span className='px-2 border-2 border-black rounded-md shrink-0 '>
+  function promptTabElementCard(word: string, key: number) {
+    return <span key={key} className='px-2 border-2 border-black rounded-md shrink-0 '>
       {word}
       <button title="delete" className="btn-scale btn-trans size-6 ml-2 rounded-full" onClick={() => setPromptTabElements(promptTabElements.filter(w => w !== word))}><Close /></button>
     </span>
@@ -125,7 +148,7 @@ export default function Chat() {
         <div className="flex gap-2">
           <div className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-hidden duration-300 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`} style={{ transitionProperty: 'height' }}>
             <span className="">单词/句子: </span>
-            {promptTabElements.map(word => promptTabElementCard(word))}
+            {promptTabElements.map((word, index) => promptTabElementCard(word, index))}
           </div>
           <div className={`w-12 shrink-0 border-2 border-transparent duration-300 ${promptTabOpen ? 'h-12' : 'h-0'}`} style={{ transitionProperty: 'height' }}></div>
           {/* // !tailwind的duration动画曲线和默认easeinout不同……最好统一 */}

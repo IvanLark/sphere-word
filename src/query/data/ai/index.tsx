@@ -23,7 +23,7 @@ export default function QueryDataAi({ word }: { word: string }) {
   }
   if (data?.DictionaryByGPT4) {
     Object.assign(pageTabs, {
-      'AI解析3': <div className="whitespace-pre-line"> {data.DictionaryByGPT4}</div>
+      'AI解析3': <div className="whitespace-pre-line"> {data.DictionaryByGPT4.replace('\n\n', '')}</div>
     });
   }
 

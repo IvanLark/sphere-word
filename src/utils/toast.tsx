@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { Info, Warning } from '@mui/icons-material';
 import Error from '@mui/icons-material/Error';

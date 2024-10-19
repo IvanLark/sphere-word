@@ -1,7 +1,10 @@
-import { WordCore } from "../../types.ts";
+import {WordCore} from "../../types.ts";
 import DataCard from "../components/card/DataCard.tsx";
 import DiscreteTabs from "../components/tabs/DiscreteTabs.tsx";
 import ListItem from "../components/item/ListItem.tsx";
+import ReactEcharts, {EChartsOption} from 'echarts-for-react';
+import 'echarts/lib/chart/pie'; // 饼图
+import 'echarts/lib/component/tooltip';
 
 /**
  * 单词详情页面
@@ -18,6 +21,46 @@ export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
   const definitionTabs: Record<string, Array<string>> = {}
   if (data?.definition.cn) Object.assign(definitionTabs, { '中英': data.definition.cn });
   if (data?.definition.en) Object.assign(definitionTabs, { '英英': data.definition.en });
+
+  interface EchartsDataItem {
+    name: string;
+    value: number;
+  }
+  let meaningProportionData: EchartsDataItem[]|undefined = undefined
+  if (data?.proportion && data.proportion?.meaning) {
+    meaningProportionData = Object.values(data.proportion.meaning)[0]
+      .map(item => ({name: item.meaning, value: item.proportion}))
+      .filter(item => item.value !== 100);
+  }
+  const echartOption: EChartsOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    series: [
+      {
+        name: '义项比例',
+        type: 'pie',
+        radius: '55%',
+        center: ['50%', '50%'],
+        data: meaningProportionData,
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        },
+        label: {
+          show: true,
+          position: 'outside', // 标签显示在扇形的外侧
+          textStyle: {
+            fontSize: 18
+          }
+        }
+      }
+    ]
+  };
 
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
@@ -52,10 +95,12 @@ export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
           </div>
         </DataCard>
         {/* 义项比例 */}
-        <DataCard title="义项比例" showMoreButton={false} isLoading={isLoading}>
-          {/* TODO 饼状图或者条形图 */}
-          <div className="w-full h-40 rounded-md bg-gradient-to-tr from-gray-600 to-gray-300 text-center">To Implement</div>
-        </DataCard>
+        {
+          meaningProportionData &&
+          <DataCard title="义项比例" showMoreButton={false} isLoading={isLoading}>
+            <ReactEcharts option={echartOption} />
+          </DataCard>
+        }
         {/* 词源 */}
         {
           data?.etymology &&
