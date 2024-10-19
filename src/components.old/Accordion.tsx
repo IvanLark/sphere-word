@@ -13,7 +13,7 @@ export default function Accordion({ title, child, titleColor = 'black', bgColor 
 	const [isOpen, setIsOpen] = React.useState(false);
 	return (
 		// <div className={`w-full rounded-3xl overflow-hidden ${childClass}`} onClick={() => { if (!isOpen) setIsOpen(true) }}>
-		// 	<p className={`w-full p-4 pb-2 relative text-2xl font-bold rounded-3xl overflow-hidden ${titleClass} `} onClick={() => setIsOpen(!isOpen)}>{title}<span className={`absolute right-8 text-3xl font-bold transition-transform ${isOpen ? '-rotate-90' : ''}`}>&lt;</span></p>
+		// 	<p className={`w-full p-4 pb-2 relative text-2xl fonts-bold rounded-3xl overflow-hidden ${titleClass} `} onClick={() => setIsOpen(!isOpen)}>{title}<span className={`absolute right-8 text-3xl fonts-bold transition-transform ${isOpen ? '-rotate-90' : ''}`}>&lt;</span></p>
 		// 	<div className={` px-4 p-4 text-ellipsis transition-all duration-300 ${isOpen ? 'max-h-screen' : ' h-0'}`} style={{ height: isOpen ? `${child.offsetHeight}px` : '0' }}>{child}</div>
 		// 	{/* <child className={`text-ellipsis transition-all ${isOpen ? '' : 'max-h-6'} ${childClass}`} /> */}
 		// 	{/* //dtd @IvanLark 因为用了child无法使用text-ellipsis，所以擅自主张加了这种效果，看看如何 */}
@@ -24,7 +24,7 @@ export default function Accordion({ title, child, titleColor = 'black', bgColor 
 			<AccordionSummary
 				expandIcon={<ExpandMoreRounded />}
 				style={{ color: titleColor, fontWeight: 'bold', borderRadius: '10px' }}
-				// className={`p-4 pb-2 relative text-2xl font-bold rounded-3xl overflow-hidden ${titleClass} `}
+				// className={`p-4 pb-2 relative text-2xl fonts-bold rounded-3xl overflow-hidden ${titleClass} `}
 				onClick={() => setIsOpen(!isOpen)}
 			>
 				{title}

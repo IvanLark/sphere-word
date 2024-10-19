@@ -2,7 +2,7 @@ import { useState } from "react";
 import QueryGraph from "./graph";
 import QueryData from "./data";
 import { Edge, Node } from "./types.ts";
-import QueryHeader from "./graph/QueryHeader.tsx";
+import QueryHeader from "./QueryHeader.tsx";
 
 /**
  * 单词查询页面
@@ -56,7 +56,7 @@ export default function Query() {
   }
 
   // 处理单词数据页面中点击单词事件
-  function handleSkipWord(newWord: string, relationType: string, relationLabel: string = relationType): void {
+  function handleSkipWordFromRelation(newWord: string, relationType: string, relationLabel: string = relationType): void {
     // 添加nodes和edge
     addNodesAndEdges([{
       id: getNodeId('Word', newWord),
@@ -74,25 +74,25 @@ export default function Query() {
     setCurWord(newWord);
   }
 
-  function handleSearch(searchWord: string) {
+  function handleSkipWord(newWord: string) {
     // 添加nodes和edge
     addNodesAndEdges([{
-      id: getNodeId('Word', searchWord),
-      key: searchWord,
+      id: getNodeId('Word', newWord),
+      key: newWord,
       type: 'Word',
-      label: searchWord
+      label: newWord
     } as Node], [])
     // 设置当前查询单词
-    setCurWord(searchWord);
+    setCurWord(newWord);
   }
 
   // 单词查询页面
   return (
     <div className="w-screen h-[calc(100vh-100px)] ">
-      <QueryHeader word={curWord} handleSearch={handleSearch}></QueryHeader>
-      <QueryGraph word={curWord} history={history}></QueryGraph>
+      <QueryHeader word={curWord} handleSkipWord={handleSkipWord}></QueryHeader>
+      <QueryGraph word={curWord} history={history} handleSkipWord={handleSkipWord}></QueryGraph>
       {/* <div className="w-screen h-[calc(100vh-100px)] fixed bg-gradient-to-tr from-yellow-400 to-yellow-200"><div className="w-screen text-center text-5xl">QueryGraph</div><button className="btn-scale btn-grey px-4 py-2 m-auto">Test Click</button></div> */}
-      <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
+      <QueryData word={curWord} handleSkipWord={handleSkipWordFromRelation}></QueryData>
     </div>
   );
 }

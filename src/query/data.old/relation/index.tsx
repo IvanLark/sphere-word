@@ -36,7 +36,7 @@ export default function QueryDataRelation({ word }: { word: string }) {
         {/* <div className="flex"> */}
         {/* <div className="flex-1 flex flex-col">
             <div className="">
-              <span className="text-5xl text-green-700 font-bold">{word}</span>
+              <span className="text-5xl text-green-700 fonts-bold">{word}</span>
               <span className="ml-3 text-sm text-gray-400">【{wordRelation.data?.tags.basic.slice(0, 3).join(', ')}】</span>
             </div>
             <div className="flex items-center gap-8 mt-5 ml-2">
@@ -45,14 +45,14 @@ export default function QueryDataRelation({ word }: { word: string }) {
             </div>
             <div className="w-full h-5"></div>
             <div className="w-full  mt-5">
-              <span className="font-bold text-lime-400">最简释义: </span>
-              <span className="font-bold">{wordRelation.data?.simpleMeaning}</span>
+              <span className="fonts-bold text-lime-400">最简释义: </span>
+              <span className="fonts-bold">{wordRelation.data?.simpleMeaning}</span>
             </div>
           </div> */}
         {/* //td @IvanLark 这里按html的是270px但是和设计图比感觉太大了不知道具体数值 */}
         {/* <div className="size-[200px] rounded-full bg-white shadow-xl flex items-center justify-center"> */}
         {/* // td @IvanLark 这个其实不太知道是什么东西 */}
-        {/* <span className="text-xl font-bold">义项比例</span> */}
+        {/* <span className="text-xl fonts-bold">义项比例</span> */}
         {/* </div> */}
         {/* </div> */}
         <div className="w-full p-4 relative bg-yellow-200 rounded-3xl shadow-lg shadow-blue-300">
@@ -81,7 +81,7 @@ export default function QueryDataRelation({ word }: { word: string }) {
         <Accordion title="短语" child={wordRelation.data?.Phrase.slice(0, 10).map((phrase, index) => <li key={index}>{phrase.phrase} {phrase.meaning}</li>)} titleColor="rgb(132,205,22)" bgColor="rgb(240,240,240)" />
         <Accordion title="固定搭配" child={wordRelation.data?.Collocation.map((colect, index) =>
           <div key={index} className="flex">
-            {/* <div className="p-3 font-bold"><span className="m-auto">{colect.collocation}</span></div> */}
+            {/* <div className="p-3 fonts-bold"><span className="m-auto">{colect.collocation}</span></div> */}
             <div className="p-3 font-bold">{colect.collocation}</div>
             <ul className="border-l-2 border-gray-500 flex-1 my-3">
               {colect.phrases.slice(0, 10).map((phrase, index) => <li key={index} className="ml-2">{phrase.phrase} {phrase.translation}</li>)}
