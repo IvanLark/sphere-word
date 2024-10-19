@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "allowSyntheticDefaultImports": true,    // that is probably the important one
+    "esModuleInterop": true,                 // this also
   },
   "files": [],
   "references": [

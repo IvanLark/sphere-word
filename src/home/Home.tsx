@@ -1,4 +1,3 @@
-import * as React from 'react';
 import HomeNaviTab, { HomeNaviTabProps } from './HomeNaviTab';
 export default function Home() {
 	const tabs: HomeNaviTabProps[] = [
@@ -11,10 +10,10 @@ export default function Home() {
 	]
 	return (
 		<div className="w-screen h-screen relative">
-			<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4">
+			<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+			 flex flex-col items-center gap-4">
 				{tabs.map((tab, index) => <HomeNaviTab key={index} {...tab} />)}
 			</div>
 		</div>
-
-	)
+	);
 }

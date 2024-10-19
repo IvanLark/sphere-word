@@ -5,7 +5,6 @@ import DiscreteTabs from "../components/tabs/DiscreteTabs.tsx";
 import {ButtonItem} from "../components/item/ButtonItem.tsx";
 import ListItem from "../components/item/ListItem.tsx";
 import AccordionItem from "../components/item/AccordionItem.tsx";
-import {Edge, Node} from "../../types.ts";
 
 /**
  * 单词关系页面
