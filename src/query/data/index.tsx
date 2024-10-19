@@ -27,7 +27,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   /* 请求失败时 */
   if (isError) {
     toast('无法获取单词数据', 'error')
-    // TODO Error时返回的页面
+    // td Error时返回的页面
     return (<></>);
   }
 
