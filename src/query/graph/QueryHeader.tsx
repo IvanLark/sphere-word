@@ -2,8 +2,8 @@ import { Close, HomeOutlined, SearchOutlined } from '@mui/icons-material';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import {BASE_URL} from "../../constants.ts";
-import {toast} from "../../utils/toast.ts";
+import { BASE_URL } from "../../constants.ts";
+import { toast } from "../../utils/toast.ts";
 
 interface ChatHeaderProps {
 	word: string;
@@ -42,12 +42,11 @@ export default function QueryHeader({ word, handleSearch }: ChatHeaderProps) {
 		<>
 			<div className="w-full h-16 p-2 fixed bg-transparent flex gap-2 overflow-hidden">
 				{/* 搜索按钮 */}
-				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
-													 flex items-center justify-center group"
-								onClick={handleSearchButtonClick}>
+				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black flex items-center justify-center group"
+					onClick={handleSearchButtonClick}>
 					{
 						searchInputBoxOpen && searchText.length === 0 ?
-						<Close style={{ fontSize: "40px" }} /> : <SearchOutlined style={{ fontSize: "40px" }} />
+							<Close style={{ fontSize: "40px" }} /> : <SearchOutlined style={{ fontSize: "40px" }} />
 					}
 				</button>
 				{/* 搜索框 */}
@@ -62,9 +61,8 @@ export default function QueryHeader({ word, handleSearch }: ChatHeaderProps) {
 					</span>
 				</div>
 				{/* 菜单按钮 */}
-				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
-													 flex items-center justify-center group"
-								onClick={() => navigate('/home')}>
+				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black flex items-center justify-center group"
+					onClick={() => navigate('/home')}>
 					<HomeOutlined style={{ fontSize: "40px" }} />
 				</button>
 			</div>

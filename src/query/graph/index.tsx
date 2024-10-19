@@ -1,7 +1,7 @@
 import { Edge, Node } from "../types.ts";
 import cytoscape from 'cytoscape';
 import cola from 'cytoscape-cola';
-import {useEffect} from "react";
+import { useEffect } from "react";
 
 /**
  * 单词图谱页面
@@ -37,7 +37,7 @@ export default function QueryGraph({ word, history }: { word: string, history: H
         'label': 'data(label)', // 使用节点的label属性作为标签
         'font-size': 15, // 设置字体大小为12px
         'padding': 10, // 设置节点内边距为10px
-        'width': function(node) {
+        'width': function (node) {
           // 动态计算节点的宽度
           const label = node.data('label');
           const fontSize = 15; // 字体大小
@@ -45,7 +45,7 @@ export default function QueryGraph({ word, history }: { word: string, history: H
           const labelWidth = label.length * fontSize; // 简单估计标签宽度
           return labelWidth + padding * 2; // 加上内边距
         },
-        'height': function() {
+        'height': function () {
           // 动态计算节点的高度
           const fontSize = 15; // 字体大小
           const padding = 10; // 内边距
@@ -74,7 +74,7 @@ export default function QueryGraph({ word, history }: { word: string, history: H
     }
   ];
 
-  cytoscape.use( cola );
+  cytoscape.use(cola);
 
   useEffect(() => {
     const cy = cytoscape({
@@ -88,7 +88,7 @@ export default function QueryGraph({ word, history }: { word: string, history: H
     });
 
     // 动态调整节点大小以适应标签长度
-    cy.nodes().forEach(function(node){
+    cy.nodes().forEach(function (node) {
       const labelText = node.data('label');
       const fontSize = node.style('font-size');
       const labelWidth = labelText.length * fontSize * 0.6; // 假设一个字符的平均宽度大约是字体大小的0.6倍
@@ -104,7 +104,7 @@ export default function QueryGraph({ word, history }: { word: string, history: H
 
     // 设置选中单词为黑色背景白色字
     // 遍历每个节点并更新样式
-    cy.nodes().forEach(function(node) {
+    cy.nodes().forEach(function (node) {
       if (node.data('label') === word) {
         node.style({
           'background-color': 'black', // 黑色背景
@@ -115,6 +115,6 @@ export default function QueryGraph({ word, history }: { word: string, history: H
   })
 
   return (
-    <div id='cy' className="w-screen h-[calc(100vh-100px)] fixed bg-white"></div>
+    <div id='cy' className="w-screen h-screen fixed bg-white"></div>
   );
 }

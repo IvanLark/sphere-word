@@ -16,8 +16,8 @@ interface QueryDataCoreProps {
 
 export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
   const definitionTabs: Record<string, Array<string>> = {}
-  if (data?.definition.cn) Object.assign(definitionTabs, {'中英': data.definition.cn});
-  if (data?.definition.en) Object.assign(definitionTabs, {'英英': data.definition.en});
+  if (data?.definition.cn) Object.assign(definitionTabs, { '中英': data.definition.cn });
+  if (data?.definition.en) Object.assign(definitionTabs, { '英英': data.definition.en });
 
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
@@ -44,12 +44,12 @@ export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
         </DataCard>
         {/* 词频 */}
         <DataCard title="词频" showMoreButton={false} isLoading={isLoading}>
-          <>
-            { data?.freq.examFrequency && <FrequencyBuilder title="真题" content={data?.freq.examFrequency.toString()} /> }
-            { data?.freq.bncFrequency && <FrequencyBuilder title="BNC" content={data?.freq.bncFrequency.toString()} /> }
-            { data?.freq.cocaFrequency && <FrequencyBuilder title="COCA" content={data?.freq.cocaFrequency.toString()} /> }
-            { data?.freq.collinsStar && <FrequencyBuilder title="柯林" content={data?.freq.collinsStar + '星'} /> }
-          </>
+          <div className="flex flex-wrap gap-1">
+            {data?.freq.examFrequency && <FrequencyBuilder title="真题" content={data?.freq.examFrequency.toString()} />}
+            {data?.freq.bncFrequency && <FrequencyBuilder title="BNC" content={data?.freq.bncFrequency.toString()} />}
+            {data?.freq.cocaFrequency && <FrequencyBuilder title="COCA" content={data?.freq.cocaFrequency.toString()} />}
+            {data?.freq.collinsStar && <FrequencyBuilder title="柯林" content={data?.freq.collinsStar + '星'} />}
+          </div>
         </DataCard>
         {/* 义项比例 */}
         <DataCard title="义项比例" showMoreButton={false} isLoading={isLoading}>
