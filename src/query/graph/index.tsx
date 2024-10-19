@@ -14,7 +14,13 @@ interface History {
   edges: Array<Edge>;
 }
 
-export default function QueryGraph({ word, history }: { word: string, history: History }) {
+interface QueryGraphProps {
+  word: string;
+  history: History;
+  handleSkipWord: (newWord: string) => void;
+}
+
+export default function QueryGraph({ word, history, handleSkipWord }: QueryGraphProps) {
   const elements = [
     ...history.nodes.map(nodeItem => ({ data: nodeItem })),
     ...history.edges.map(edgeItem => ({ data: edgeItem }))
@@ -111,6 +117,12 @@ export default function QueryGraph({ word, history }: { word: string, history: H
           'color': 'white' // 白色字
         });
       }
+    });
+
+    // 监听节点点击事件
+    cy.on('tap', 'node', function(event) {
+      const node = event.target; // 获取被点击的节点
+      handleSkipWord(node.data('key'));
     });
   })
 

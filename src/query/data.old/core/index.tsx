@@ -97,9 +97,9 @@ export default function QueryDataCore({ word }: { word: string }) {
         {/* // ** AI解析 */}
         <Accordion title="AI解析" child={<Markdown>{wordCoreData.data.ai.DictionaryByGPT4}</Markdown>} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' />
         {/* <div className="p-5 bg-blue-400 rounded-3xl shadow-xl text-white">
-          <h2 className="text-xl text-yellow-300 font-bold">AI解析</h2>
+          <h2 className="text-xl text-yellow-300 fonts-bold">AI解析</h2>
           <div className="w-full mt-4">
-            <h3 className="text-lg text-yellow-300 font-bold">分析词义</h3>
+            <h3 className="text-lg text-yellow-300 fonts-bold">分析词义</h3>
             <Markdown>{wordCoreData.data.ai.DictionaryByGPT4}</Markdown>
             <p className="">{wordCoreData.data.ai.DictionaryByGPT4}</p>
           </div>
@@ -108,7 +108,7 @@ export default function QueryDataCore({ word }: { word: string }) {
         {["例句", "助记", "单词新解", "同义词", "形近词", "搭配", "替换", "派生词", "词根", "词源"].map((title, index) =>
           <Accordion key={index} title={title} titleColor="rgb(253,224,71)" bgColor='rgb(96,160,250)' child={<p className="" dangerouslySetInnerHTML={{ __html: wordCoreData.data.ai.Eudic[title as AiEudicTypes] }}></p>} />
           // <div key={index} className="w-full mt-4">
-          //   <h3 className="text-lg text-yellow-300 font-bold">{title}</h3>
+          //   <h3 className="text-lg text-yellow-300 fonts-bold">{title}</h3>
           //   {/* // td @IvanLark 这个属性警告你危险了/汗 */}
 
           // </div>
