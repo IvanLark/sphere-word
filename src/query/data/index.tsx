@@ -4,7 +4,7 @@ import QueryDataRelation from "./relation";
 import QueryDataAi from "./ai";
 import { WordCard } from "./components/card/WordCard.tsx";
 import { useGetWordCore } from "../api.ts";
-import { toast } from "../../utils/toast.ts";
+import { toast } from "../../utils/toast.tsx";
 import * as React from "react";
 import ContinuousTabs from "./components/tabs/ContinuousTabs.tsx";
 
@@ -41,13 +41,13 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
   /* 请求中和请求成功用同一个JSX */
   return (
-    <div className="w-screen h-[calc(100vh-100px)] snap-y snap-mandatory overflow-y-auto">
+    <div className="w-screen h-[calc(100vh-64px)] snap-y snap-mandatory overflow-y-auto">
       {/* // !md在h-[100vh-100px]这里掉坑好多次了…… */}
       {/* <div className="w-screen h-[calc(100vh-280px)] bg-transparent snap-end pointer-events-none"></div> */}
       {/* // **snap占位div */}
       <div className="w-screen h-[calc(100vh-400px)] flex- bg-transparent
         snap-start pointer-events-none"></div>
-      {/* <div className="w-screen min-h-[calc(100vh-100px)] px- relative bg-gray-100 snap-start"> */}
+      {/* <div className="w-screen min-h-[calc(100vh-64px)] px- relative bg-gray-100 snap-start"> */}
       {/* <div className="relative"> */}
       {/* //!fc为什么不生效className="bg-gray-100 " md漏了relative呗背景覆盖了……*/}
       <div className="h-[300px relative bg-gray-100 snap-start">
@@ -68,7 +68,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
         {/* <div className="sticky"> */}
         <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={isPending}>
           {
-            (value) => <div className="min-h-[calc(100vh-100px)]">{value}</div>
+            (value) => <div className="min-h-[calc(100vh-64px)]">{value}</div>
           }
         </ContinuousTabs>
       </div>

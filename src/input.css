@@ -4,7 +4,8 @@
 
 /* //**----------------------------Gerneral----------------------------------------------------- */
 * {
-	@apply font-sans font-serif
+	font-family: 'CustomFont', sans-serif, serif;
+	/* @apply font-sans font-serif */
 }
 
 button {
@@ -57,6 +58,13 @@ li {
 /* !az这才解决…… */
 li>p {
 	@apply inline-block
+}
+
+/* //**----------------------------Fonts----------------------------------------------------- */
+@font-face {
+	font-family: 'CustomFont';
+	src: url('./assets/fonts/ALIMAMAFANGYUANTIVF-THIN.TTF') format('truetype');
+	/* !注意是truetype而不是ttf */
 }
 
 /* //**----------------------------Others----------------------------------------------------- */

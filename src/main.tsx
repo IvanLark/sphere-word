@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Query from "./query";
 import Chat from "./chat";
 import Home from './home/Home.tsx';
+import ToastContainer from './utils/toast.tsx';
 
 const queryClient = new QueryClient();
 
@@ -37,5 +38,6 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
+    <ToastContainer />
   </StrictMode>
 )

@@ -120,13 +120,13 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
     });
 
     // 监听节点点击事件
-    cy.on('tap', 'node', function(event) {
+    cy.on('tap', 'node', function (event) {
       const node = event.target; // 获取被点击的节点
       handleSkipWord(node.data('key'));
     });
   })
 
   return (
-    <div id='cy' className="w-screen h-screen fixed bg-white"></div>
+    <div id='cy' className="w-screen h-[calc(50vh)] fixed bg-white"></div>
   );
 }

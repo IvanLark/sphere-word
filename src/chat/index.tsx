@@ -5,8 +5,8 @@ import WordCard from "../components.old/WordCard";
 import { useNavigate } from "react-router-dom";
 import { ChatMessage } from "./types.ts";
 import axios from "axios";
-import {BASE_URL} from "../constants.ts";
-import {Result} from "../types.ts";
+import { BASE_URL } from "../constants.ts";
+import { Result } from "../types.ts";
 
 /**
  * AI对话页面
@@ -25,7 +25,7 @@ export default function Chat() {
     chatState: "empty",
     inputText: "",
     messages: [
-      {role: 'system', content: '你好呀我是你的AI助手!'}
+      { role: 'system', content: '你好呀我是你的AI助手!' }
     ]
   })
 
@@ -67,7 +67,7 @@ export default function Chat() {
           inputText: '',
           messages: [
             ...newChatData.messages,
-            {role: 'assistant', content: response.data.data}
+            { role: 'assistant', content: response.data.data }
           ]
         })
       })
@@ -88,7 +88,7 @@ export default function Chat() {
       <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex overflow-hidden">
         {/* 返回按钮 */}
         <button className="btn-trans size-16 rounded-md border-r-2 border-black group"
-                onClick={() => { navigate(-1) }}>
+          onClick={() => { navigate(-1) }}>
           <div className="btn-scale-xl"><ArrowBack style={{ fontSize: "40px" }} /></div>
         </button>
         {/* 中间 */}
@@ -98,7 +98,7 @@ export default function Chat() {
         </div>
         {/* 菜单按钮 */}
         <button className="btn-trans size-16 rounded-md border-l-2 border-black group">
-          <div className="btn-scale-xl" onClick={() => navigate('/home')}>
+          <div className="btn-scale-xl" onClick={() => navigate('/')}>
             <HomeOutlined style={{ fontSize: "40px" }} />
           </div>
         </button>
@@ -132,19 +132,19 @@ export default function Chat() {
         </div>
         {/* 输入框 */}
         <div className={`w-full h-12 flex gap-2 items-center`}>
-          <textarea className={`flex-1 h-12 p-3 rounded-md border-2 border-black hide-scrollbar 
+          <textarea className={`flex-1 h-12 p-3 rounded-md border-2 border-black hide-scrollbar
                       transition-all duration-300 ${promptTabOpen ? 'rounded-t-none' : ''}`}
-                    placeholder="有英语问题尽管问我~"
-                    disabled={chatData.chatState === "gernerating"}
-                    value={chatData.inputText}
-                    onChange={(event) => { handleInputTextChange(event.target.value) }}
-                    onKeyDown={(event) => { if (event.key === 'Enter') handleInputButtonClick() }}/>
+            placeholder="有英语问题尽管问我~"
+            disabled={chatData.chatState === "gernerating"}
+            value={chatData.inputText}
+            onChange={(event) => { handleInputTextChange(event.target.value) }}
+            onKeyDown={(event) => { if (event.key === 'Enter') handleInputButtonClick() }} />
           <button className="btn-scale-xl btn-common-hover size-12 rounded-md border-2 border-black"
-                  onClick={handleInputButtonClick}>
+            onClick={handleInputButtonClick}>
             {
               chatData.chatState === "empty" ? <Menu style={{ fontSize: "40px" }} /> :
-              chatData.chatState === "inputing" ? <Send style={{ fontSize: "40px" }} /> :
-              chatData.chatState === "gernerating" ? <StopCircle style={{ fontSize: "40px" }} /> : "出错了"
+                chatData.chatState === "inputing" ? <Send style={{ fontSize: "40px" }} /> :
+                  chatData.chatState === "gernerating" ? <StopCircle style={{ fontSize: "40px" }} /> : "出错了"
             }
           </button>
         </div>

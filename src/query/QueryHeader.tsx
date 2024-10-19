@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { BASE_URL } from "../constants.ts";
-import { toast } from "../utils/toast.ts";
+import { toast } from "../utils/toast.tsx";
 
 interface ChatHeaderProps {
 	word: string;
@@ -64,7 +64,7 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 				{/* 菜单按钮 */}
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
 													 flex items-center justify-center group"
-					onClick={() => navigate('/home')}>
+					onClick={() => navigate('/')}>
 					<HomeOutlined style={{ fontSize: "40px" }} />
 				</button>
 			</div>

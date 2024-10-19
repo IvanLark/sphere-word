@@ -14,7 +14,7 @@ export function WordCard({ word, data, isCollected, isLoading }: WordCardProps) 
 	return (
 		<div className="bg-white p-4 flex-1 flex flex-col gap2 snap-end">
 			<div className="flex items-center text-nowrap">
-				<span className={`font-bold flex-1 font-sans shrink ${word.length > 10 ? 'text-4xl' : 'text-6xl'}`}>{word}</span>
+				<span className={`font-bold flex-1 shrink ${word.length > 10 ? 'text-4xl' : 'text-6xl'}`}>{word}</span>
 				<button
 					className={`
 						btn-trans btn-scale px-3 py-1 m-2 text-lg rounded-full

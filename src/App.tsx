@@ -1,12 +1,11 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './MainView.css'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/ReactToastify.css'
 import { useEffect, useRef } from 'react';
-import { useGSAP } from '@gsap/react';
+// import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+export let routerRef: React.RefObject<HTMLDivElement>;
 function App() {
-  const routerRef = useRef(null);
+  routerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   // const gsap = useGSAP();
   useEffect(() => {
@@ -36,7 +35,6 @@ function App() {
           <button className="btn-scale btn-grey px-4 py-2 text-5xl" onClick={() => navigate(`/${route}`)} key={index}>{route}</button>
         )}
       </div> */}
-      <ToastContainer />
     </div>
   )
 }
