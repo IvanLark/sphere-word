@@ -62,7 +62,7 @@ export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
           <DataCard title="词源" showMoreButton={false} isLoading={isLoading}>
             {data.etymology.map((etymologyItem, index) =>
               <div key={index}>
-                <h3 className="px-2 py-1 border-2 border-black rounded-full font-bold w-fit">
+                <h3 className="px-2 py-1 my-2 border-2 border-black rounded-full font-bold w-fit">
                   {etymologyItem.meaning}
                 </h3>
                 <p className="">

@@ -100,12 +100,15 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
         data.Synset.slice(0, 5).map((synsetItem, index1) =>
           <AccordionItem key={index1} title={synsetItem.name} content={
             synsetItem.discriminations.map((diccriminationItem, index2) =>
-              <div key={index1 * 10 + index2} className="flex flex-wra gap-2 max-w-full overflow-hidden text-ellipsis">
-                <ButtonItem content={diccriminationItem.word} className="max-w-32 text-ellipsis overflow-hidden"
-                  onClick={() => { handleSkipWord(diccriminationItem.word, 'Synset', synsetItem.name) }}
-                />
-                {diccriminationItem.meaning}
-              </div>
+              <>
+                <div key={index1 * 10 + index2} className="flex flex-wra gap-2 max-w-full overflow-hidden text-ellipsis">
+                  <ButtonItem content={diccriminationItem.word} className="max-w-32 text-ellipsis overflow-hidden"
+                    onClick={() => { handleSkipWord(diccriminationItem.word, 'Synset', synsetItem.name) }}
+                  />
+                  {diccriminationItem.meaning}
+                </div>
+                {index2 < synsetItem.discriminations.length - 1 && <div className="w-full h-[1px] border-[1px] border-gray-300 border-dashed my-2"></div>}
+              </>
             )
           } />
         )

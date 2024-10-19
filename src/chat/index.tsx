@@ -85,14 +85,14 @@ export default function Chat() {
 
   return (
     <div className="w-screen h-screen flex flex-col">
-      <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex overflow-hidden">
+      <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex items-center overflow-hidden">
         {/* 返回按钮 */}
         <button className="btn-trans size-16 rounded-md border-r-2 border-black group"
           onClick={() => { navigate(-1) }}>
           <div className="btn-scale-xl"><ArrowBack style={{ fontSize: "40px" }} /></div>
         </button>
         {/* 中间 */}
-        <div className="flex-1">
+        <div className="flex-1 text-center text-3xl font-bold">
           {/* // td to fill */}
           Lingo AI
         </div>
