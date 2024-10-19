@@ -80,7 +80,7 @@ export interface WordCore {
   /**
    * 词源
    */
-  Etymology: Array<EtymologyItem>;
+  etymology: Array<EtymologyItem>;
 }
 
 interface SemanticRelationItem {
@@ -124,6 +124,27 @@ interface EtymologyItem {
   word: string;
   meaning: string;
   author: string;
+}
+
+interface TopicItem {
+  key: string;
+  from: string;
+  score: number;
+  name: string;
+  words: Array<string>;
+}
+
+interface DiscriminationItem {
+  word: string;
+  meaning: string;
+}
+
+interface SynsetItem {
+  key: string;
+  from: string;
+  score: number;
+  name: string;
+  discriminations: Array<DiscriminationItem>;
 }
 
 interface SetRelationItem {
@@ -175,11 +196,11 @@ export interface WordRelation {
   /**
    * 话题
    */
-  Topic: Array<SetRelationItem>;
+  Topic: Array<TopicItem>;
   /**
    * 近义词辨析
    */
-  Synset: Array<SetRelationItem>;
+  Synset: Array<SynsetItem>;
   /**
    * 母词/词根
    */
@@ -235,4 +256,3 @@ export interface Edge {
   source: string; // source节点的id
   target: string; // target节点的id
 }
-

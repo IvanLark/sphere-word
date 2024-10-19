@@ -9,15 +9,18 @@ import { Edge, Node } from "./types.ts";
  */
 export default function Query() {
   // 当前查询单词
-  const [curWord, setCurWord] = useState<string>('');
+  const [curWord, setCurWord] = useState<string>('make');
   // 历史查询单词
   const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>({
     nodes: [], edges: []
   });
 
+  function getNodeId(nodeType: string, nodeKey: string): string {
+    return `${nodeType}@${nodeKey}`;
+  }
+
   // 添加节点
   function addNode(node: Node): string {
-    node.id = `${node.type}@${node.key}`;
     let isExisted = false;
     history.nodes.forEach(nodeItem => {
       if (nodeItem.id === node.id) isExisted = true;
@@ -51,16 +54,23 @@ export default function Query() {
   }
 
   // 处理单词数据页面中点击单词事件
-  function handleSkipWord(word: string, nodes: Array<Node>, edges: Array<Edge>): void {
+  function handleSkipWord(newWord: string, relationType: string, relationLabel: string = relationType): void {
+    // 添加nodes和edge
+    const newWordId = addNode({
+      id: getNodeId('Word', newWord),
+      key: newWord,
+      type: 'Word',
+      label: newWord
+    } as Node);
+    addEdge({
+      id: '',
+      type: relationType,
+      label: relationLabel,
+      source: newWordId,
+      target: getNodeId('Word', curWord)
+    } as Edge);
     // 设置当前查询单词
-    setCurWord(word);
-    // 添加nodes和edges
-    nodes.forEach((nodeItem) => {
-      addNode(nodeItem);
-    })
-    edges.forEach((edgeItem) => {
-      addEdge(edgeItem);
-    })
+    setCurWord(newWord);
   }
 
   // 单词查询页面

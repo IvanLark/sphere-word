@@ -1,101 +1,150 @@
-import { useState } from "react";
-import { testWordRelation } from "../../../constants.ts";
-import TabCard, { listItemsType } from "../../../components/TabCard.tsx";
-import SubTab from "../../../components/SubTab.tsx";
-import WordCard from "../../../components/WordCard.tsx";
 import { toast } from "../../../utils/toast.ts";
 import { useGetWordRelation } from "../../api.ts";
-interface SemanticRelationItem {
-  word: string;
-  score: number;
-  from: Array<string>;
-  detail: object;
-}
+import DataCard from "../components/card/DataCard.tsx";
+import DiscreteTabs from "../components/tabs/DiscreteTabs.tsx";
+import {ButtonItem} from "../components/item/ButtonItem.tsx";
+import ListItem from "../components/item/ListItem.tsx";
+import AccordionItem from "../components/item/AccordionItem.tsx";
+import {Edge, Node} from "../../types.ts";
 
 /**
  * 单词关系页面
  * @param word
  * @constructor
  */
-export default function QueryDataRelation({ word }: { word: string }) {
-  // **tabs
-  const [relationTabIndex, setRelationTabIndex] = useState(0);
-  const [wordGroupTabIndex, setWordGroupTabIndex] = useState(0);
-  const [wordCollectionTabIndex, setWordCollectionTabIndex] = useState(0);
-  const [wordRelatedTabIndex, setWordRelatedTabIndex] = useState(0);
 
-  // td to delete
-  // word = 'make';
-  // let data: typeof testWordRelation | undefined;
-  const { isPending: not, isError, isSuccess, data, error } = useGetWordRelation(word)
-  if (isError) toast('无法获取单词数据', 'error')
-  const isPending = true;
+interface QueryDataRelationProps {
+  word: string;
+  handleSkipWord: (newWord: string, relationType: string, relationLabel?: string) => void;
+}
 
-  // const [wordRelationTabIndex, setWordRelationTabIndex] = useState(0);
-  // function wordListBuilder(title: string, wordDataList: SemanticRelationItem[] | undefined) {
-  //   return (<>
-  //     <h2 className="text-lg">{title}</h2>
-  //     {wordDataList ? wordDataList.map((word, index) => <li key={index}>{word.word}</li>) : <p>暂无数据</p>}
-  //   </>
-  //   )
-  // }
-  function wordRelationListBuilder(words?: string[]) {
-    return (
-      <div className="flex flex-wrap gap-2">
-        {words?.map((word, index) => <WordCard key={index} word={word} />)}
-      </div>
-    )
+export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRelationProps) {
+  const { isPending, isError, isSuccess, data, error } = useGetWordRelation(word)
+
+  if (isError) {
+    toast('无法获取单词数据', 'error');
+    // TODO 错误响应页面
+    return (<></>);
   }
+
+  // 语义关系Tabs
+  const semanticTabs: Record<string, Array<string>> = {};
+  if (data?.Synonym) Object.assign(semanticTabs, {'同义': data.Synonym.slice(0,10).map(item => item.word)});
+  if (data?.Similar) Object.assign(semanticTabs, {'近义': data.Similar.slice(0,10).map(item => item.word)});
+  if (data?.Antonym) Object.assign(semanticTabs, {'反义': data.Antonym.slice(0,10).map(item => item.word)});
+  if (data?.RelatedTo) Object.assign(semanticTabs, {'相关': data.RelatedTo.slice(0,10).map(item => item.word)});
+  if (data?.ClassOf) Object.assign(semanticTabs, {'上位': data.ClassOf.slice(0,10).map(item => item.word)});
+  if (data?.InstanceOf) Object.assign(semanticTabs, {'下位': data.InstanceOf.slice(0,10).map(item => item.word)});
+
+  // 表达关系Tabs
+  const expressionTabs: Record<string, JSX.Element|JSX.Element[]> = {};
+  if (data?.Phrase) {
+    Object.assign(expressionTabs, {
+      '短语':
+        data.Phrase.slice(0,10).map((item, index) =>
+          <ListItem key={index} index={index} content={`${item.phrase} | ${item.meaning}`}/>
+        )
+    })
+  }
+  if (data?.Example) {
+    Object.assign(expressionTabs, {
+      '例句':
+        data.Example.slice(0,10).map((item, index) =>
+          <ListItem key={index} index={index} content={
+            <>
+              <p>{item.example}</p>
+              <p>{item.translation}</p>
+            </>
+          }/>
+        )
+    })
+  }
+  if (data?.Collocation) {
+    const collocationTabs: Record<string, Array<string>> = {};
+    data.Collocation.forEach(collocationItem => {
+      Object.assign(collocationTabs, {
+        // 用 [] 包裹键名，ES6
+        [collocationItem.collocation]:
+          collocationItem.phrases.map(phraseItem => `${phraseItem.phrase} | ${phraseItem.translation}`)
+      });
+    });
+    Object.assign(expressionTabs, {
+      '搭配': <>
+        <div className="w-full h-[1px] bg-black mb-2">{/* 留空 */}</div>
+        <DiscreteTabs<Array<string>> tabs={collocationTabs} isLoading={isPending}>
+          {(_, value) => value.map((phrase, index) => <ListItem index={index} content={phrase}/>)}
+        </DiscreteTabs>
+      </>
+    });
+  }
+
+  const setTabs: Record<string, Array<JSX.Element>> = {};
+  if (data?.Topic) {
+    Object.assign(setTabs, {
+      '话题':
+        data.Topic.slice(0,5).map((topicItem, index1) =>
+          <AccordionItem key={index1} title={topicItem.name} content={
+            <div className="flex flex-wrap gap-2">
+              {topicItem.words.map((relatedWord, index2) =>
+                <ButtonItem key={index1*10 + index2} content={relatedWord}
+                            onClick={() => { handleSkipWord(relatedWord, 'Topic', topicItem.name) }}
+                />
+              )}
+            </div>
+          }/>
+        )
+    })
+  }
+  if (data?.Synset) {
+    Object.assign(setTabs, {
+      '近义词辨析':
+        data.Synset.slice(0,5).map((synsetItem, index1) =>
+          <AccordionItem key={index1} title={synsetItem.name} content={
+            synsetItem.discriminations.map((diccriminationItem, index2) =>
+              <div key={index1*10 + index2} className="flex flex-wra gap-2 max-w-full overflow-hidden text-ellipsis">
+                <ButtonItem content={diccriminationItem.word} className="max-w-32 text-ellipsis overflow-hidden"
+                            onClick={() => { handleSkipWord(diccriminationItem.word, 'Synset', synsetItem.name) }}
+                />
+                {diccriminationItem.meaning}
+              </div>
+            )
+          }/>
+        )
+    })
+  }
+
   return (
     <div className="w-full rounded-b-xl bg-white p-4">
       <div className="flex flex-col gap-5">
-        <TabCard tabs={['同义', '近义', '反义', '相关', '上位', '下位']} tabIndex={relationTabIndex} setTabIndex={setRelationTabIndex} loading={isPending} >
-          {/* // td @IvanLark 数据结构可能有误 */}
-          {relationTabIndex === 0 ? wordRelationListBuilder(data?.Antonym.slice(0, 10).map(ant => ant.word)) :
-            relationTabIndex === 1 ? wordRelationListBuilder(data?.Synset.slice(0, 10).map(sim => sim.key)) :
-              relationTabIndex === 2 ? wordRelationListBuilder(data?.Antonym.slice(0, 10).map(opp => opp.word)) :
-                relationTabIndex === 3 ? wordRelationListBuilder(data?.RelatedTo.slice(0, 10).map(rel => rel.word)) :
-                  relationTabIndex === 4 ? wordRelationListBuilder(data?.InstanceOf.slice(0, 10).map(ins => ins.word)) :
-                    relationTabIndex === 10 ? wordRelationListBuilder(data?.InstanceOf.slice(0, 10).map(sub => sub.word)) : <></>
-          }
-        </TabCard>
-        <TabCard tabs={['短语', '例句', '搭配']} tabIndex={wordGroupTabIndex} setTabIndex={setWordGroupTabIndex} loading={isPending} type={wordGroupTabIndex === 2 ? 'none' : 'list'} listItems={
-          wordGroupTabIndex === 0 ? data?.Phrase.slice(0, 5).map(phrase => `${phrase.phrase} | ${phrase.meaning}`) :
-            wordGroupTabIndex === 1 ? data?.Example.slice(0, 5).map(example =>
-              <>
-                <p>{example.example}</p>
-                <p>{example.translation}</p>
-              </>
-            ) : undefined} >
-          {wordGroupTabIndex === 2 && <>
-            <div className="w-full h-[1px] bg-black mb-2"></div>
-            <SubTab titles={data?.Collocation.map(colect => colect.collocation)} tabIndex={wordCollectionTabIndex} setTabIndex={setWordCollectionTabIndex} />
-            {data?.Collocation[wordCollectionTabIndex].phrases.map((phrase, index) =>
-              wordCollectionTabIndex === index && <p className="">{phrase.phrase} | {phrase.translation}</p>
-            )}
-          </>}
-        </TabCard>
-        <TabCard tabs={['话题', '近义词辨析']} tabIndex={wordRelatedTabIndex} setTabIndex={setWordRelatedTabIndex} loading={isPending} type="accordion"
-          listItems={wordRelatedTabIndex === 0 ? data?.Topic.slice(0, 5).map(topic => {
-            return {
-              title: topic.key,
-              content: [
+        {/* 语义关系 */}
+        <DataCard title='语义关系' showMoreButton={true} isLoading={isPending}>
+          <DiscreteTabs<Array<string>> tabs={semanticTabs} isLoading={isPending}>
+            {
+              (tabName, value) =>
                 <div className="flex flex-wrap gap-2">
-                  {Array(5).fill(0).map((_v, index) =>
-                    // !注意不能用数组的index不然key都相同会出现切换tab元素不断增加的bug
-                    <WordCard key={index} word={topic.key.slice(0, 2)} />)}
+                  {value.map((relatedWord, index) =>
+                    <ButtonItem key={index} content={relatedWord}
+                      onClick={() => { handleSkipWord(relatedWord, tabName) }}
+                    />
+                  )}
                 </div>
-              ]
-            } as listItemsType
-          }) :
-            data?.Synset.slice(0, 5).map(synset => {
-              return {
-                title: synset.key,
-                // dtd 这里元素数量有点问题额这能bug……
-                // td @IvanLark 这里数据不准确，换行可能存在问题
-                content: Array(5).fill(0).map((_v, index) => <div key={index} className="flex flex-wra gap-2 max-w-full overflow-hidden text-ellipsis"><WordCard word={synset.key.slice(0, 5)} className="max-w-32 text-ellipsis overflow-hidden" />{synset.key}</div>)
-              }
-            })} />
+            }
+          </DiscreteTabs>
+        </DataCard>
+
+        {/* 表达关系 */}
+        <DataCard title='表达关系' showMoreButton={true} isLoading={isPending}>
+          <DiscreteTabs<JSX.Element|JSX.Element[]> tabs={expressionTabs} isLoading={isPending}>
+            { (_, value) => value }
+          </DiscreteTabs>
+        </DataCard>
+
+        {/* 集合关系 */}
+        <DataCard isLoading={isPending} title='集合关系' showMoreButton={true}>
+          <DiscreteTabs<JSX.Element[]> tabs={setTabs} isLoading={isPending}>
+            { (_, value) => value }
+          </DiscreteTabs>
+        </DataCard>
       </div>
     </div>
   );
