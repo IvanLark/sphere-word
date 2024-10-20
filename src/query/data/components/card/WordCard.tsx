@@ -69,11 +69,9 @@ interface PronBuilderProps {
 	onClick: () => void;
 }
 
-// !!包装了一下这个以便map和拓展
 function PronBuilder({ title, pron, onClick }: PronBuilderProps) {
 	return <div className=" text-lg font-bold text-nowrap">{`${title} [${pron}]`}
 		<Tooltip title='点击播放发音' arrow>
-			{/* // td @IvanLark 这里MUI内暂时找不到合适的Icon你看看自己加个svg或者就用这个得了 */}
 			{/* //@ts-expect-error no title*/}
 			<button className='btn-scale-xl size-12' onClick={onClick}>
 				<Mic style={{ width: '35px', height: '35px' }} />

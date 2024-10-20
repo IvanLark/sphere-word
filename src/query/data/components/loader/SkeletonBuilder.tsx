@@ -10,5 +10,4 @@ export default function SkeletonBuilder({ loading, variant = 'rectangular', chil
 	return loading ?
 		<Skeleton variant={variant} animation="wave">{children}</Skeleton> :
 		<>{children}</>;
-	// !不能直接{children}不然即使是JSX.Element也不被认为是组件……
 }

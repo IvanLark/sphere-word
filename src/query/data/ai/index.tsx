@@ -17,7 +17,7 @@ export default function QueryDataAi({ word }: { word: string }) {
     Object.assign(pageTabs, {
       'AI解析2':
         <DiscreteTabs<string> tabs={data.Eudic} isLoading={false}>
-          {(_, value) => <div dangerouslySetInnerHTML={{__html: value}}></div>}
+          {(_, value) => <div dangerouslySetInnerHTML={{ __html: value }}></div>}
         </DiscreteTabs>
     });
   }

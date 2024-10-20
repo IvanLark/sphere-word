@@ -88,7 +88,6 @@ export default function Query() {
     scrollBackToTop();
   }
   function scrollBackToTop() {
-    // !这个可实现但硬切
     // document.getElementById('scroll-container-word')!.scrollTop = 0;
     document.getElementById('scroll-container-start')!.scrollIntoView({ behavior: 'smooth' });
 

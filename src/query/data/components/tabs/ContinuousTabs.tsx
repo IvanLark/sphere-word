@@ -27,7 +27,7 @@ export default function ContinuousTabs<T>({ tabs, children, isLoading }: Continu
 						className="rounded-md bg-black absolute pointer-events-none transition-all duration-300"
 						style={{
 							width: `${100 / Object.keys(tabs).length}%`,
-							height: '40px',
+							height: '2.5rem',
 							left: `${pickedIndex * 100 / Object.keys(tabs).length}%`
 						}}>
 					</div>

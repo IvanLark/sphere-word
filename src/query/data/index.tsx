@@ -1,4 +1,3 @@
-import { Edge, Node } from "../types.ts";
 import QueryDataCore from "./core";
 import QueryDataRelation from "./relation";
 import QueryDataAi from "./ai";
@@ -43,17 +42,10 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   return (
     <div className="w-full h-[calc(100vh-64px)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar">
       {/* id="scroll-container-word"  */}
-      {/* // !哇趣莫名其妙解决了，本来这里不加relative图谱按钮会在上面但是加了又无法点击 */}
-      {/* // !md在h-[100vh-100px]这里掉坑好多次了…… */}
-      {/* <div className="w-full h-[calc(100vh-280px)] bg-transparent snap-end pointer-events-none"></div> */}
       {/* // **snap占位div */}
       <div id="scroll-container-start" className="w-full h-[calc(100vh-400px)] flex- bg-transparent
         snap-start pointer-events-none"></div>
-      {/* <div className="w-screen min-h-[calc(100vh-6xkb 4px)] px- relative bg-gray-100 snap-start"> */}
-      {/* <div className="relative"> */}
-      {/* //!fc为什么不生效className="bg-gray-100 " md漏了relative呗背景覆盖了……*/}
       <div className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde">
-        {/* // !好像兜回到一开始的设计了…… */}
 
         {/* 分割 */}
         <div className="h-[300px] snap-end">
@@ -67,7 +59,6 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
         {/* Tabs */}
         {/* // td 暂时搞不了sticky…… */}
-        {/* <div className="sticky"> */}
         <div className="mx-2">
           <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={isPending}>
             {

@@ -1,4 +1,4 @@
-import { Add, Close, HomeOutlined, Minimize, Remove, SearchOutlined } from '@mui/icons-material';
+import { Add, Close, HomeOutlined, Remove, SearchOutlined } from '@mui/icons-material';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -46,7 +46,7 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 					onClick={handleSearchButtonClick}>
 					{
 						searchInputBoxOpen && searchText.length === 0 ?
-							<Close style={{ fontSize: "40px" }} /> : <SearchOutlined style={{ fontSize: "40px" }} />
+							<Close style={{ fontSize: "2.5rem" }} /> : <SearchOutlined style={{ fontSize: "2.5rem" }} />
 					}
 				</button>
 				{/* 搜索框 */}
@@ -64,16 +64,16 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
 													 flex items-center justify-center group"
 					onClick={() => navigate('/')}>
-					<HomeOutlined style={{ fontSize: "40px" }} />
+					<HomeOutlined style={{ fontSize: "2.5rem" }} />
 				</button>
 			</div>
 			<div className="w-full h-16"></div>
-			<div className="fixed bottom-[350px] left-2 z-10">
+			<div className="fixed bottom-[400px] left-2 z-10">
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold" onClick={() => navigate('/chat')}>AI</button>
 			</div>
-			<div className="fixed bottom-[350px] right-2 z-10 flex flex-col gap-2">
-				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold" onClick={() => {/** td to implement */ }}><Add style={{ fontSize: '48px' }} /></button>
-				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold" onClick={() => {/** td to implement */ }}><Remove style={{ fontSize: '48px' }} /></button>
+			<div className="fixed bottom-[400px] right-2 z-10 flex flex-col gap-2">
+				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold" onClick={() => {/** td to implement */ }}><Add style={{ fontSize: '3rem' }} /></button>
+				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold" onClick={() => {/** td to implement */ }}><Remove style={{ fontSize: '3rem' }} /></button>
 			</div>
 		</>
 	);
