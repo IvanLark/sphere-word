@@ -1,7 +1,7 @@
 import { ArrowBack, Close, HomeOutlined, Menu, Send, StopCircle } from "@mui/icons-material";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import ChatArea from "./chat_area/ChatArea";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { ChatMessage } from "./types.ts";
 import { BASE_URL } from "../constants.ts";
 import { SSE } from 'sse.js';
@@ -13,46 +13,57 @@ import { SSE } from 'sse.js';
 export default function Chat() {
   const navigate = useNavigate();
 
-  type ChatState = 'empty' | 'inputing' | 'gernerating' | 'error';
+  // chat
+  type ChatState = 'empty' | 'inputting' | 'generating' | 'error';
   interface ChatData {
     chatState: ChatState;
     inputText: string;
     messages: Array<ChatMessage>;
   }
-  const [chatData, setChatData] = useState<ChatData>({
+
+  const storedChatData = sessionStorage.getItem('ChatChatData');
+  const initChatData = storedChatData ? JSON.parse(storedChatData) : {
     chatState: "empty",
     inputText: "",
     messages: [
       { role: 'system', content: '你好呀我是你的AI助手!' }
     ]
-  })
+  };
+  const [chatData, setChatData] = useState<ChatData>(initChatData);
 
-  const [promptTabOpen, setPromptTabOpen] = useState(false);
-  const [promptTabElements, setPromptTabElements] = useState<string[]>(['make', 'case']);
-  const prompts = {
-    '生活场景': '$word在生活场景中有什么应用？',
-    '起源历史': '$word的起源历史是什么？',
-    '词根词缀': '$word的词根词缀是什么？',
-    '新闻事件': '最近关于$word有什么新闻事件？',
+  useEffect(() => {
+    sessionStorage.setItem('ChatChatData', JSON.stringify(chatData));
+  }, [chatData]);
 
-    // td to delete
-    '生活场景1': '$word在生活场景中有什么应用？',
-    '起源历史1': '$word的起源历史是什么？',
-    '词根词缀1': '$word的词根词缀是什么？',
-    '新闻事件1': '最近关于$word有什么新闻事件？',
-    '生活场景2': '$word在生活场景中有什么应用？',
-    '起源历史2': '$word的起源历史是什么？',
-    '词根词缀2': '$word的词根词缀是什么？',
-    '新闻事件2': '最近关于$word有什么新闻事件？',
-    '生活场景3': '$word在生活场景中有什么应用？',
-    '起源历史3': '$word的起源历史是什么？',
-    '词根词缀3': '$word的词根词缀是什么？',
-    '新闻事件3': '最近关于$word有什么新闻事件？',
-  }
+  // prompt
+  const location = useLocation();
+  const { objectsType = undefined, objects = [] } = location.state as { objectsType: |'单词'|'多个单词'|'句子'|undefined, objects: string[]|undefined } || {};
 
+  const [promptTabOpen, setPromptTabOpen] = useState(true);
+  const [promptTabElements, setPromptTabElements] = useState<string[]>(objects);
+
+  const getPrompts =
+    (type: string|undefined, props: string|string[]|[]) => {
+      switch (type) {
+        case '单词':
+          return {
+            '生活场景': `单词${props}在生活中有哪些应用场景呢？`,
+            '起源历史': `单词${props}的起源历史是什么？`,
+            '词根词缀': `单词${props}的词根词缀是什么？`,
+            '新闻事件': `最近或者历史上有哪些关于${props}的新闻事件？`
+          };
+        default:
+          return {
+            '如何学英语': '英语该如何学习呢？',
+            '如何背单词': '背单词好无聊，怎么背单词比较好'
+          };
+      }
+    }
+
+  // 事件
   function handleInputTextChange(text: string) {
     setChatData({
-      ...chatData, inputText: text, chatState: text.trim() === '' ? 'empty' : 'inputing'
+      ...chatData, inputText: text, chatState: text.trim() === '' ? 'empty' : 'inputting'
     });
   }
   /*
@@ -67,9 +78,9 @@ export default function Chat() {
     if (chatData.chatState === "empty") {
       setPromptTabOpen(!promptTabOpen);
     }
-    else if (chatData.chatState === "inputing") {
+    else if (chatData.chatState === "inputting") {
       const newChatData = {
-        chatState: 'gernerating',
+        chatState: 'generating',
         inputText: '',
         messages: [
           ...chatData.messages,
@@ -82,7 +93,7 @@ export default function Chat() {
         messages: newChatData.messages
       }).then(response => {
         setChatData({
-          chatState: 'inputing',
+          chatState: 'inputting',
           inputText: '',
           messages: [
             ...newChatData.messages,
@@ -103,23 +114,34 @@ export default function Chat() {
       source.addEventListener("message", (event: MessageEvent) => {
         responseContent += JSON.parse(event.data).content;
         setChatData({
-          chatState: 'inputing',
+          chatState: 'empty',
           inputText: '',
           messages: [
             ...newChatData.messages,
             { role: 'assistant', content: responseContent }
           ]
         })
+        // 自动滚动到最底部
+        const chatAreaDiv = document.getElementById('chat-area');
+        if (chatAreaDiv) {
+          chatAreaDiv.scrollTo({
+            top: chatAreaDiv.scrollHeight,
+            behavior: 'smooth' // 平滑滚动
+          });
+        }
       });
     }
-    //else if (chatState === "gernerating")
-    //  setChatState("inputing");
+    //else if (chatState === "generating")
+    //  setChatState("inputting");
   }
 
   function promptTabElementCard(word: string, key: number) {
     return <span key={key} className='px-2 border-2 border-black rounded-md shrink-0 '>
       {word}
-      <button title="delete" className="btn-scale btn-trans size-6 ml-2 rounded-full" onClick={() => setPromptTabElements(promptTabElements.filter(w => w !== word))}><Close /></button>
+      <button title="delete" className="btn-scale btn-trans size-6 ml-2 rounded-full"
+              onClick={() => setPromptTabElements(promptTabElements.filter(w => w !== word))}>
+        <Close />
+      </button>
     </span>
   }
 
@@ -148,41 +170,52 @@ export default function Chat() {
       {/* 输入部分 */}
       <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
         {/* 预设提示词部分 */}
-        <div className={`pb-2 flex gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar transition-all duration-300 ${promptTabOpen ? 'w-full h-9' : 'size-0'}`} onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
-          {Object.entries(prompts).map(([key, value]) =>
-            <span
+        <div className={`pb-2 flex gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar transition-all duration-300 
+          ${promptTabOpen ? 'w-full h-9' : 'size-0'}`}
+          onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
+          {Object.entries(getPrompts(objectsType, objects)).map(([key, value], index) =>
+            <span key={index} onClick={() => { handleInputTextChange(value); }}
               className={`btn-scale btn-trans h-fit px-2 border-2 border-black rounded-md overflow-hidden text-nowrap shrink-0`}
-              onClick={() => {
-                if (promptTabElements.length === 0) return
-                handleInputTextChange(value.replace("$word", promptTabElements.join(", ")));
-              }} >
+            >
               {key}
             </span>
           )}
         </div>
         {/* 针对对象 */}
-        <div className="flex gap-2">
-          <div className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`} style={{ transitionProperty: 'height' }} onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
-            <span className="">单词/句子: </span>
-            {promptTabElements.map((word, index) => promptTabElementCard(word, index))}
+        {
+          objectsType && objects.length !== 0 &&
+          <div className="flex gap-2">
+            <div
+              className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`}
+              style={{transitionProperty: 'height'}} onWheel={(event) => {
+              (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5
+            }}>
+              <span className="">{objectsType}: </span>
+              {promptTabElements.map((word, index) => promptTabElementCard(word, index))}
+            </div>
+            <div className={`w-12 shrink-0 border-2 border-transparent duration-300 ${promptTabOpen ? 'h-12' : 'h-0'}`}
+                 style={{transitionProperty: 'height'}}></div>
           </div>
-          <div className={`w-12 shrink-0 border-2 border-transparent duration-300 ${promptTabOpen ? 'h-12' : 'h-0'}`} style={{ transitionProperty: 'height' }}></div>
-        </div>
+        }
         {/* 输入框 */}
         <div className={`w-full h-12 flex gap-2 items-center`}>
           <textarea className={`flex-1 h-12 p-3 rounded-md border-2 border-black hide-scrollbar
                       transition-all duration-300 ${promptTabOpen ? 'rounded-t-none' : ''}`}
-            placeholder="有英语问题尽管问我~"
-            disabled={chatData.chatState === "gernerating"}
-            value={chatData.inputText}
-            onChange={(event) => { handleInputTextChange(event.target.value) }}
-            onKeyDown={(event) => { if (event.key === 'Enter') handleInputButtonClick() }} />
+                    placeholder="有英语问题尽管问我~"
+                    disabled={chatData.chatState === "generating"}
+                    value={chatData.inputText}
+                    onChange={(event) => {
+                      handleInputTextChange(event.target.value)
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') handleInputButtonClick()
+                    }}/>
           <button className="btn-scale-xl btn-common-hover size-12 rounded-md border-2 border-black"
-            onClick={handleInputButtonClick}>
+                  onClick={handleInputButtonClick}>
             {
               chatData.chatState === "empty" ? <Menu style={{ fontSize: "2.5rem" }} /> :
-                chatData.chatState === "inputing" ? <Send style={{ fontSize: "2.5rem" }} /> :
-                  chatData.chatState === "gernerating" ? <StopCircle style={{ fontSize: "2.5rem" }} /> : "出错了"
+                chatData.chatState === "inputting" ? <Send style={{ fontSize: "2.5rem" }} /> :
+                  chatData.chatState === "generating" ? <StopCircle style={{ fontSize: "2.5rem" }} /> : "出错了"
             }
           </button>
         </div>

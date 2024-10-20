@@ -1,8 +1,11 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import QueryGraph from "./graph";
 import QueryData from "./data";
 import { Edge, Node } from "./types.ts";
 import QueryHeader from "./QueryHeader.tsx";
+import axios from "axios";
+import {BASE_URL} from "../constants.ts";
+import {toast} from "../utils/toast.tsx";
 
 /**
  * 单词查询页面
@@ -10,11 +13,21 @@ import QueryHeader from "./QueryHeader.tsx";
  */
 export default function Query() {
   // 当前查询单词
-  const [curWord, setCurWord] = useState<string>('make');
+  const storedCurWord = sessionStorage.getItem('QueryCurWord');
+  const initCurWord = storedCurWord ? storedCurWord : 'make';
+  const [curWord, setCurWord] = useState<string>(initCurWord);
+
   // 历史查询单词
-  const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>({
+  const storedHistory = sessionStorage.getItem('QueryHistory');
+  const initHistory = storedHistory ? JSON.parse(storedHistory) : {
     nodes: [{ id: getNodeId('Word', 'make'), key: 'make', type: 'Word', label: 'make' }], edges: []
-  });
+  };
+  const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>(initHistory);
+
+  useEffect(() => {
+    sessionStorage.setItem('QueryHistory', JSON.stringify(history));
+    sessionStorage.setItem('QueryCurWord', curWord);
+  }, [curWord, history]);
 
   function getNodeId(nodeType: string, nodeKey: string): string {
     return `${nodeType}@${nodeKey}`;
@@ -71,8 +84,7 @@ export default function Query() {
       target: getNodeId('Word', newWord)
     } as Edge])
     // 设置当前查询单词
-    setCurWord(newWord);
-    scrollBackToTop();
+    pickNewWord(newWord);
   }
 
   function handleSkipWord(newWord: string) {
@@ -84,9 +96,25 @@ export default function Query() {
       label: newWord
     } as Node], [])
     // 设置当前查询单词
-    setCurWord(newWord);
-    scrollBackToTop();
+    pickNewWord(newWord);
   }
+
+  const client = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
+  function pickNewWord(newWord: string) {
+    client.get(`/search/check/${newWord}`).then(() => {
+      setCurWord(newWord);
+      scrollBackToTop();
+    }).catch(() => {
+      toast.error('不好意思，词库里没有这个词');
+    });
+  }
+
   function scrollBackToTop() {
     // document.getElementById('scroll-container-word')!.scrollTop = 0;
     document.getElementById('scroll-container-start')!.scrollIntoView({ behavior: 'smooth' });

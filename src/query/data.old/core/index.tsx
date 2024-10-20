@@ -23,7 +23,7 @@ export default function QueryDataCore({ word }: { word: string }) {
   const [detailedMeaningTabIndex, setDetailedMeaningTabIndex] = useState(0);
 
   return (
-    <div className="w-full rounded-b-xl bg-white p-4">
+    <div className="w-full rounded-b-xl bg-white p-2">
       <div className="flex flex-col gap-5">
         {/* // ** 单词 */}
         <div className="flex">

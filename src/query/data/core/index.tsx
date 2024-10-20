@@ -63,7 +63,7 @@ export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
   };
 
   return (
-    <div className="w-full rounded-b-xl bg-white p-4">
+    <div className="w-full rounded-b-xl bg-white p-2">
       <div className="flex flex-col gap-5">
         {/* 标签 */}
         <DataCard title='标签' showMoreButton={true} isLoading={isLoading}>

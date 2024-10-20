@@ -18,7 +18,7 @@ interface QueryDataRelationProps {
 }
 
 export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRelationProps) {
-  const { isPending, isError, isSuccess, data, error } = useGetWordRelation(word)
+  const { isPending, isError, data } = useGetWordRelation(word)
 
   if (isError) {
     toast.error('无法获取单词数据');
@@ -116,7 +116,7 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
   }
 
   return (
-    <div className="w-full rounded-b-xl bg-white p-4">
+    <div className="w-full rounded-b-xl bg-white p-2">
       <div className="flex flex-col gap-5">
         {/* 语义关系 */}
         <DataCard title='语义关系' showMoreButton={true} isLoading={isPending}>

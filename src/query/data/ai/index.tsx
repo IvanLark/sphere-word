@@ -2,6 +2,7 @@ import { useGetWordAi } from "../../api.ts";
 import DiscreteTabs from "../components/tabs/DiscreteTabs.tsx";
 import ContinuousTabs from "../components/tabs/ContinuousTabs.tsx";
 import DataCard from "../components/card/DataCard.tsx";
+import {toast} from "react-toastify";
 
 /**
  * AI解析页面
@@ -9,7 +10,12 @@ import DataCard from "../components/card/DataCard.tsx";
  * @constructor
  */
 export default function QueryDataAi({ word }: { word: string }) {
-  const { isPending, isError, isSuccess, data, error } = useGetWordAi(word);
+  const { isPending, isError, data } = useGetWordAi(word);
+
+  if (isError) {
+    toast.error('数据加载失败');
+    return (<></>);
+  }
 
   /* 子页面：AI解析1，AI解析2，AI解析3 */
   const pageTabs: Record<string, JSX.Element> = {};
@@ -28,7 +34,7 @@ export default function QueryDataAi({ word }: { word: string }) {
   }
 
   return (
-    <div className="w-full rounded-b-xl bg-white p-4">
+    <div className="w-full rounded-b-xl bg-white p-2">
       <ContinuousTabs<JSX.Element> tabs={pageTabs} isLoading={isPending}>
         {
           (value) =>

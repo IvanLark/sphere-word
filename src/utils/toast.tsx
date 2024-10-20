@@ -33,7 +33,7 @@ export default function ToastContainer() {
 	};
 
 	return (
-		<div className="w-full bottom-4 fixed flex gap-2 items-center flex-col-reverse">
+		<div className="w-full bottom-4 fixed flex gap-2 items-center flex-col-reverse z-50">
 			{
 				toastMsgs.map((msg, index) =>
 					<div key={index} className="w-fit px-2 py-1 rounded-md bg-white shadow-lg text-xl">
