@@ -1,10 +1,8 @@
 import { ArrowBack, Close, HomeOutlined, Menu, Send, StopCircle } from "@mui/icons-material";
 import { useState } from "react";
 import ChatArea from "./chat_area/ChatArea";
-import WordCard from "../components.old/WordCard";
 import { useNavigate } from "react-router-dom";
 import { ChatMessage } from "./types.ts";
-//import axios from "axios";
 import { BASE_URL } from "../constants.ts";
 import { SSE } from 'sse.js';
 
@@ -31,7 +29,26 @@ export default function Chat() {
 
   const [promptTabOpen, setPromptTabOpen] = useState(false);
   const [promptTabElements, setPromptTabElements] = useState<string[]>(['make', 'case']);
-  const prompts = { '生活场景': '$word在生活场景中有什么应用？', '起源历史': '$word的起源历史是什么？', '词根词缀': '$word的词根词缀是什么？', '新闻事件': '最近关于$word有什么新闻事件？' }
+  const prompts = {
+    '生活场景': '$word在生活场景中有什么应用？',
+    '起源历史': '$word的起源历史是什么？',
+    '词根词缀': '$word的词根词缀是什么？',
+    '新闻事件': '最近关于$word有什么新闻事件？',
+
+    // td to delete
+    '生活场景1': '$word在生活场景中有什么应用？',
+    '起源历史1': '$word的起源历史是什么？',
+    '词根词缀1': '$word的词根词缀是什么？',
+    '新闻事件1': '最近关于$word有什么新闻事件？',
+    '生活场景2': '$word在生活场景中有什么应用？',
+    '起源历史2': '$word的起源历史是什么？',
+    '词根词缀2': '$word的词根词缀是什么？',
+    '新闻事件2': '最近关于$word有什么新闻事件？',
+    '生活场景3': '$word在生活场景中有什么应用？',
+    '起源历史3': '$word的起源历史是什么？',
+    '词根词缀3': '$word的词根词缀是什么？',
+    '新闻事件3': '最近关于$word有什么新闻事件？',
+  }
 
   function handleInputTextChange(text: string) {
     setChatData({
@@ -110,19 +127,18 @@ export default function Chat() {
     <div className="w-screen h-screen flex flex-col">
       <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex items-center overflow-hidden">
         {/* 返回按钮 */}
-        <button className="btn-trans size-16 rounded-md border-r-2 border-black group"
+        <button title="Back" className="btn-trans size-16 rounded-md border-r-2 border-black group"
           onClick={() => { navigate(-1) }}>
-          <div className="btn-scale-xl"><ArrowBack style={{ fontSize: "40px" }} /></div>
+          <div className="btn-scale-xl"><ArrowBack style={{ fontSize: "2.5rem" }} /></div>
         </button>
         {/* 中间 */}
         <div className="flex-1 text-center text-3xl font-bold">
-          {/* // td to fill */}
           Lingo AI
         </div>
         {/* 菜单按钮 */}
-        <button className="btn-trans size-16 rounded-md border-l-2 border-black group">
+        <button title="Menu" className="btn-trans size-16 rounded-md border-l-2 border-black group">
           <div className="btn-scale-xl" onClick={() => navigate('/')}>
-            <HomeOutlined style={{ fontSize: "40px" }} />
+            <HomeOutlined style={{ fontSize: "2.5rem" }} />
           </div>
         </button>
       </div>
@@ -130,28 +146,27 @@ export default function Chat() {
       <ChatArea messages={chatData.messages} />
 
       {/* 输入部分 */}
-      {/* // ! 哇趣这里向上展开有点难实现……用了取巧的方式 */}
-      {/* // ! md想起来fixed以后又花了大力气才回到现在这个效果 */}
       <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
         {/* 预设提示词部分 */}
-        <div className={`py-1 flex gap-2 overflow-hidden transition-all duration-300 ${promptTabOpen ? 'w-full h-8' : 'size-0'}`}>
-          {Object.entries(prompts).map(([key, value]) => <WordCard key={key} word={key} className={`btn-scale btn-trans ${!promptTabOpen && 'border-0'}`} onClick={() => {
-            if (promptTabElements.length === 0) return
-            handleInputTextChange(value.replace("$word", promptTabElements.join(", ")));
-            setChatData({
-              ...chatData,
-              inputText: value.replace("$word", promptTabElements.join(", "))
-            })
-          }} />)}
+        <div className={`pb-2 flex gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar transition-all duration-300 ${promptTabOpen ? 'w-full h-9' : 'size-0'}`} onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
+          {Object.entries(prompts).map(([key, value]) =>
+            <span
+              className={`btn-scale btn-trans h-fit px-2 border-2 border-black rounded-md overflow-hidden text-nowrap shrink-0`}
+              onClick={() => {
+                if (promptTabElements.length === 0) return
+                handleInputTextChange(value.replace("$word", promptTabElements.join(", ")));
+              }} >
+              {key}
+            </span>
+          )}
         </div>
         {/* 针对对象 */}
         <div className="flex gap-2">
-          <div className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-hidden duration-300 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`} style={{ transitionProperty: 'height' }}>
+          <div className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`} style={{ transitionProperty: 'height' }} onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
             <span className="">单词/句子: </span>
             {promptTabElements.map((word, index) => promptTabElementCard(word, index))}
           </div>
           <div className={`w-12 shrink-0 border-2 border-transparent duration-300 ${promptTabOpen ? 'h-12' : 'h-0'}`} style={{ transitionProperty: 'height' }}></div>
-          {/* // !tailwind的duration动画曲线和默认easeinout不同……最好统一 */}
         </div>
         {/* 输入框 */}
         <div className={`w-full h-12 flex gap-2 items-center`}>
@@ -165,9 +180,9 @@ export default function Chat() {
           <button className="btn-scale-xl btn-common-hover size-12 rounded-md border-2 border-black"
             onClick={handleInputButtonClick}>
             {
-              chatData.chatState === "empty" ? <Menu style={{ fontSize: "40px" }} /> :
-                chatData.chatState === "inputing" ? <Send style={{ fontSize: "40px" }} /> :
-                  chatData.chatState === "gernerating" ? <StopCircle style={{ fontSize: "40px" }} /> : "出错了"
+              chatData.chatState === "empty" ? <Menu style={{ fontSize: "2.5rem" }} /> :
+                chatData.chatState === "inputing" ? <Send style={{ fontSize: "2.5rem" }} /> :
+                  chatData.chatState === "gernerating" ? <StopCircle style={{ fontSize: "2.5rem" }} /> : "出错了"
             }
           </button>
         </div>

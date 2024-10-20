@@ -131,6 +131,6 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
   })
 
   return (
-    <div id='cy' className="w-screen h-[calc(50vh)] fixed bg-white"></div>
+    <div id='cy' className="w-screen h-[calc(100vh-300px)] fixed bg-white"></div>
   );
 }

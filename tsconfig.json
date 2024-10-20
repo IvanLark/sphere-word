@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "strict": true,
-    "allowSyntheticDefaultImports": true,    // that is probably the important one
-    "esModuleInterop": true,                 // this also
-    "skipLibCheck": true // 打包时跳过库检查，从而加快打包速度
+    "allowSyntheticDefaultImports": true, // that is probably the important one
+    "esModuleInterop": true, // this also
+    "skipLibCheck": true, // 打包时跳过库检查，从而加快打包速度
   },
   "files": [],
   "references": [
