@@ -1,4 +1,3 @@
-import { Edge, Node } from "../types.ts";
 import QueryDataCore from "./core";
 import QueryDataRelation from "./relation";
 import QueryDataAi from "./ai";
@@ -26,7 +25,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
   /* 请求失败时 */
   if (isError) {
-    toast('无法获取单词数据', 'error')
+    toast.error('无法获取单词数据')
     // td Error时返回的页面
     return (<></>);
   }
@@ -46,18 +45,20 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
       {/* <div className="w-screen h-[calc(100vh-280px)] bg-transparent snap-end pointer-events-none"></div> */}
       {/* // **snap占位div */}
       <div className="w-screen h-[calc(100vh-400px)] flex- bg-transparent
-        snap-start pointer-events-none"></div>
+        snap-start pointer-events-none">
+      </div>
       {/* <div className="w-screen min-h-[calc(100vh-64px)] px- relative bg-gray-100 snap-start"> */}
       {/* <div className="relative"> */}
       {/* //!fc为什么不生效className="bg-gray-100 " md漏了relative呗背景覆盖了……*/}
       <div className="h-[300px relative bg-gray-100 snap-start">
         {/* // !好像兜回到一开始的设计了…… */}
 
-        {/* 分割 */}
         <div className="h-[300px] snap-end">
+          {/* 顶部装饰条 */}
           <div className="w-full h-8 relative">
             <div className="w-56 h-4 rounded-full bg-gray-200 absolute left-1/2
-              top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+              top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            </div>
           </div>
           {/* 顶部单词卡片 */}
           <WordCard word={word} data={data} isCollected={false} isLoading={isPending} />

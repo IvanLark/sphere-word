@@ -17,8 +17,6 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 	const [searchInputBoxOpen, setSearchInputBoxOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	//let blurInputBoxCloseTimer: NodeJS.Timeout | null = null;
-
 	function handleSearchButtonClick() {
 		if (!searchInputBoxOpen) { setSearchInputBoxOpen(true); inputRef.current?.focus(); }
 		else if (searchText.length === 0) setSearchInputBoxOpen(false);
@@ -34,10 +32,11 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 				setSearchInputBoxOpen(false);
 				handleSkipWord(searchText);
 			}).catch(() => {
-				toast('不好意思，词库里没有这个词', 'error');
+				toast.error('不好意思，词库里没有这个词');
 			})
 		}
 	}
+
 	return (
 		<>
 			<div className="w-full h-16 p-2 fixed bg-transparent flex gap-2 overflow-hidden">

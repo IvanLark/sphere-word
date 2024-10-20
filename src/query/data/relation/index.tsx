@@ -21,7 +21,7 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
   const { isPending, isError, isSuccess, data, error } = useGetWordRelation(word)
 
   if (isError) {
-    toast('无法获取单词数据', 'error');
+    toast.error('无法获取单词数据');
     // TODO 错误响应页面
     return (<></>);
   }
@@ -126,7 +126,7 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
                 <div className="flex flex-wrap gap-2">
                   {value.map((relatedWord, index) =>
                     <ButtonItem key={index} content={relatedWord}
-                      onClick={() => { handleSkipWord(relatedWord, tabName) }}
+                      onClick={() => { handleSkipWord(relatedWord, tabName); }}
                     />
                   )}
                 </div>

@@ -7,6 +7,7 @@ import Query from "./query";
 import Chat from "./chat";
 import Home from './home/Home.tsx';
 import ToastContainer from './utils/toast.tsx';
+import Test from "./test";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: '/chat',
         element: <Chat />
+      },
+      {
+        path: 'test',
+        element: <Test />
       }
     ]
   }
