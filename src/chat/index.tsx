@@ -31,7 +31,26 @@ export default function Chat() {
 
   const [promptTabOpen, setPromptTabOpen] = useState(false);
   const [promptTabElements, setPromptTabElements] = useState<string[]>(['make', 'case']);
-  const prompts = { '生活场景': '$word在生活场景中有什么应用？', '起源历史': '$word的起源历史是什么？', '词根词缀': '$word的词根词缀是什么？', '新闻事件': '最近关于$word有什么新闻事件？' }
+  const prompts = {
+    '生活场景': '$word在生活场景中有什么应用？',
+    '起源历史': '$word的起源历史是什么？',
+    '词根词缀': '$word的词根词缀是什么？',
+    '新闻事件': '最近关于$word有什么新闻事件？',
+
+    // td to delete
+    '生活场景1': '$word在生活场景中有什么应用？',
+    '起源历史1': '$word的起源历史是什么？',
+    '词根词缀1': '$word的词根词缀是什么？',
+    '新闻事件1': '最近关于$word有什么新闻事件？',
+    '生活场景2': '$word在生活场景中有什么应用？',
+    '起源历史2': '$word的起源历史是什么？',
+    '词根词缀2': '$word的词根词缀是什么？',
+    '新闻事件2': '最近关于$word有什么新闻事件？',
+    '生活场景3': '$word在生活场景中有什么应用？',
+    '起源历史3': '$word的起源历史是什么？',
+    '词根词缀3': '$word的词根词缀是什么？',
+    '新闻事件3': '最近关于$word有什么新闻事件？',
+  }
 
   function handleInputTextChange(text: string) {
     setChatData({
@@ -134,19 +153,26 @@ export default function Chat() {
       {/* // ! md想起来fixed以后又花了大力气才回到现在这个效果 */}
       <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
         {/* 预设提示词部分 */}
-        <div className={`py-1 flex gap-2 overflow-hidden transition-all duration-300 ${promptTabOpen ? 'w-full h-8' : 'size-0'}`}>
-          {Object.entries(prompts).map(([key, value]) => <WordCard key={key} word={key} className={`btn-scale btn-trans ${!promptTabOpen && 'border-0'}`} onClick={() => {
-            if (promptTabElements.length === 0) return
-            handleInputTextChange(value.replace("$word", promptTabElements.join(", ")));
-            setChatData({
-              ...chatData,
-              inputText: value.replace("$word", promptTabElements.join(", "))
-            })
-          }} />)}
+        <div className={`pb-2 flex gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar transition-all duration-300 ${promptTabOpen ? 'w-full h-9' : 'size-0'}`} onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
+          {/* // ! 再次注意这里是currentTarget */}
+          {Object.entries(prompts).map(([key, value]) =>
+            <span
+              className={`btn-scale btn-trans h-fit px-2 border-2 border-black rounded-md overflow-hidden text-nowrap shrink-0`}
+              onClick={() => {
+                if (promptTabElements.length === 0) return
+                handleInputTextChange(value.replace("$word", promptTabElements.join(", ")));
+                // setChatData({
+                //   ...chatData,
+                //   inputText: value.replace("$word", promptTabElements.join(", "))
+                // })
+              }} >
+              {key}
+            </span>
+          )}
         </div>
         {/* 针对对象 */}
         <div className="flex gap-2">
-          <div className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-hidden duration-300 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`} style={{ transitionProperty: 'height' }}>
+          <div className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`} style={{ transitionProperty: 'height' }} onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
             <span className="">单词/句子: </span>
             {promptTabElements.map((word, index) => promptTabElementCard(word, index))}
           </div>

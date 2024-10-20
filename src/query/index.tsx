@@ -72,6 +72,7 @@ export default function Query() {
     } as Edge])
     // 设置当前查询单词
     setCurWord(newWord);
+    scrollBackToTop();
   }
 
   function handleSkipWord(newWord: string) {
@@ -84,11 +85,22 @@ export default function Query() {
     } as Node], [])
     // 设置当前查询单词
     setCurWord(newWord);
+    scrollBackToTop();
+  }
+  function scrollBackToTop() {
+    // !这个可实现但硬切
+    // document.getElementById('scroll-container-word')!.scrollTop = 0;
+    document.getElementById('scroll-container-start')!.scrollIntoView({ behavior: 'smooth' });
+
+    // document.getElementById('scroll-container-graph')!.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // gsap.to(document.getElementById('scroll-container-graph')!, { y: 0, duration: 1, ease: 'power2.inOut' });
+    // 要插件……
   }
 
   // 单词查询页面
   return (
-    <div className="w-screen h-[calc(100vh-64px)] ">
+    <div className="w-screen h-[calc(100vh-64px)]">
       <QueryHeader word={curWord} handleSkipWord={handleSkipWord}></QueryHeader>
       <QueryGraph word={curWord} history={history} handleSkipWord={handleSkipWord}></QueryGraph>
       {/* <div className="w-screen h-[calc(100vh-64px)] fixed bg-gradient-to-tr from-yellow-400 to-yellow-200"><div className="w-screen text-center text-5xl">QueryGraph</div><button className="btn-scale btn-grey px-4 py-2 m-auto">Test Click</button></div> */}
