@@ -1,4 +1,4 @@
-import { Add, Close, HomeOutlined, Remove, SearchOutlined } from '@mui/icons-material';
+import { Add, ArrowForward, Close, HomeOutlined, Remove, SearchOutlined } from '@mui/icons-material';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -16,6 +16,8 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 	const [searchText, setSearchText] = useState('');
 	const [searchInputBoxOpen, setSearchInputBoxOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	const [autoCompleteList, setAutoCompleteList] = useState<string[]>([]);
 
 	function handleSearchButtonClick() {
 		if (!searchInputBoxOpen) { setSearchInputBoxOpen(true); inputRef.current?.focus(); }
@@ -36,10 +38,16 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 			})
 		}
 	}
+	function handleSearchInputChange(content: string) {
+		setSearchText(content);
+
+		// td to implement
+		setAutoCompleteList([...content])
+	}
 
 	return (
 		<>
-			<div className="w-full h-16 p-2 fixed bg-transparent flex gap-2 overflow-hidden">
+			<div className={`w-full  p-2 fixed z-10 bg-transparent flex gap-2 overflow-hidden ${searchInputBoxOpen ? '' : 'h-16'}`}>
 				{/* 搜索按钮 */}
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
 													 flex items-center justify-center group"
@@ -50,13 +58,20 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 					}
 				</button>
 				{/* 搜索框 */}
-				<div className="flex-1 text-3xl flex items-center">
-					<input ref={inputRef} type="text" placeholder="搜索单词..." className={`h-full border-black rounded-md duration-300 ${searchInputBoxOpen ? 'w-full px-2 border-2' : 'w-0'}`} style={{ transitionProperty: 'width,padding ', }} value={searchText}
-						onChange={(e) => setSearchText(e.target.value)}
-						onBlur={() => setSearchInputBoxOpen(false)}
-						onFocus={() => { inputRef.current?.select(); }}
-						onKeyDown={(event) => { if (event.key === 'Enter') { handleSearchButtonClick(); } }} />
-					<span className="flex-1  text-center overflow-hidden">
+				<div className="flex-1 text-3xl flex items-start bg-white">
+					<div className={`border-black rounded-md shadow-md overflow-hidden duration-300 ${searchInputBoxOpen ? 'w-full px-2 border-2' : 'w-0'}`} style={{ transitionProperty: 'width,padding ', }}>
+						<input ref={inputRef} type="text" placeholder="搜索单词..." className={`w-full h-full bg-transparent outline-none`} value={searchText}
+							onChange={(e) => handleSearchInputChange(e.target.value)}
+							onBlur={() => setSearchInputBoxOpen(false)}
+							onFocus={() => { inputRef.current?.select(); }}
+							onKeyDown={(event) => { if (event.key === 'Enter') { handleSearchButtonClick(); } }} />
+						{(searchInputBoxOpen ? autoCompleteList : []).slice(0, 5).map((word, index) =>
+							<div className={`btn-white w-full p-2 border-t-2 border-black flex ${index === 0 ? 'border-x-' : ''}`} onClick={() => {/** to implement */ }}>
+								<span className='flex-1'>{word}</span>
+								<ArrowForward fontSize='1rem' />
+							</div>)}
+					</div>
+					<span className="h-fit flex-1  text-center overflow-hidden">
 						{word}
 					</span>
 				</div>
