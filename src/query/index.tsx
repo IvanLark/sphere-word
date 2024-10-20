@@ -84,8 +84,6 @@ export default function Query() {
     } as Node], [])
     // 设置当前查询单词
     setCurWord(newWord);
-    // 滚动屏幕
-    //window.scrollTo(0, 10);
   }
 
   // 单词查询页面
