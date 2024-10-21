@@ -3,7 +3,7 @@ import { Skeleton } from '@mui/material';
 interface SkeletonBuilderProps {
 	loading: boolean;
 	variant?: 'text' | 'circular' | 'rectangular' | 'rounded'
-	children: JSX.Element | JSX.Element[];
+	children: JSX.Element | Array<JSX.Element|undefined|''>;
 }
 
 export default function SkeletonBuilder({ loading, variant = 'rectangular', children }: SkeletonBuilderProps): JSX.Element {

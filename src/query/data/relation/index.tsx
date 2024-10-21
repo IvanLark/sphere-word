@@ -119,34 +119,43 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
     <div className="w-full rounded-b-xl bg-white p-2">
       <div className="flex flex-col gap-5">
         {/* 语义关系 */}
-        <DataCard title='语义关系' showMoreButton={true} isLoading={isPending}>
-          <DiscreteTabs<Array<string>> tabs={semanticTabs} isLoading={isPending}>
-            {
-              (tabName, value) =>
-                <div className="flex flex-wrap gap-2">
-                  {value.map((relatedWord, index) =>
-                    <ButtonItem key={index} content={relatedWord}
-                      onClick={() => { handleSkipWord(relatedWord, tabName); }}
-                    />
-                  )}
-                </div>
-            }
-          </DiscreteTabs>
-        </DataCard>
+        {
+          semanticTabs && Object.keys(semanticTabs).length > 0 &&
+          <DataCard title='语义关系' showMoreButton={true} isLoading={isPending}>
+            <DiscreteTabs<Array<string>> tabs={semanticTabs} isLoading={isPending}>
+              {
+                (tabName, value) =>
+                  <div className="flex flex-wrap gap-2">
+                    {value.map((relatedWord, index) =>
+                      <ButtonItem key={index} content={relatedWord}
+                                  onClick={() => { handleSkipWord(relatedWord, tabName); }}
+                      />
+                    )}
+                  </div>
+              }
+            </DiscreteTabs>
+          </DataCard>
+        }
 
         {/* 表达关系 */}
-        <DataCard title='表达关系' showMoreButton={true} isLoading={isPending}>
-          <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs} isLoading={isPending}>
-            {(_, value) => value}
-          </DiscreteTabs>
-        </DataCard>
+        {
+          expressionTabs && Object.keys(expressionTabs).length > 0 &&
+          <DataCard title='表达关系' showMoreButton={true} isLoading={isPending}>
+            <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs} isLoading={isPending}>
+              {(_, value) => value}
+            </DiscreteTabs>
+          </DataCard>
+        }
 
         {/* 集合关系 */}
-        <DataCard isLoading={isPending} title='集合关系' showMoreButton={true}>
-          <DiscreteTabs<JSX.Element[]> tabs={setTabs} isLoading={isPending}>
-            {(_, value) => value}
-          </DiscreteTabs>
-        </DataCard>
+        {
+          setTabs && Object.keys(setTabs).length > 0 &&
+          <DataCard isLoading={isPending} title='集合关系' showMoreButton={true}>
+            <DiscreteTabs<JSX.Element[]> tabs={setTabs} isLoading={isPending}>
+              {(_, value) => value}
+            </DiscreteTabs>
+          </DataCard>
+        }
       </div>
     </div>
   );

@@ -68,37 +68,6 @@ export default function Query() {
     });
   }
 
-  // 处理单词数据页面中点击单词事件
-  function handleSkipWordFromRelation(newWord: string, relationType: string, relationLabel: string = relationType): void {
-    // 添加nodes和edge
-    addNodesAndEdges([{
-      id: getNodeId('Word', newWord),
-      key: newWord,
-      type: 'Word',
-      label: newWord
-    } as Node], [{
-      id: '',
-      type: relationType,
-      label: relationLabel,
-      source: getNodeId('Word', curWord),
-      target: getNodeId('Word', newWord)
-    } as Edge])
-    // 设置当前查询单词
-    pickNewWord(newWord);
-  }
-
-  function handleSkipWord(newWord: string) {
-    // 添加nodes和edge
-    addNodesAndEdges([{
-      id: getNodeId('Word', newWord),
-      key: newWord,
-      type: 'Word',
-      label: newWord
-    } as Node], [])
-    // 设置当前查询单词
-    pickNewWord(newWord);
-  }
-
   const client = axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -106,8 +75,40 @@ export default function Query() {
     }
   })
 
-  function pickNewWord(newWord: string) {
+  // 处理单词数据页面中点击单词事件
+  function handleSkipWordFromRelation(newWord: string, relationType: string, relationLabel: string = relationType): void {
     client.get(`/search/check/${newWord}`).then(() => {
+      // 添加nodes和edge
+      addNodesAndEdges([{
+        id: getNodeId('Word', newWord),
+        key: newWord,
+        type: 'Word',
+        label: newWord
+      } as Node], [{
+        id: '',
+        type: relationType,
+        label: relationLabel,
+        source: getNodeId('Word', curWord),
+        target: getNodeId('Word', newWord)
+      } as Edge])
+      // 选中新单词
+      setCurWord(newWord);
+      scrollBackToTop();
+    }).catch(() => {
+      toast.error('不好意思，词库里没有这个词');
+    });
+  }
+
+  function handleSkipWord(newWord: string) {
+    client.get(`/search/check/${newWord}`).then(() => {
+      // 添加nodes和edge
+      addNodesAndEdges([{
+        id: getNodeId('Word', newWord),
+        key: newWord,
+        type: 'Word',
+        label: newWord
+      } as Node], [])
+      // 选中当前单词
       setCurWord(newWord);
       scrollBackToTop();
     }).catch(() => {

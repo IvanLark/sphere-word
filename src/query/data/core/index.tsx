@@ -78,13 +78,16 @@ export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
           </div>
         </DataCard>
         {/* 释义 */}
-        <DataCard isLoading={isLoading}>
-          <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={isLoading}>
-            {(_, value) => value.map((meaning, index) =>
-              <ListItem key={index} index={index} content={meaning}></ListItem>
-            )}
-          </DiscreteTabs>
-        </DataCard>
+        {
+          Object.keys(definitionTabs).length > 0 &&
+          <DataCard isLoading={isLoading}>
+            <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={isLoading}>
+              {(_, value) => value.map((meaning, index) =>
+                <ListItem key={index} index={index} content={meaning}></ListItem>
+              )}
+            </DiscreteTabs>
+          </DataCard>
+        }
         {/* 词频 */}
         <DataCard title="词频" showMoreButton={false} isLoading={isLoading}>
           <div className="flex flex-wrap gap-1">

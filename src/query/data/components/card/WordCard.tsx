@@ -32,32 +32,54 @@ export function WordCard({ word, data, isCollected, isLoading }: WordCardProps) 
 			</div>
 			<SkeletonBuilder loading={isLoading}>
 				{/* 发音 */}
-				<div className="flex items-center gap-2	">
-					<PronBuilder title="英" pron={data?.pron.ukPron}
-						onClick={() => { new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${word}`).play(); }}
-					/>
-					<PronBuilder title="美" pron={data?.pron.usPron}
-						onClick={() => { new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${word}`).play(); }}
-					/>
-				</div>
+				{
+					data && data?.pron &&
+					<div className="flex items-center gap-2	">
+						{
+							data.pron?.ukPron &&
+							<PronBuilder title="英" pron={data.pron.ukPron}
+													 onClick={() => {
+														 new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${word}`).play();
+													 }}
+							/>
+						}
+						{
+							data.pron?.usPron &&
+							<PronBuilder title="美" pron={data.pron.usPron}
+													 onClick={() => {
+														 new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${word}`).play();
+													 }}
+							/>
+						}
+					</div>
+				}
 				{/* 意思 */}
-				<span className="font-bold">{data?.simpleMeaning}</span>
+				{
+					data && data?.simpleMeaning &&
+					<span className="font-bold">{data.simpleMeaning}</span>
+				}
 				{/* 标签 */}
 				{/* <span className="ml-3 text-lg ">【{tags.basic.slice(0, 3).join(', ')}】</span> */}
-				<div className="mt-2 flex gap-2 text-black">
-					{data?.tags.basic.slice(0, 3).map((tag, index) =>
-						<span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
+				{
+					data && data?.tags && data.tags?.basic &&
+					<div className="mt-2 flex gap-2 text-black">
+						{data.tags.basic.slice(0, 3).map((tag, index) =>
+								<span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
 							{tag}
 						</span>
-					)}
-				</div>
+						)}
+					</div>
+				}
 				{/* 变形 */}
-				<div className="mt-2 flex flex-wrap gap-2 text-sm">
-					{data && Object.entries(data?.exchange)
-						.map(([key, value]) => key + value)
-						.join(' | ')
-					}
-				</div>
+				{
+					data && data?.exchange &&
+					<div className="mt-2 flex flex-wrap gap-2 text-sm">
+						{Object.entries(data.exchange)
+							.map(([key, value]) => key + value)
+							.join(' | ')
+						}
+					</div>
+				}
 			</SkeletonBuilder>
 		</div>
 	);
@@ -69,7 +91,7 @@ interface PronBuilderProps {
 	onClick: () => void;
 }
 
-function PronBuilder({ title, pron, onClick }: PronBuilderProps) {
+function PronBuilder({title, pron, onClick}: PronBuilderProps) {
 	return <div className=" text-lg font-bold text-nowrap">{`${title} [${pron}]`}
 		<Tooltip title='点击播放发音' arrow>
 			{/* //@ts-expect-error no title*/}
