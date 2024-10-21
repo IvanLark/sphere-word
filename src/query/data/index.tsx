@@ -21,7 +21,7 @@ interface QueryDataProps {
 
 export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   // 单词core数据
-  const { isPending, isError, isSuccess, data, error } = useGetWordCore(word);
+  const { isPending, isError, data } = useGetWordCore(word);
 
   /* 请求失败时 */
   if (isError) {
@@ -33,7 +33,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   /* 子页面：单词详情，单词关系，AI解析，阅读材料 */
   type TabName = '单词详情' | '单词关系' | 'AI解析';
   const pageTabs: Record<TabName, React.ReactNode> = {
-    '单词详情': <QueryDataCore data={data} isLoading={isPending}></QueryDataCore>,
+    '单词详情': <QueryDataCore word={word} data={data} isLoading={isPending}></QueryDataCore>,
     '单词关系': <QueryDataRelation word={word} handleSkipWord={handleSkipWord}></QueryDataRelation>,
     'AI解析': <QueryDataAi word={word}></QueryDataAi>
   };

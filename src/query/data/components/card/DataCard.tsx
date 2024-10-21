@@ -8,7 +8,7 @@ interface DataCardProps {
 	children: JSX.Element|JSX.Element[];
 }
 
-export default function DataCard({title, showMoreButton = true, isLoading, children }: DataCardProps) {
+export default function DataCard({title, showMoreButton = false, isLoading, children }: DataCardProps) {
 	return (
 		isLoading ?
 		<Skeleton variant='rectangular' animation='wave' height={200} /> :

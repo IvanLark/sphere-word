@@ -5,6 +5,7 @@ import DiscreteTabs from "../components/tabs/DiscreteTabs.tsx";
 import { ButtonItem } from "../components/item/ButtonItem.tsx";
 import ListItem from "../components/item/ListItem.tsx";
 import AccordionItem from "../components/item/AccordionItem.tsx";
+import {useNavigate} from "react-router-dom";
 
 /**
  * 单词关系页面
@@ -18,6 +19,8 @@ interface QueryDataRelationProps {
 }
 
 export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRelationProps) {
+  const navigate = useNavigate();
+
   const { isPending, isError, data } = useGetWordRelation(word)
 
   if (isError) {
@@ -121,8 +124,9 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
         {/* 语义关系 */}
         {
           semanticTabs && Object.keys(semanticTabs).length > 0 &&
-          <DataCard title='语义关系' showMoreButton={true} isLoading={isPending}>
-            <DiscreteTabs<Array<string>> tabs={semanticTabs} isLoading={isPending}>
+          <DataCard isLoading={isPending}>
+            <DiscreteTabs<Array<string>> tabs={semanticTabs} isLoading={isPending}
+               title='语义关系' showMore={(tabName) => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
               {
                 (tabName, value) =>
                   <div className="flex flex-wrap gap-2">
@@ -140,8 +144,9 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
         {/* 表达关系 */}
         {
           expressionTabs && Object.keys(expressionTabs).length > 0 &&
-          <DataCard title='表达关系' showMoreButton={true} isLoading={isPending}>
-            <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs} isLoading={isPending}>
+          <DataCard isLoading={isPending}>
+            <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs} isLoading={isPending}
+               title='表达关系' showMore={(tabName) => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
               {(_, value) => value}
             </DiscreteTabs>
           </DataCard>
@@ -150,8 +155,9 @@ export default function QueryDataRelation({ word, handleSkipWord }: QueryDataRel
         {/* 集合关系 */}
         {
           setTabs && Object.keys(setTabs).length > 0 &&
-          <DataCard isLoading={isPending} title='集合关系' showMoreButton={true}>
-            <DiscreteTabs<JSX.Element[]> tabs={setTabs} isLoading={isPending}>
+          <DataCard isLoading={isPending}>
+            <DiscreteTabs<JSX.Element[]> tabs={setTabs} isLoading={isPending}
+              title='集合关系' showMore={(tabName) => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
               {(_, value) => value}
             </DiscreteTabs>
           </DataCard>

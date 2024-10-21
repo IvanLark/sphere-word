@@ -5,6 +5,7 @@ import ListItem from "../components/item/ListItem.tsx";
 import ReactEcharts, {EChartsOption} from 'echarts-for-react';
 import 'echarts/lib/chart/pie'; // 饼图
 import 'echarts/lib/component/tooltip';
+import {useNavigate} from "react-router-dom";
 
 /**
  * 单词详情页面
@@ -13,11 +14,14 @@ import 'echarts/lib/component/tooltip';
  */
 
 interface QueryDataCoreProps {
+  word: string;
   data: WordCore | undefined;
   isLoading: boolean;
 }
 
-export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
+export default function QueryDataCore({ word, data, isLoading }: QueryDataCoreProps) {
+  const navigate = useNavigate();
+
   const definitionTabs: Record<string, Array<string>> = {}
   if (data?.definition.cn) Object.assign(definitionTabs, { '中英': data.definition.cn });
   if (data?.definition.en) Object.assign(definitionTabs, { '英英': data.definition.en });
@@ -81,7 +85,8 @@ export default function QueryDataCore({ data, isLoading }: QueryDataCoreProps) {
         {
           Object.keys(definitionTabs).length > 0 &&
           <DataCard isLoading={isLoading}>
-            <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={isLoading}>
+            <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={isLoading}
+              showMore={() => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: '释义' } }) }}>
               {(_, value) => value.map((meaning, index) =>
                 <ListItem key={index} index={index} content={meaning}></ListItem>
               )}
