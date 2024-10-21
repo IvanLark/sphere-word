@@ -40,17 +40,24 @@ export default function Chat() {
   const { objectsType = undefined, objects = [] } = location.state as { objectsType: |'单词'|'多个单词'|'句子'|undefined, objects: string[]|undefined } || {};
 
   const [promptTabOpen, setPromptTabOpen] = useState(true);
-  const [promptTabElements, setPromptTabElements] = useState<string[]>(objects);
+  //const [promptTabElements, setPromptTabElements] = useState<string[]>(objects);
+  const promptTabElements: string[] = objects;
 
   const getPrompts =
     (type: string|undefined, props: string|string[]|[]) => {
       switch (type) {
         case '单词':
           return {
+            '释义': `单词${props}有哪些意思呢？什么意思比较常用呢？`,
             '生活场景': `单词${props}在生活中有哪些应用场景呢？`,
-            '起源历史': `单词${props}的起源历史是什么？`,
+            '短语': `单词${props}的短语`,
+            '例句': `单词${props}的例句`,
+            '固定搭配': `单词${props}的固定搭配`,
+            '相关话题': `单词${props}和哪些话题有关？同话题下还有哪些单词呢？`,
+            '近义词': `单词${props}有哪些近义词？`,
+            '反义词': `单词${props}有哪些反义词？`,
             '词根词缀': `单词${props}的词根词缀是什么？`,
-            '新闻事件': `最近或者历史上有哪些关于${props}的新闻事件？`
+            '起源历史': `单词${props}的起源历史是什么？`
           };
         default:
           return {
@@ -59,6 +66,18 @@ export default function Chat() {
           };
       }
     }
+
+  // 滚动到最底部
+  function scrollToBottom() {
+    const chatAreaDiv = document.getElementById('chat-area');
+    if (chatAreaDiv) {
+      chatAreaDiv.scrollTo({
+        top: chatAreaDiv.scrollHeight,
+        behavior: 'smooth' // 平滑滚动
+      });
+    }
+  }
+  scrollToBottom(); // 一开始就滚动到最底部
 
   // 事件
   function handleInputTextChange(text: string) {
@@ -120,15 +139,9 @@ export default function Chat() {
             ...newChatData.messages,
             { role: 'assistant', content: responseContent }
           ]
-        })
+        });
         // 自动滚动到最底部
-        const chatAreaDiv = document.getElementById('chat-area');
-        if (chatAreaDiv) {
-          chatAreaDiv.scrollTo({
-            top: chatAreaDiv.scrollHeight,
-            behavior: 'smooth' // 平滑滚动
-          });
-        }
+        scrollToBottom();
       });
     }
     //else if (chatState === "generating")
@@ -136,12 +149,18 @@ export default function Chat() {
   }
 
   function promptTabElementCard(word: string, key: number) {
-    return <span key={key} className='px-2 border-2 border-black rounded-md shrink-0 '>
+    return <span key={key}
+                 className='px-2 border-2 border-black rounded-md shrink-0 active:bg-black active:text-white'
+                 onClick={() => {
+                   setChatData(prev => {
+                     return { ...prev, inputText: prev.inputText + ` ${word} `, chatState: 'inputting' };
+                   });
+                 }}>
       {word}
-      <button title="delete" className="btn-scale btn-trans size-6 ml-2 rounded-full"
+      {/*<button title="delete" className="btn-scale btn-trans size-6 ml-2 rounded-full"
               onClick={() => setPromptTabElements(promptTabElements.filter(w => w !== word))}>
         <Close />
-      </button>
+      </button>*/}
     </span>
   }
 
@@ -175,7 +194,7 @@ export default function Chat() {
           onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
           {Object.entries(getPrompts(objectsType, objects)).map(([key, value], index) =>
             <span key={index} onClick={() => { handleInputTextChange(value); }}
-              className={`btn-scale btn-trans h-fit px-2 border-2 border-black rounded-md overflow-hidden text-nowrap shrink-0`}
+              className={`btn-scale btn-trans h-fit px-2 border-2 border-black rounded-md overflow-hidden text-nowrap shrink-0 active:bg-black active:text-white`}
             >
               {key}
             </span>
