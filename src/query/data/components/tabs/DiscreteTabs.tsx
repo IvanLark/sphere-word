@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Skeleton } from "@mui/material";
-import {KeyboardArrowRight} from "@mui/icons-material";
+import { KeyboardArrowRight } from "@mui/icons-material";
 
 /**
  * "分开"样式的Tabs
@@ -21,17 +21,17 @@ export default function DiscreteTabs<T>({ title, showMore, tabs, children, isLoa
   const [pickedIndex, setPickedIndex] = useState(0);
 
   // Tabs选项
-  function TabOptions () {
+  function TabOptions() {
     return (
       <ul className="m-2 flex flex-wrap gap-2 select-none">
         {
           Object.keys(tabs).map((tabName, index) =>
             <li key={index}
-                className={`
+              className={`
 								px-2 py-1 text-nowrap rounded-md list-none border-2 border-black transition-all
 								duration-300 ${pickedIndex === index ? 'text-white bg-black' : ''}
 							`}
-                onClick={() => setPickedIndex(index)}>
+              onClick={() => setPickedIndex(index)}>
               {tabName}
             </li>
           )
@@ -42,31 +42,31 @@ export default function DiscreteTabs<T>({ title, showMore, tabs, children, isLoa
 
   return (
     isLoading ?
-    <Skeleton variant="rectangular" height="40px"/> :
-    <>
-      {/* 顶部 */}
-      {title &&
-        <div className="w-full h-full py-0.5 flex items-center">
+      <Skeleton variant="rectangular" height="40px" /> :
+      <>
+        {/* 顶部 */}
+        <div className="w-full h-full py-0.5 flex">
           {/* 标题 */}
           <div className="flex-1">
-            {<h2 className="text-xl font-bold">{title}</h2>}
+            {title &&
+              <h2 className="text-xl font-bold">{title}</h2>
+            }
+            <TabOptions></TabOptions>
           </div>
           {/* 更多 */}
           {
             showMore &&
             <button className="h-full px-4 "
-              onClick={() => showMore(Object.keys(tabs)[pickedIndex], Object.values(tabs)[pickedIndex]) }>
+              onClick={() => showMore(Object.keys(tabs)[pickedIndex], Object.values(tabs)[pickedIndex])}>
               AI
-              <KeyboardArrowRight style={{width: '28px', height: '28px'}}/>
+              <KeyboardArrowRight style={{ width: '28px', height: '28px' }} />
             </button>
           }
         </div>
-      }
 
-      <TabOptions></TabOptions>
 
-      {/* 渲染当前Tab */}
-      {children(Object.keys(tabs)[pickedIndex], Object.values(tabs)[pickedIndex])}
-    </>
+        {/* 渲染当前Tab */}
+        {children(Object.keys(tabs)[pickedIndex], Object.values(tabs)[pickedIndex])}
+      </>
   );
 }

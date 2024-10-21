@@ -1,7 +1,7 @@
 import { ArrowBack, HomeOutlined, Menu, Send, StopCircle } from "@mui/icons-material";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import ChatArea from "./chat_area/ChatArea";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChatMessage } from "./types.ts";
 import { BASE_URL } from "../constants.ts";
 import { SSE } from 'sse.js';
@@ -37,9 +37,9 @@ export default function Chat() {
 
   // prompt
   interface ChatLocationState {
-    objectsType: '单词'|'多个单词'|'句子'|undefined; // 针对对象类型
-    objects: string[]|undefined; // 针对对象
-    promptName: string|undefined; // 需要自动触发的prompt，如果没有则不触发
+    objectsType: '单词' | '多个单词' | '句子' | undefined; // 针对对象类型
+    objects: string[] | undefined; // 针对对象
+    promptName: string | undefined; // 需要自动触发的prompt，如果没有则不触发
   }
 
   const location = useLocation();
@@ -56,7 +56,7 @@ export default function Chat() {
   const promptTabElements: string[] = objects;
 
   // 提示词Map
-  function getPromptMap (): Record<string, string> {
+  function getPromptMap(): Record<string, string> {
     switch (objectsType) {
       case '单词': {
         const word = objects[0];
@@ -167,14 +167,14 @@ export default function Chat() {
   // 针对对象卡片
   function promptTabElementCard(word: string, key: number) {
     return <span key={key}
-                 className='px-2 border-2 border-black rounded-md shrink-0 active:bg-black active:text-white'
-                 onClick={() => {
-                   if (chatData.chatState !== 'generating') {
-                     setChatData(prev => {
-                       return { ...prev, inputText: prev.inputText + ` ${word} `, chatState: 'inputting' };
-                     });
-                   }
-                 }}>
+      className='px-2 border-2 border-black rounded-md shrink-0 active:bg-black active:text-white'
+      onClick={() => {
+        if (chatData.chatState !== 'generating') {
+          setChatData(prev => {
+            return { ...prev, inputText: prev.inputText + ` ${word} `, chatState: 'inputting' };
+          });
+        }
+      }}>
       {word}
       {/*<button title="delete" className="btn-scale btn-trans size-6 ml-2 rounded-full"
               onClick={() => setPromptTabElements(promptTabElements.filter(w => w !== word))}>
@@ -208,12 +208,12 @@ export default function Chat() {
       {/* 输入部分 */}
       <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
         {/* 预设提示词部分 */}
-        <div className={`pb-2 flex gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar transition-all duration-300 
-          ${promptTabOpen ? 'w-full h-9' : 'size-0'}`}
+        <div className={`pb-4 flex gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar transition-all duration-300
+          ${promptTabOpen ? 'w-full h-12' : 'size-0'}`}
           onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
           {Object.entries(getPromptMap()).map(([key, value], index) =>
             <span key={index} onClick={() => { handleInputTextChange(value); }}
-              className={`btn-scale btn-trans h-fit px-2 border-2 border-black rounded-md 
+              className={`btn-scale btn-trans h-fit px-4 py-2 border-2 border-black rounded-md
                 overflow-hidden text-nowrap shrink-0 active:bg-black active:text-white`}
             >
               {key}
@@ -225,33 +225,33 @@ export default function Chat() {
           objectsType && objects.length !== 0 &&
           <div className="flex gap-2">
             <div
-              className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300 
+              className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300
                 ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`}
-              style={{transitionProperty: 'height'}} onWheel={(event) => {
-              (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5
-            }}>
+              style={{ transitionProperty: 'height' }} onWheel={(event) => {
+                (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5
+              }}>
               <span className="">{objectsType}: </span>
               {promptTabElements.map((word, index) => promptTabElementCard(word, index))}
             </div>
             <div className={`w-12 shrink-0 border-2 border-transparent duration-300 ${promptTabOpen ? 'h-12' : 'h-0'}`}
-                 style={{transitionProperty: 'height'}}></div>
+              style={{ transitionProperty: 'height' }}></div>
           </div>
         }
         {/* 输入框 */}
         <div className={`w-full h-12 flex gap-2 items-center`}>
           <textarea className={`flex-1 h-12 p-3 rounded-md border-2 border-black hide-scrollbar
                       transition-all duration-300 ${promptTabOpen ? 'rounded-t-none' : ''}`}
-                    placeholder="有英语问题尽管问我~"
-                    disabled={ chatData.chatState === "generating" }
-                    value={ chatData.inputText }
-                    onChange={(event) => {
-                      handleInputTextChange(event.target.value)
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') handleInputButtonClick()
-                    }}/>
+            placeholder="有英语问题尽管问我~"
+            disabled={chatData.chatState === "generating"}
+            value={chatData.inputText}
+            onChange={(event) => {
+              handleInputTextChange(event.target.value)
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') handleInputButtonClick()
+            }} />
           <button className="btn-scale-xl btn-common-hover size-12 rounded-md border-2 border-black"
-                  onClick={handleInputButtonClick}>
+            onClick={handleInputButtonClick}>
             {
               chatData.chatState === "empty" ? <Menu style={{ fontSize: "2.5rem" }} /> :
                 chatData.chatState === "inputting" ? <Send style={{ fontSize: "2.5rem" }} /> :
