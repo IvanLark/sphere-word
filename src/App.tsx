@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import {Outlet, useLocation} from 'react-router-dom'
 import './MainView.css'
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';

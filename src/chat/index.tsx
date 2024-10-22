@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChatMessage } from "./types.ts";
 import { BASE_URL } from "../constants.ts";
 import { SSE } from 'sse.js';
+import {toast} from "../utils/toast.tsx";
 
 /**
  * AI对话页面
@@ -117,7 +118,7 @@ export default function Chat() {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        payload: JSON.stringify({ 'messages': newChatData.messages })
+        payload: JSON.stringify({ 'messages': newChatData.messages.slice(-5) })
       }
     );
     source.addEventListener("message", (event: MessageEvent) => {
@@ -145,6 +146,15 @@ export default function Chat() {
       // 自动滚动到最底部
       scrollToBottom();
     });
+    // 处理错误情况
+    source.addEventListener("error", () => {
+      toast.error('网络出问题啦');
+      setChatData({
+        chatState: 'empty',
+        inputText: '',
+        messages: [ ...chatData.messages ]
+      });
+    })
   }
 
   // 输入改变事件
@@ -188,7 +198,7 @@ export default function Chat() {
       <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex items-center overflow-hidden">
         {/* 返回按钮 */}
         <button title="Back" className="btn-trans size-16 rounded-md border-r-2 border-black group"
-          onClick={() => { navigate(-1) }}>
+          onClick={() => { if (chatData.chatState !== 'generating') { navigate(-1); } else { toast.error('生成完成前不能跳转'); } }}>
           <div className="btn-scale-xl"><ArrowBack style={{ fontSize: "2.5rem" }} /></div>
         </button>
         {/* 中间 */}
@@ -197,7 +207,7 @@ export default function Chat() {
         </div>
         {/* 菜单按钮 */}
         <button title="Menu" className="btn-trans size-16 rounded-md border-l-2 border-black group">
-          <div className="btn-scale-xl" onClick={() => navigate('/')}>
+          <div className="btn-scale-xl" onClick={() => { if (chatData.chatState !== 'generating') { navigate('/'); } else { toast.error('生成完成前不能跳转'); } }}>
             <HomeOutlined style={{ fontSize: "2.5rem" }} />
           </div>
         </button>
@@ -212,7 +222,7 @@ export default function Chat() {
           ${promptTabOpen ? 'w-full h-12' : 'size-0'}`}
           onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
           {Object.entries(getPromptMap()).map(([key, value], index) =>
-            <span key={index} onClick={() => { handleInputTextChange(value); }}
+            <span key={index} onClick={() => { if (chatData.chatState !== 'generating') { handleInputTextChange(value); } }}
               className={`btn-scale btn-trans h-fit px-4 py-2 border-2 border-black rounded-md
                 overflow-hidden text-nowrap shrink-0 active:bg-black active:text-white`}
             >

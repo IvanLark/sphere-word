@@ -51,19 +51,24 @@ export default function DiscreteTabs<T>({ title, showMore, tabs, children, isLoa
             {title &&
               <h2 className="text-xl font-bold">{title}</h2>
             }
-            <TabOptions></TabOptions>
+            { !title &&
+              <TabOptions></TabOptions>
+            }
           </div>
           {/* 更多 */}
           {
             showMore &&
-            <button className="h-full px-4 "
+            <button className="h-full px-2 border-2 border-black rounded-md"
               onClick={() => showMore(Object.keys(tabs)[pickedIndex], Object.values(tabs)[pickedIndex])}>
-              AI
+              AI生成
               <KeyboardArrowRight style={{ width: '28px', height: '28px' }} />
             </button>
           }
         </div>
 
+        { title &&
+          <TabOptions></TabOptions>
+        }
 
         {/* 渲染当前Tab */}
         {children(Object.keys(tabs)[pickedIndex], Object.values(tabs)[pickedIndex])}
