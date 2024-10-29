@@ -27,7 +27,7 @@
   ],
   "exclude": [
     // 忽略data.old目录
-    // td @IvanLark 不确定是否可行
+    // TODO @IvanLark 不确定是否可行
     "**/*.old/*"
   ]
 }

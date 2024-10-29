@@ -6,6 +6,7 @@
 * {
 	font-family: 'CustomFont', sans-serif, serif;
 	/* @apply font-sans font-serif */
+	@apply focus-visible:outline-none
 }
 
 button {
@@ -36,6 +37,10 @@ img {
 
 .btn-grey {
 	@apply bg-gray-200 transition-all hover:bg-gray-300 active:bg-gray-400
+}
+
+.btn-black {
+	@apply text-white bg-black hover:bg-gray-900 active:bg-gray-800
 }
 
 .btn-teal {

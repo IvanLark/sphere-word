@@ -26,7 +26,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   /* 请求失败时 */
   if (isError) {
     toast.error('无法获取单词数据')
-    // td Error时返回的页面
+    // TODO Error时返回的页面
     return (<></>);
   }
 
@@ -58,7 +58,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
         </div>
 
         {/* Tabs */}
-        {/* // td 暂时搞不了sticky…… */}
+        {/* // TODO 暂时搞不了sticky…… */}
         <div className="mx-2">
           <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={isPending}>
             {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SubTab from './SubTab';
+import SubTab from './SubTab.tsx.old';
 import { ExpandMore, KeyboardArrowRight } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Skeleton } from '@mui/material';
 
