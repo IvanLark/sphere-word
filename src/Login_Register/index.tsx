@@ -25,9 +25,9 @@ export default function LRScaffold() {
 		e.preventDefault()
 	}
 	return (
-		<div className="w-screen h-screen bg-white relative px-10">
+		<div className="w-screen h-screen bg-white relative px-10 select-none">
 			<div className="w-full max-w-[300px] absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-				<form action="" className="flex flex-col gap-5 items-center" onSubmit={onSubmit} >
+				<form action="" className="flex flex-col gap-5 items-center" onSubmit={onSubmit}>
 					<h1 className="w-full text-center mb-10 text-4xl font-bold"><img src={Icon} alt="智臻" className="size-16 inline-block mr-2" />智臻</h1>
 					<div className="w-full border-2 border-black rounded-md">
 						<Tabs tabs={['注册', '登录']} tabIndex={loginPageIndex} setTabIndex={setLoginPageIndex} />
@@ -57,6 +57,7 @@ function Input({ label, type, required, value, onChange }: { label: string, type
 		<div className="w-full pr-2 flex items-center rounded-md border-2 border-black">
 			<div className="w-20 py-2 h-full text-center text-lg border-r-2 border-black">{label}</div>
 			<input title={label} type={type} required={required} value={value} onChange={onChange} className=" flex-1 pl-2 text-lg rounded-md" />
+			{/* onError={(e) => (e.target as HTMLInputElement).setCustomValidity('必填项不能为空')} */}
 			{/* // !？？？这里为什么设置了一个py就会导致两个都有py了？ */}
 		</div>
 	)

@@ -1,11 +1,11 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import QueryGraph from "./graph";
 import QueryData from "./data";
 import { Edge, Node } from "./types.ts";
 import QueryHeader from "./QueryHeader.tsx";
 import axios from "axios";
-import {BASE_URL} from "../constants.ts";
-import {toast} from "../utils/toast.tsx";
+import { BASE_URL } from "../constants.ts";
+import { toast } from "../utils/toast.tsx";
 
 /**
  * 单词查询页面
@@ -128,10 +128,10 @@ export default function Query() {
 
   // 单词查询页面
   return (
-    <div className="w-screen h-[calc(100vh-64px)]">
+    <div className="w-screen h-[calc(100vh-4rem)]">
       <QueryHeader word={curWord} handleSkipWord={handleSkipWord}></QueryHeader>
       <QueryGraph word={curWord} history={history} handleSkipWord={handleSkipWord}></QueryGraph>
-      {/* <div className="w-screen h-[calc(100vh-64px)] fixed bg-gradient-to-tr from-yellow-400 to-yellow-200"><div className="w-screen text-center text-5xl">QueryGraph</div><button className="btn-scale btn-grey px-4 py-2 m-auto">Test Click</button></div> */}
+      {/* <div className="w-screen h-[calc(100vh-4rem)] fixed bg-gradient-to-tr from-yellow-400 to-yellow-200"><div className="w-screen text-center text-5xl">QueryGraph</div><button className="btn-scale btn-grey px-4 py-2 m-auto">Test Click</button></div> */}
       <QueryData word={curWord} handleSkipWord={handleSkipWordFromRelation}></QueryData>
     </div>
   );

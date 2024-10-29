@@ -8,7 +8,8 @@ import Chat from "./chat";
 import Home from './home/Home.tsx';
 import ToastContainer from './utils/toast.tsx';
 import Test from "./test";
-import LRScaffold from './Login_Register/LRScaffold.tsx';
+import LRScaffold from './Login_Register/index.tsx';
+import Review from './review/index.tsx';
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,11 @@ const router = createBrowserRouter([
       {
         path: 'Login',
         element: <LRScaffold />,
+        children: []
+      },
+      {
+        path: 'Review',
+        element: <Review />,
         children: []
       },
       {

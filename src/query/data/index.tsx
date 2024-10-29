@@ -40,7 +40,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
   /* 请求中和请求成功用同一个JSX */
   return (
-    <div className="w-full h-[calc(100vh-64px)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar">
+    <div className="w-full h-[calc(100vh-4rem)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar">
       {/* id="scroll-container-word"  */}
       {/* // **snap占位div */}
       <div id="scroll-container-start" className="w-full h-[calc(100vh-400px)] flex- bg-transparent
@@ -62,7 +62,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
         <div className="mx-2">
           <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={isPending}>
             {
-              (value) => <div className="min-h-[calc(100vh-64px)]">{value}</div>
+              (value) => <div className="min-h-[calc(100vh-4rem)]">{value}</div>
             }
           </ContinuousTabs>
         </div>

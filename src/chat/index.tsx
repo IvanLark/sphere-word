@@ -5,7 +5,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChatMessage } from "./types.ts";
 import { BASE_URL } from "../constants.ts";
 import { SSE } from 'sse.js';
-import {toast} from "../utils/toast.tsx";
+import { toast } from "../utils/toast.tsx";
+import Header from "../components/Header.tsx";
 
 /**
  * AI对话页面
@@ -152,7 +153,7 @@ export default function Chat() {
       setChatData({
         chatState: 'empty',
         inputText: '',
-        messages: [ ...chatData.messages ]
+        messages: [...chatData.messages]
       });
     })
   }
@@ -195,24 +196,37 @@ export default function Chat() {
 
   return (
     <div className="w-screen h-screen flex flex-col">
-      <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex items-center overflow-hidden">
-        {/* 返回按钮 */}
+      {/* <div className="w-full h-16 fixed rounded-md border-2 border-black bg-white flex items-center overflow-hidden">
         <button title="Back" className="btn-trans size-16 rounded-md border-r-2 border-black group"
           onClick={() => { if (chatData.chatState !== 'generating') { navigate(-1); } else { toast.error('生成完成前不能跳转'); } }}>
           <div className="btn-scale-xl"><ArrowBack style={{ fontSize: "2.5rem" }} /></div>
         </button>
-        {/* 中间 */}
         <div className="flex-1 text-center text-3xl font-bold">
           Lingo AI
         </div>
-        {/* 菜单按钮 */}
         <button title="Menu" className="btn-trans size-16 rounded-md border-l-2 border-black group">
           <div className="btn-scale-xl" onClick={() => { if (chatData.chatState !== 'generating') { navigate('/'); } else { toast.error('生成完成前不能跳转'); } }}>
             <HomeOutlined style={{ fontSize: "2.5rem" }} />
           </div>
         </button>
-      </div>
-      <div className="w-screen h-16 shrink-0">nothing here</div>
+      </div> */}
+      <Header
+        // 返回按钮
+        leadingBtn={
+          <button title="Back" className="btn-trans size-16 rounded-md border-r-2 border-black group"
+            onClick={() => { if (chatData.chatState !== 'generating') { navigate(-1); } else { toast.error('生成完成前不能跳转'); } }}>
+            <div className="btn-scale-xl"><ArrowBack style={{ fontSize: "2.5rem" }} /></div>
+          </button>
+        }
+        // 中间
+        middleElement='Lingo AI'
+        // 菜单按钮
+        trailingBtn={<button title="Menu" className="btn-trans size-16 rounded-md border-l-2 border-black group">
+          <div className="btn-scale-xl" onClick={() => { if (chatData.chatState !== 'generating') { navigate('/'); } else { toast.error('生成完成前不能跳转'); } }}>
+            <HomeOutlined style={{ fontSize: "2.5rem" }} />
+          </div>
+        </button>
+        } />
       <ChatArea messages={chatData.messages} />
 
       {/* 输入部分 */}
