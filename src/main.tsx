@@ -1,15 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import App from './pages/app.tsx'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Query from "./query";
-import Chat from "./chat";
-import Home from './home/Home.tsx';
-import ToastContainer from './utils/toast.tsx';
-import Test from "./test";
-import LRScaffold from './Login_Register/index.tsx';
-import Review from './review/index.tsx';
+import Query from "./pages/query/query.page.tsx";
+import Chat from "./pages/chat/chat.page.tsx";
+import HomePage from './pages/home/home.page.tsx';
+import ToastContainer from './common/utils/toast.util.tsx';
+import Auth from './pages/auth/auth.page.tsx';
+import Review from './pages/review/review.page.tsx';
 
 const queryClient = new QueryClient();
 
@@ -20,35 +19,27 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
-        children: []
+        element: <HomePage />,
       },
       {
-        path: 'Login',
-        element: <LRScaffold />,
-        children: []
+        path: 'auth',
+        element: <Auth />,
       },
       {
-        path: 'Review',
+        path: 'review',
         element: <Review />,
-        children: []
       },
       {
         path: 'query',
         element: <Query />,
-        children: []
       },
       {
         path: '/chat',
         element: <Chat />
-      },
-      {
-        path: 'test',
-        element: <Test />
       }
     ]
   }
-])
+]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

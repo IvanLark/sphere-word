@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_图层_2" data-name="图层 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 113.29 134.07">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#_未命名的渐变_3-2);
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: url(#_未命名的渐变_3-3);
+      }
+
+      .cls-3 {
+        fill: url(#_未命名的渐变_3);
+      }
+    </style>
+    <linearGradient id="_未命名的渐变_3" data-name="未命名的渐变 3" x1="0" y1="67.96" x2="40.23" y2="67.96" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#125498"/>
+      <stop offset="1" stop-color="#258fc6"/>
+    </linearGradient>
+    <linearGradient id="_未命名的渐变_3-2" data-name="未命名的渐变 3" x1="72.67" x2="113.29" xlink:href="#_未命名的渐变_3"/>
+    <linearGradient id="_未命名的渐变_3-3" data-name="未命名的渐变 3" x1="34.98" y1="67.03" x2="77.92" y2="67.03" xlink:href="#_未命名的渐变_3"/>
+  </defs>
+  <g id="_图层_1-2" data-name="图层 1">
+    <g>
+      <g>
+        <path class="cls-3" d="m40.23,12.37L.67,65.91c-.9,1.21-.9,2.87,0,4.09l39.55,53.54-19.9-53.84c-.42-1.13-.42-2.36,0-3.49L40.23,12.37Z"/>
+        <path class="cls-1" d="m72.67,12.37l20.18,54.6c.23.64.23,1.33,0,1.97l-20.18,54.6,40.26-54.49c.48-.65.48-1.54,0-2.19L72.67,12.37Z"/>
+      </g>
+      <path class="cls-2" d="m56.46,0l-21.3,65.91c-.24.73-.24,1.52,0,2.25l21.3,65.91,21.27-65.82c.25-.78.25-1.63,0-2.41L56.46,0Zm1.03,73.47c-4.4.67-8.14-3.06-7.46-7.46.42-2.74,2.66-4.98,5.4-5.41,4.4-.67,8.14,3.06,7.46,7.46-.42,2.74-2.66,4.98-5.41,5.4Z"/>
+    </g>
+  </g>
+</svg>
