@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Info, Warning } from '@mui/icons-material';
 import Error from '@mui/icons-material/Error';
 
-export let toastUtil: {
+export let toast: {
 	info: (content: string) => void,
 	error: (content: string) => void,
 	warning: (content: string) => void
@@ -23,7 +23,7 @@ export default function ToastContainer() {
 		});
 	}
 
-	toastUtil = {
+	toast = {
 		info: (content: string) =>
 			addToastMsg({ icon: <Info color='info'/>, content: content } as ToastMsg),
 		error: (content: string) =>

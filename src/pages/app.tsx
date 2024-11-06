@@ -2,15 +2,13 @@ import {Outlet, useLocation, useNavigate} from 'react-router-dom'
 import '../assets/css/main-view.css'
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import {toastUtil} from "../common/utils/toast.util.tsx";
+import {toast} from "../common/utils/toast.util.tsx";
 
 function App() {
 
   const routerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
-
-  console.log(location)
 
   useEffect(() => {
     // 页面切换动画
@@ -20,13 +18,13 @@ function App() {
     // 判断是否登录
     const tokenCreateTime = localStorage.getItem('tokenCreateTime')
     if (tokenCreateTime === null && location.pathname !== '/auth') {
-      toastUtil.error('未登录，请先登录');
+      toast.error('未登录，请先登录');
       navigate('/auth');
     }
     // token超过30天过期
     if (tokenCreateTime !== null && location.pathname !== '/auth' &&
       Math.abs(new Date().getTime() - Number(tokenCreateTime)) >= (1000 * 60 * 60 * 24 * 30) ) {
-      toastUtil.error('登录已过期，请重新登录');
+      toast.error('登录已过期，请重新登录');
       navigate('/auth');
     }
   }, [navigate, location])
@@ -38,4 +36,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

@@ -3,12 +3,13 @@ import { createRoot } from 'react-dom/client'
 import App from './pages/app.tsx'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Query from "./pages/query/query.page.tsx";
-import Chat from "./pages/chat/chat.page.tsx";
-import HomePage from './pages/home/home.page.tsx';
+import Query from "./pages/query/query.tsx";
+import Chat from "./pages/chat/chat.tsx";
+import Home from './pages/home/home.tsx';
 import ToastContainer from './common/utils/toast.util.tsx';
-import Auth from './pages/auth/auth.page.tsx';
-import Review from './pages/review/review.page.tsx';
+import Auth from './pages/auth/auth.tsx';
+import Review from './pages/review/review.tsx';
+import Test from "./pages/test/test.tsx";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <HomePage />,
+        element: <Home />,
       },
       {
         path: 'auth',
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
         element: <Chat />
       }
     ]
+  },
+  {
+    path: '/test',
+    element: <Test />
   }
 ]);
 
