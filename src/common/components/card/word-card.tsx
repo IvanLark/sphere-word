@@ -15,7 +15,7 @@ export function WordCard({ word, data, button, isLoading }: WordCardProps) {
 		<div className="bg-white p-4 flex-1 flex flex-col gap2 snap-end">
 			<div className="flex items-center text-nowrap">
 				<span className={`font-bold flex-1 shrink ${word.length > 10 ? 'text-4xl' : 'text-6xl'}`}>{word}</span>
-				{ button }
+				{button}
 			</div>
 			<SkeletonBuilder loading={isLoading}>
 				{/* 发音 */}
@@ -25,17 +25,17 @@ export function WordCard({ word, data, button, isLoading }: WordCardProps) {
 						{
 							data.pron?.ukPron &&
 							<PronItem title="英" pron={data.pron.ukPron}
-							  onClick={() => {
+								onClick={() => {
 									new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${word}`).play();
-							  }}
+								}}
 							/>
 						}
 						{
 							data.pron?.usPron &&
 							<PronItem title="美" pron={data.pron.usPron}
-							  onClick={() => {
-								  new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${word}`).play();
-							  }}
+								onClick={() => {
+									new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${word}`).play();
+								}}
 							/>
 						}
 					</div>
@@ -51,9 +51,9 @@ export function WordCard({ word, data, button, isLoading }: WordCardProps) {
 					data && data?.tags && data.tags?.basic &&
 					<div className="mt-2 flex gap-2 text-black">
 						{data.tags.basic.slice(0, 3).map((tag, index) =>
-								<span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
-							{tag}
-						</span>
+							<span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
+								{tag}
+							</span>
 						)}
 					</div>
 				}
@@ -78,7 +78,7 @@ interface PronBuilderProps {
 	onClick: () => void;
 }
 
-function PronItem({title, pron, onClick}: PronBuilderProps) {
+function PronItem({ title, pron, onClick }: PronBuilderProps) {
 	return <div className=" text-lg font-bold text-nowrap">{`${title} [${pron}]`}
 		<Tooltip title='点击播放发音' arrow>
 			{/* //@ts-expect-error no title*/}

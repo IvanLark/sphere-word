@@ -4,7 +4,7 @@ import QueryData from "./pages/data/query-data.tsx";
 import { Edge, Node } from "../../api/types/word-data.types.ts";
 import QueryHeader from "./pages/query-header.tsx";
 import { toast } from "../../common/utils/toast.util.tsx";
-import {checkWordExisted} from "../../api/methods/word-search.methods.ts";
+import { checkWordExisted } from "../../api/methods/word-search.methods.ts";
 
 /**
  * 单词查询页面
@@ -100,7 +100,7 @@ export default function Query() {
     <div className="w-screen h-[calc(100vh-4rem)]">
       <QueryHeader word={curWord} handleSkipWord={handleSkipWord}></QueryHeader>
       <QueryGraph word={curWord} history={history}
-                  handleSkipWord={(newWord) => { setCurWord(newWord); scrollBackToTop(); }}></QueryGraph>
+        handleSkipWord={(newWord) => { setCurWord(newWord); scrollBackToTop(); }}></QueryGraph>
       <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
     </div>
   );

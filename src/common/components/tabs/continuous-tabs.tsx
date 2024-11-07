@@ -22,7 +22,7 @@ export default function ContinuousTabs<T>({ tabs, children, isLoading = false }:
 			<Skeleton variant="rectangular" height="40px" /> :
 			<>
 				{/* Tabs选项 */}
-				<ul className="w-full flex select-none relative rounded-lg border-2 border-black">
+				<ul className="w-full flex select-none text-nowrap relative rounded-lg border-2 border-black">
 					<div
 						className="rounded-md bg-black absolute pointer-events-none transition-all duration-300"
 						style={{

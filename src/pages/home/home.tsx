@@ -5,7 +5,8 @@ export default function Home() {
 	const tabs: HomeNaviTabProps[] = [
 		{ title: '单词查询', icon: '🧐', path: '/query' },
 		{ title: 'AI对话', icon: '🤗', path: '/chat' },
-		{ title: '单词复习', icon: '🤓', path: '/review' }
+		{ title: '单词复习', icon: '🤓', path: '/review' },
+		{ title: '错误页面', icon: '❌', path: '/error-test' },
 	]
 
 	return (

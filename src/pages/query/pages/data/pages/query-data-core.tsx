@@ -1,11 +1,11 @@
-import {WordCore} from "../../../../../api/types/word-data.types.ts";
+import { WordCore } from "../../../../../api/types/word-data.types.ts";
 import DataCard from "../../../../../common/components/card/data-card.tsx";
 import DiscreteTabs from "../../../../../common/components/tabs/discrete-tabs.tsx";
 import ListItem from "../../../../../common/components/item/list-item.tsx";
-import ReactEcharts, {EChartsOption} from 'echarts-for-react';
+import ReactEcharts, { EChartsOption } from 'echarts-for-react';
 import 'echarts/lib/chart/pie'; // 饼图
 import 'echarts/lib/component/tooltip';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 单词详情页面
@@ -30,10 +30,10 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
     name: string;
     value: number;
   }
-  let meaningProportionData: EchartsDataItem[]|undefined = undefined
+  let meaningProportionData: EchartsDataItem[] | undefined = undefined
   if (data?.proportion && data.proportion?.meaning) {
     meaningProportionData = Object.values(data.proportion.meaning)[0]
-      .map(item => ({name: item.meaning, value: item.proportion}))
+      .map(item => ({ name: item.meaning, value: item.proportion }))
       .filter(item => item.value !== 100);
   }
   const echartOption: EChartsOption = {
@@ -86,7 +86,7 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
           Object.keys(definitionTabs).length > 0 &&
           <DataCard isLoading={isLoading}>
             <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={isLoading}
-                                         showMore={() => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: '释义' } }) }}>
+              showMore={() => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: '释义' } }) }}>
               {(_, value) => value.map((meaning, index) =>
                 <ListItem key={index} index={index} content={meaning}></ListItem>
               )}
@@ -115,7 +115,7 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
           <DataCard title="词源" showMoreButton={false} isLoading={isLoading}>
             {data.etymology.map((etymologyItem, index) =>
               <div key={index}>
-                <h3 className="px-2 py-1 my-2 border-2 border-black rounded-full font-bold w-fit">
+                <h3 className="px-2 py-1 my-2 border-2 border-black rounded-2xl font-bold w-fit">
                   {etymologyItem.meaning}
                 </h3>
                 <p className="">
