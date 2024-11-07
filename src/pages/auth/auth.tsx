@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import Icon from "../../../public/智臻.svg";
 import ContinuousTabs from "../../common/components/tabs/continuous-tabs.tsx";
 import Input from "../../common/components/input.tsx";
-import {toast} from "../../common/utils/toast.util.tsx";
-import {useNavigate} from "react-router-dom";
-import {UserAuthData} from "../../api/types/auth.types.ts";
-import {login, signup} from "../../api/methods/auth.methods.ts";
+import { toast } from "../../common/utils/toast.util.tsx";
+import { useNavigate } from "react-router-dom";
+import { UserAuthData } from "../../api/types/auth.types.ts";
+import { login, signup } from "../../api/methods/auth.methods.ts";
 
 export default function Auth() {
 
@@ -23,20 +23,20 @@ export default function Auth() {
 
 	const navigate = useNavigate();
 
-	function handleLogin () {
+	function handleLogin() {
 		login(userData).then(response => {
 			localStorage.setItem('token', response);
 			localStorage.setItem('tokenCreateTime', String(new Date().getTime()));
 			toast.info('登录成功');
+			setUserData(initUserData);
 			navigate('/');
 		}).catch(error => {
 			toast.error(`登录失败: ${error.response.data.msg}`);
 		}).finally(() => {
-			setUserData(initUserData);
 		});
 	}
 
-	function handleSignUp () {
+	function handleSignUp() {
 		// 参数校验
 		if (userData.password !== userData.againPassword) {
 			toast.error('两次输入密码不同');
@@ -46,11 +46,11 @@ export default function Auth() {
 			localStorage.setItem('token', response);
 			localStorage.setItem('tokenCreateTime', String(new Date().getTime()));
 			toast.info('注册成功');
+			setUserData(initUserData);
 			navigate('/');
 		}).catch((error: Error) => {
 			toast.error(`注册失败: ${error.message}`);
 		}).finally(() => {
-			setUserData(initUserData);
 		});
 	}
 
@@ -70,9 +70,9 @@ export default function Auth() {
 					</h1>
 					{/* 登录、注册页面 */}
 					<ContinuousTabs tabs={pageTabs} isLoading={false}>
-						{ (value) =>
+						{(value) =>
 							<form className="flex flex-col gap-4 items-center" action="" onSubmit={
-								(e: React.FormEvent<HTMLFormElement>)=> {
+								(e: React.FormEvent<HTMLFormElement>) => {
 									e.preventDefault();
 									if (value === 'login') {
 										handleLogin();
@@ -82,27 +82,27 @@ export default function Auth() {
 								}
 							}>
 								<Input label="用户名" type="text" required={true} value={userData.username}
-											 onChange={(e) => setUserData({ ...userData, username: e.target.value })} />
+									onChange={(e) => setUserData({ ...userData, username: e.target.value })} />
 								<Input label="密码" type="password" required={true} value={userData.password}
-											 onChange={(e) => setUserData({ ...userData, password: e.target.value })} />
+									onChange={(e) => setUserData({ ...userData, password: e.target.value })} />
 								{
 									value === 'signup' &&
 									<>
 										<Input label="密码" type="password" required={true} value={userData.againPassword}
-													 onChange={(e) => setUserData({ ...userData, againPassword: e.target.value })} />
+											onChange={(e) => setUserData({ ...userData, againPassword: e.target.value })} />
 										<div className="w-full flex items-center">
 											{/* // TODO 麻了对checkbox不熟，你看看这里怎么改点击标签也能选中 */}
 											<input title="isBYS" type="checkbox" className="size-6" checked={userData.isBYR}
-														 onChange={(e) => setUserData({ ...userData, isBYR: e.target.checked })} />
+												onChange={(e) => setUserData({ ...userData, isBYR: e.target.checked })} />
 											<label htmlFor="isBYS"> 我是北邮人 </label>
 										</div>
 										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.isBYR ? 'h-40' : 'h-0'}`}>
-											<Input label="姓名" type="text" required={true} value={userData.studentName}
-														 onChange={(e) => setUserData({ ...userData, studentName: e.target.value })} />
-											<Input label="学号" type="text" required={true} value={userData.studentId}
-														 onChange={(e) => setUserData({ ...userData, studentId: e.target.value })} />
-											<Input label="班级" type="text" required={true} value={userData.classId}
-														 onChange={(e) => setUserData({ ...userData, classId: e.target.value })} />
+											<Input label="姓名" type="text" required={userData.isBYR} value={userData.studentName}
+												onChange={(e) => setUserData({ ...userData, studentName: e.target.value })} />
+											<Input label="学号" type="text" required={userData.isBYR} value={userData.studentId}
+												onChange={(e) => setUserData({ ...userData, studentId: e.target.value })} />
+											<Input label="班级" type="text" required={userData.isBYR} value={userData.classId}
+												onChange={(e) => setUserData({ ...userData, classId: e.target.value })} />
 										</div>
 									</>
 								}

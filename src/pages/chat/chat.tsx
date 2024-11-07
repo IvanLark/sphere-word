@@ -7,10 +7,10 @@ import { toast } from "../../common/utils/toast.util.tsx";
 import Header from "../../common/components/header.tsx";
 import getPromptMap from "./helpers/get-prompt.helper.ts";
 import scrollToBottom from "./helpers/scroll-to-bottom.helper.ts";
-import {useRequest} from "alova/client";
-import {getChatHistory} from "../../api/methods/chat.methods.ts";
+import { useRequest } from "alova/client";
+import { getChatHistory } from "../../api/methods/chat.methods.ts";
 import useChatState from "./hooks/use-chat-state.hook.ts";
-import {ChatClient} from "./helpers/chat-client.helper.ts";
+import { ChatClient } from "./helpers/chat-client.helper.ts";
 import SendButton from "./components/send-button.tsx";
 import PromptButton from "./components/prompt-button.tsx";
 import PromptObjectButton from "./components/prompt-object-button.tsx";
@@ -69,8 +69,9 @@ export default function Chat() {
     });
 
   if (error) {
-    // TODO
-    return (<>错误页面</>);
+    // // TODO
+    // return (<>错误页面</>);
+    throw error;
   }
 
   if (loading) {
@@ -122,7 +123,7 @@ export default function Chat() {
         trailingBtn={
           <button title="Menu" className="btn-trans size-16 rounded-md border-l-2 border-black group">
             <div className="btn-scale-xl"
-                 onClick={() => { if (chatStatus !== 'generating') { navigate('/'); } else { toast.error('生成完成前不能跳转'); } }}>
+              onClick={() => { if (chatStatus !== 'generating') { navigate('/'); } else { toast.error('生成完成前不能跳转'); } }}>
               <HomeOutlined style={{ fontSize: "2.5rem" }} />
             </div>
           </button>
@@ -139,7 +140,7 @@ export default function Chat() {
           {
             Object.entries(promptMap).map(([key, value], index) =>
               <PromptButton key={index} text={key}
-                            onClick={() => { if (chatStatus !== 'generating') updateInput(value); } } />
+                onClick={() => { if (chatStatus !== 'generating') updateInput(value); }} />
             )
           }
         </div>
@@ -159,7 +160,7 @@ export default function Chat() {
               {
                 locationState.objects.map((word, index) =>
                   <PromptObjectButton key={index} word={word}
-                    onClick={() => { if (chatStatus !== 'generating') addInput(word); } }
+                    onClick={() => { if (chatStatus !== 'generating') addInput(word); }}
                   />
                 )
               }
@@ -174,15 +175,15 @@ export default function Chat() {
         <div className={`w-full h-12 flex gap-2 items-center`}>
           <textarea className={`flex-1 h-12 p-3 rounded-md border-2 border-black hide-scrollbar
                       transition-all duration-300 ${promptTabOpen ? 'rounded-t-none' : ''}`}
-                    placeholder="有英语问题尽管问我~"
-                    disabled={chatStatus === "generating"}
-                    value={chatInput}
-                    onChange={(event) => {
-                      updateInput(event.target.value);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') handleSendButtonClick();
-                    }}/>
+            placeholder="有英语问题尽管问我~"
+            disabled={chatStatus === "generating"}
+            value={chatInput}
+            onChange={(event) => {
+              updateInput(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') handleSendButtonClick();
+            }} />
           <SendButton chatStatus={chatStatus} onClick={handleSendButtonClick}></SendButton>
         </div>
       </div>

@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "tail": "npx tailwindcss -i src/assets/css/input.css -o src/css/main-view.css --watch"
+    "tail": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/main-view.css --watch"
   },
   "dependencies": {
     "@emotion/styled": "^11.13.0",

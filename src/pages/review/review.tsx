@@ -1,17 +1,17 @@
 import { Menu } from "@mui/icons-material";
 import Header from "../../common/components/header.tsx";
-import {useState} from "react";
-import {useRequest} from "alova/client";
-import {getReviewWords, reviewWord} from "../../api/methods/review.methods.ts";
+import { useState } from "react";
+import { useRequest } from "alova/client";
+import { getReviewWords, reviewWord } from "../../api/methods/review.methods.ts";
 import ReviewWordList from "./pages/review-word-list.tsx";
-import {ReviewWordData} from "../../api/types/review.types.ts";
+import { ReviewWordData } from "../../api/types/review.types.ts";
 import ReviewWordSelect from "./pages/review-word-select.tsx";
 import ReviewWordInfo from "./pages/review-word-info.tsx";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function Review() {
 
-	const {loading, error} = useRequest(getReviewWords())
+	const { loading, error } = useRequest(getReviewWords())
 		.onSuccess(({ data }) => {
 			setReviewWords(data);
 			if (data.length === 0) {
@@ -40,14 +40,14 @@ export default function Review() {
 	const [reviewWordListOpen, setReviewWordListOpen] = useState(false);
 	const [reviewStatus, setReviewStatus] = useState(0);
 
-	function ReviewPage () {
+	function ReviewPage() {
 		switch (reviewStatus) {
 			case -1:
-				return <div className="w-full h-full mx-auto my-auto">暂时没有需要复习的单词哦</div>;
+				return <div className="w-screen h-[calc(100vh-4rem)] relative"><span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl">暂时没有需要复习的单词哦💖</span></div>;
 			case 0:
-				return <ReviewWordSelect wordData={curWordData} onSelected={handleSelect}/>;
+				return <ReviewWordSelect wordData={curWordData} onSelected={handleSelect} />;
 			case 1:
-				return <ReviewWordInfo word={curWordData.word} onNext={handleNext}/>;
+				return <ReviewWordInfo word={curWordData.word} onNext={handleNext} />;
 		}
 	}
 
@@ -56,11 +56,12 @@ export default function Review() {
 		return (<>加载中...</>);
 	}
 	if (error) {
-		// TODO
-		return (<>出错了...</>);
+		// // dTODO
+		// return (<>出错了...</>);
+		throw error;
 	}
 
-	function handleSelect (word: string, rating: number) {
+	function handleSelect(word: string, rating: number) {
 		reviewWord(word, rating).then(() => {
 			setReviewWords(prevState => prevState.slice(1));
 			setReviewStatus(1);
@@ -69,7 +70,7 @@ export default function Review() {
 		})
 	}
 
-	function handleNext () {
+	function handleNext() {
 		if (reviewWords.length === 0) {
 			setCurWordData(defaultWordData);
 			setReviewStatus(-1);
@@ -85,14 +86,14 @@ export default function Review() {
 			<Header
 				leadingBtn={
 					<button title="剩余单词" className="btn-trans size-16 rounded-md border-r-2 border-black group"
-									onClick={() => { setReviewWordListOpen(!reviewWordListOpen) }}>
+						onClick={() => { setReviewWordListOpen(!reviewWordListOpen) }}>
 						<Menu style={{ fontSize: "2.5rem" }} />
 					</button>
 				}
 				middleElement={`还剩${reviewWords.length}个单词`}
 			/>
 			<ReviewPage />
-			<ReviewWordList open={reviewWordListOpen} reviewWords={reviewWords} onClose={() => { setReviewWordListOpen(false) }}/>
+			<ReviewWordList open={reviewWordListOpen} reviewWords={reviewWords} onClose={() => { setReviewWordListOpen(false) }} />
 		</>
 	);
 }

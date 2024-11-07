@@ -1,7 +1,8 @@
 import { Error } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouteError } from "react-router-dom";
 
-export default function ErrorPage({ error }: { error: Error }) {
+export default function ErrorPage() {
+	const error = useRouteError() as Error;
 	const navigate = useNavigate();
 	return (
 		<div className="w-full h-full flex flex-col justify-center items-center">
