@@ -1,5 +1,5 @@
 import { Add, ArrowForward, Close, HomeOutlined, Remove, SearchOutlined } from '@mui/icons-material';
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "../../../common/utils/toast.util.tsx";
 import {checkWordExisted, getWordAutoComplete} from "../../../api/methods/word-search.methods.ts";
@@ -7,9 +7,11 @@ import {checkWordExisted, getWordAutoComplete} from "../../../api/methods/word-s
 interface ChatHeaderProps {
 	word: string;
 	handleSkipWord: (newWord: string, relationType: string, relationLabel?: string) => void;
+	leftBtnIcon: React.ReactNode;
+	leftBtnOnClick: () => void;
 }
 
-export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
+export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, leftBtnIcon }: ChatHeaderProps) {
 	const navigate = useNavigate();
 
 	// 数据模型
@@ -120,8 +122,8 @@ export default function QueryHeader({ word, handleSkipWord }: ChatHeaderProps) {
 				{/* 菜单按钮 */}
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
 													 flex items-center justify-center group"
-					onClick={() => navigate('/')}>
-					<HomeOutlined style={{ fontSize: "2.5rem" }} />
+					onClick={leftBtnOnClick}>
+					{leftBtnIcon}
 				</button>
 			</div>
 			{/* 三个按钮 */}

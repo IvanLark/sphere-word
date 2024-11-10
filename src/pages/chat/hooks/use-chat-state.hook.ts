@@ -42,6 +42,6 @@ export default function useChatState () {
     chatMessages, chatStatus, chatInput, promptTabOpen,
     setEmpty, setGenerating, updateInput, addInput,
     reversePromptTabOpen
-  }
+  };
 
 }

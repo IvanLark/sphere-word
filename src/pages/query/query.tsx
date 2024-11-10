@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import QueryGraph from "./pages/graph/query-graph.tsx";
 import QueryData from "./pages/data/query-data.tsx";
 import { Edge, Node } from "../../api/types/word-data.types.ts";
 import QueryHeader from "./pages/query-header.tsx";
 import { toast } from "../../common/utils/toast.util.tsx";
 import { checkWordExisted } from "../../api/methods/word-search.methods.ts";
+import {useLocation, useNavigate} from "react-router-dom";
+import {ArrowRight, HomeOutlined} from "@mui/icons-material";
 
 /**
  * 单词查询页面
@@ -95,10 +97,28 @@ export default function Query() {
     document.getElementById('scroll-container-start')!.scrollIntoView({ behavior: 'smooth' });
   }
 
+  const [headLeftBtn, setHeadLeftBtn] = useState({
+    icon: <HomeOutlined style={{ fontSize: "2.5rem" }} />,
+    onClick: () => { navigate('/'); }
+  });
+  const navigate = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state !== null) {
+      setCurWord(location.state.word);
+      setHeadLeftBtn({
+        icon: <ArrowRight style={{ fontSize: "2.5rem" }} />,
+        onClick: () => { navigate(-1); }
+      });
+    }
+  }, [location.state, navigate]);
+
   // 单词查询页面
   return (
     <div className="w-screen h-[calc(100vh-4rem)]">
-      <QueryHeader word={curWord} handleSkipWord={handleSkipWord}></QueryHeader>
+      <QueryHeader word={curWord} handleSkipWord={handleSkipWord}
+                   leftBtnIcon={headLeftBtn.icon}
+                   leftBtnOnClick={headLeftBtn.onClick}/>
       <QueryGraph word={curWord} history={history}
         handleSkipWord={(newWord) => { setCurWord(newWord); scrollBackToTop(); }}></QueryGraph>
       <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>

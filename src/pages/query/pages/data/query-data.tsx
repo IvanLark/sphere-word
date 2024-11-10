@@ -55,7 +55,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   }
 
   /* 加载数据时 TODO 完善 */
-  if (loading) {
+  if (loading || data === undefined) {
     return (<></>);
   }
 

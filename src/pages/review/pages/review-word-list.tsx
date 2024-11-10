@@ -1,12 +1,13 @@
 import { ReviewWordData } from "../../../api/types/review.types.ts";
 
 interface ReviewWordListProps {
-  reviewWords: ReviewWordData[];
+  index: number;
+  words: ReviewWordData[];
   onClose: () => void;
   open: boolean;
 }
 
-export default function ReviewWordList({ reviewWords, onClose, open }: ReviewWordListProps) {
+export default function ReviewWordList({ index, words, onClose, open }: ReviewWordListProps) {
   return (
     // TODO 这里设置了transition-opacity高度变化也有动画()
     <div
@@ -15,8 +16,9 @@ export default function ReviewWordList({ reviewWords, onClose, open }: ReviewWor
       onClick={onClose}>
       <h2 className="w-full text-xl font-bold text-center mb-2">剩余单词</h2>
       {
-        reviewWords.map((wordData, index) =>
-          <button key={index} className="btn-scale btn-trans w-full py-4 text-center rounded-lg">
+        words.map((wordData, mapIndex) =>
+          <button key={mapIndex} className={`btn-scale btn-trans w-full py-4 text-center rounded-lg 
+            ${index === mapIndex ? 'bg-black text-white' : ''}`}>
             {wordData.word}
           </button>
         )

@@ -12,6 +12,7 @@ import Review from './pages/review/review.tsx';
 // import Test from "./pages/test/test.tsx";
 import ErrorTest from './common/components/ErrorBoundary/ErrorTest.tsx';
 import ErrorPage from './common/components/ErrorBoundary/ErrorPage.tsx';
+import Test from "./pages/test/test.tsx";
 
 
 const queryClient = new QueryClient();
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
 
     ],
     errorElement: <ErrorPage />
+  },
+  {
+    path: '/test',
+    element: <Test />
   }
 ]);
 

@@ -7,6 +7,7 @@ export default function Home() {
 		{ title: 'AI对话', icon: '🤗', path: '/chat' },
 		{ title: '单词复习', icon: '🤓', path: '/review' },
 		{ title: '错误页面', icon: '❌', path: '/error-test' },
+		{ title: '测试页面', icon: '🥳', path: '/test' }
 	]
 
 	return (
