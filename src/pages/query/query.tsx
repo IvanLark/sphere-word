@@ -105,13 +105,13 @@ export default function Query() {
   const location = useLocation();
   useEffect(() => {
     if (location.state !== null) {
-      setCurWord(location.state.word);
+      handleSkipWord(location.state.word, '搜索', '搜索');
       setHeadLeftBtn({
         icon: <ArrowRight style={{ fontSize: "2.5rem" }} />,
         onClick: () => { navigate(-1); }
       });
     }
-  }, [location.state, navigate]);
+  }, [location.state]);
 
   // 单词查询页面
   return (
