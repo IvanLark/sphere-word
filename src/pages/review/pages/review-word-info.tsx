@@ -19,13 +19,12 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
     immediate: true
   });
 
-  if (loading) {
+  if (loading || data === undefined) {
     // TODO
     return (<>加载中...</>);
   }
   if (error) {
-    // TODO
-    return (<>出错了...</>);
+    throw new Error('获取数据出错');
   }
 
   const definitionTabs: Record<string, Array<string>> = {}
@@ -79,7 +78,7 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
     <div className="w-full h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] fle flex-col items-center justify-center overflow-y-auto">
       {/* 顶部卡片 */}
       <WordCard word={word} data={data.core} button={
-        <SkipButton onClick={() => navigate('query', { state: { word: word } })} />
+        <SkipButton onClick={() => navigate('/query', { state: { word: word } })} />
       } isLoading={false}>
       </WordCard>
       <div className="w-full h-fit rounded-b-xl bg-white p-2">
@@ -119,7 +118,7 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
         </div>
       </div>
       <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
-        <button className="w-8/12 h-10 btn-white border-black border-4 rounded-md" onClick={onNext}>
+        <button className="w-8/12 h-10 btn-black text-3xl rounded-md" onClick={onNext}>
           下一个单词
         </button>
       </div>

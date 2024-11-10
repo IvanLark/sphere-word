@@ -69,11 +69,8 @@ export default function Chat() {
     });
 
   if (error) {
-    // // TODO
-    // return (<>错误页面</>);
-    throw error;
+    throw new Error('获取数据出错');
   }
-
   if (loading) {
     // TODO
     return (<>加载页面</>);

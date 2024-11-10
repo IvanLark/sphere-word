@@ -12,5 +12,5 @@ export default function ErrorPage() {
 			{/* // TODO 这里返回上一级后错误依然留存，除了刷新不知道如何解决 */}
 			<button className="btn-scale btn-grey px-4 py-2 mt-4 rounded-lg" onClick={() => { navigate(-1); setTimeout(() => { window.location.reload() }, 500) }}>返回上一级</button>
 		</div>
-	)
+	);
 }

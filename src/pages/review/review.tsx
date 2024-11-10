@@ -1,82 +1,62 @@
 import { Menu } from "@mui/icons-material";
 import Header from "../../common/components/header.tsx";
-import { useState } from "react";
 import { useRequest } from "alova/client";
 import { getReviewWords, reviewWord } from "../../api/methods/review.methods.ts";
 import ReviewWordList from "./pages/review-word-list.tsx";
-import { ReviewWordData } from "../../api/types/review.types.ts";
 import ReviewWordSelect from "./pages/review-word-select.tsx";
 import ReviewWordInfo from "./pages/review-word-info.tsx";
 import { toast } from "react-toastify";
+import useReviewState from "./hooks/use-review-state.ts";
+import ReviewWordBlank from "./pages/review-word-blank.tsx";
 
 export default function Review() {
 
-	const { loading, error } = useRequest(getReviewWords())
+	const {
+		index, words, activePage, wordListWinOpen,
+		setWords, nextPage, reverseWordListWinOpen
+	} = useReviewState();
+
+	const { data, loading, error } = useRequest(getReviewWords(), { force: true })
 		.onSuccess(({ data }) => {
-			setReviewWords(data);
-			if (data.length === 0) {
-				setReviewStatus(-1);
-			} else {
-				setCurWordData(data[0]);
-				setReviewStatus(0);
-			}
+		setWords(prevState => {
+			return prevState.concat(
+				data.filter(i => {
+					let isExisted = false;
+					prevState.forEach(j => {
+						console.log(`比较: ${i.word}, ${j.word}`)
+						if (i.word === j.word) isExisted = true;
+					});
+					return !isExisted;
+				})
+			);
 		});
+		if (activePage === 'init') { nextPage(data); }
+	});
 
-	const defaultWordData = {
-		word: 'make',
-		due: 0,
-		last: 0,
-		reps: 0,
-		review: {
-			'轻松': { rating: 4, due: 0 },
-			'还行': { rating: 3, due: 0 },
-			'困难': { rating: 2, due: 0 },
-			'忘记': { rating: 1, due: 0 }
-		}
-	} as ReviewWordData;
-
-	const [curWordData, setCurWordData] = useState<ReviewWordData>(defaultWordData);
-	const [reviewWords, setReviewWords] = useState<ReviewWordData[]>([]);
-	const [reviewWordListOpen, setReviewWordListOpen] = useState(false);
-	const [reviewStatus, setReviewStatus] = useState(0);
-
-	function ReviewPage() {
-		switch (reviewStatus) {
-			case -1:
-				return <div className="w-screen h-[calc(100vh-4rem)] relative"><span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl">暂时没有需要复习的单词哦💖</span></div>;
-			case 0:
-				return <ReviewWordSelect wordData={curWordData} onSelected={handleSelect} />;
-			case 1:
-				return <ReviewWordInfo word={curWordData.word} onNext={handleNext} />;
-		}
-	}
-
-	if (loading) {
+	if (loading || data === undefined) {
 		// TODO
 		return (<>加载中...</>);
 	}
 	if (error) {
-		// // dTODO
-		// return (<>出错了...</>);
-		throw error;
+		throw new Error('获取数据出错');
 	}
 
 	function handleSelect(word: string, rating: number) {
 		reviewWord(word, rating).then(() => {
-			setReviewWords(prevState => prevState.slice(1));
-			setReviewStatus(1);
+			nextPage(words);
 		}).catch((error: Error) => {
 			toast.error(`出错了，${error.message}`);
-		})
+		});
 	}
 
-	function handleNext() {
-		if (reviewWords.length === 0) {
-			setCurWordData(defaultWordData);
-			setReviewStatus(-1);
-		} else {
-			setCurWordData(reviewWords[0]);
-			setReviewStatus(0);
+	function ReviewPage() {
+		switch (activePage) {
+			case 'blank':
+				return <ReviewWordBlank />;
+			case 'select':
+				return <ReviewWordSelect wordData={words[index]} onSelected={handleSelect} />;
+			case 'info':
+				return <ReviewWordInfo word={words[index].word} onNext={() => nextPage(words)} />;
 		}
 	}
 
@@ -86,14 +66,14 @@ export default function Review() {
 			<Header
 				leadingBtn={
 					<button title="剩余单词" className="btn-trans size-16 rounded-md border-r-2 border-black group"
-						onClick={() => { setReviewWordListOpen(!reviewWordListOpen) }}>
+						onClick={reverseWordListWinOpen}>
 						<Menu style={{ fontSize: "2.5rem" }} />
 					</button>
 				}
-				middleElement={`还剩${reviewWords.length}个单词`}
+				middleElement={`还剩${words.length - index - 1}个单词`}
 			/>
 			<ReviewPage />
-			<ReviewWordList open={reviewWordListOpen} reviewWords={reviewWords} onClose={() => { setReviewWordListOpen(false) }} />
+			<ReviewWordList index={index} words={words} open={wordListWinOpen} onClose={reverseWordListWinOpen} />
 		</>
 	);
 }
