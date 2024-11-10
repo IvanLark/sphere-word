@@ -49,9 +49,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
   /* 请求失败时 */
   if (error) {
-    toast.error('无法获取单词数据')
-    // TODO Error时返回的页面
-    return (<></>);
+    throw new Error('获取数据出错');
   }
 
   /* 加载数据时 TODO 完善 */

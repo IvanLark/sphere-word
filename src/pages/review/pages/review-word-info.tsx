@@ -24,8 +24,7 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
     return (<>加载中...</>);
   }
   if (error) {
-    // TODO
-    return (<>出错了...</>);
+    throw new Error('获取数据出错');
   }
 
   const definitionTabs: Record<string, Array<string>> = {}

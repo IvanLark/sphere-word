@@ -7,6 +7,7 @@ import { toast } from "../../common/utils/toast.util.tsx";
 import { checkWordExisted } from "../../api/methods/word-search.methods.ts";
 import {useLocation, useNavigate} from "react-router-dom";
 import {ArrowRight, HomeOutlined} from "@mui/icons-material";
+import QueryBlank from "./pages/query-blank.tsx";
 
 /**
  * 单词查询页面
@@ -15,13 +16,13 @@ import {ArrowRight, HomeOutlined} from "@mui/icons-material";
 export default function Query() {
   // 当前查询单词
   const storedCurWord = sessionStorage.getItem('query:cur-word');
-  const initCurWord = storedCurWord ? storedCurWord : 'make';
+  const initCurWord = storedCurWord ? storedCurWord : '';
   const [curWord, setCurWord] = useState<string>(initCurWord);
 
   // 历史查询单词
   const storedHistory = sessionStorage.getItem('query:history');
   const initHistory = storedHistory ? JSON.parse(storedHistory) : {
-    nodes: [{ id: getNodeId('Word', 'make'), key: 'make', type: 'Word', label: 'make' }], edges: []
+    nodes: [{id: getNodeId('Word', 'make'), key: 'make', type: 'Word', label: 'make'}], edges: []
   };
   const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>(initHistory);
 
@@ -98,34 +99,56 @@ export default function Query() {
   }
 
   function scrollBackToTop() {
-    document.getElementById('scroll-container-start')!.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('scroll-container-start')!.scrollIntoView({behavior: 'smooth'});
   }
 
   const [headLeftBtn, setHeadLeftBtn] = useState({
-    icon: <HomeOutlined style={{ fontSize: "2.5rem" }} />,
-    onClick: () => { navigate('/'); }
+    icon: <HomeOutlined style={{fontSize: "2.5rem"}}/>,
+    onClick: () => {
+      navigate('/');
+    }
   });
   const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
     if (location.state !== null) {
-      handleSkipWord(location.state.word, '搜索', '搜索');
+      handleSkipWord(location.state.word, '查询', '查询');
       setHeadLeftBtn({
-        icon: <ArrowRight style={{ fontSize: "2.5rem" }} />,
-        onClick: () => { navigate(-1); }
+        icon: <ArrowRight style={{fontSize: "2.5rem"}}/>,
+        onClick: () => {
+          navigate(-1);
+        }
       });
     }
   }, [location.state]);
 
+  function handleSearch(newWord: string) {
+    addNodesAndEdges([{
+      id: getNodeId('Word', newWord),
+      key: newWord,
+      type: 'Word',
+      label: newWord
+    } as Node], []);
+    setCurWord(newWord);
+    scrollBackToTop();
+  }
+
   // 单词查询页面
-  return (
-    <div className="w-screen h-[calc(100vh-4rem)]">
-      <QueryHeader word={curWord} handleSkipWord={handleSkipWord}
-                   leftBtnIcon={headLeftBtn.icon}
-                   leftBtnOnClick={headLeftBtn.onClick}/>
-      <QueryGraph word={curWord} history={history}
-        handleSkipWord={(newWord) => { setCurWord(newWord); scrollBackToTop(); }}></QueryGraph>
-      <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
-    </div>
-  );
+  return (<>
+    {
+      curWord === '' ?
+      <QueryBlank handleSearch={handleSearch}/> :
+      <div className="w-screen h-[calc(100vh-4rem)]">
+        <QueryHeader word={curWord} handleSkipWord={handleSkipWord}
+                     leftBtnIcon={headLeftBtn.icon}
+                     leftBtnOnClick={headLeftBtn.onClick}/>
+        <QueryGraph word={curWord} history={history}
+                    handleSkipWord={(newWord) => {
+                      setCurWord(newWord);
+                      scrollBackToTop();
+                    }}></QueryGraph>
+        <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
+      </div>
+    }
+  </>);
 }

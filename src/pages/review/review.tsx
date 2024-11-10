@@ -38,9 +38,7 @@ export default function Review() {
 		return (<>加载中...</>);
 	}
 	if (error) {
-		// // dTODO
-		// return (<>出错了...</>);
-		throw error;
+		throw new Error('获取数据出错');
 	}
 
 	function handleSelect(word: string, rating: number) {
