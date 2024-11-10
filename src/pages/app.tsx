@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import '../assets/css/main-view.css'
+import '../assets/css/style.css'
 import { Suspense, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { toast } from "../common/utils/toast.util.tsx";
