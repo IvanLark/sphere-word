@@ -71,6 +71,10 @@ export default function Query() {
 
   // 处理单词数据页面中点击单词事件
   function handleSkipWord(newWord: string, relationType: string, relationLabel: string = relationType): void {
+    if (newWord === curWord) {
+      scrollBackToTop();
+      return;
+    }
     checkWordExisted(newWord).then(() => {
       // 添加nodes和edge
       addNodesAndEdges([{
