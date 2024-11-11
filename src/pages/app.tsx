@@ -1,23 +1,30 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import {Outlet, useLocation, useNavigate} from 'react-router-dom'
 import '../assets/css/style.css'
 import { Suspense, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { toast } from "../common/utils/toast.util.tsx";
 import ErrorBoundary from '../common/components/ErrorBoundary/ErrorBoundary';
-import {useRequest} from "alova/client";
 import {checkLogin} from "../api/methods/auth.methods.ts";
 
 function App() {
 
   const routerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 登录校验
-  useRequest(checkLogin())
-    .onError(() => {
-      toast.error('未登录，请先登录');
-      navigate('/auth');
-    });
+  useEffect(() => {
+    const loginFlag = sessionStorage.getItem('login');
+    if (location.pathname !== '/auth' && loginFlag === null) {
+      checkLogin().then(() => {
+        sessionStorage.setItem('login', 'true');
+        toast.info('欢迎回来');
+      }).catch(() => {
+        toast.error('未登录，请先登录');
+        navigate('/auth');
+      });
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     // 页面切换动画

@@ -29,13 +29,14 @@ export default function useReviewState() {
     if (activePage === 'select') {
       setActivePage('info');
     }
-    else if (activePage === 'info' || activePage === 'init') {
+    else {
       if ( index !== curWords.length - 1 ) {
         setIndex(prevState => prevState + 1);
         setActivePage('select');
       } else {
         setActivePage('blank');
         setWords([]);
+        setIndex(-1);
       }
     }
   }

@@ -21,14 +21,17 @@ interface QueryGraphProps {
 }
 
 export default function QueryGraph({ word, history, handleSkipWord }: QueryGraphProps) {
+
   const elements = [
     ...history.nodes.map(nodeItem => ({ data: nodeItem })),
     ...history.edges.map(edgeItem => ({ data: edgeItem }))
   ];
+
   const layoutData = {
     name: 'cola',
     nodeSpacing: 25 // 节点间最小距离
   };
+
   const styleData = [
     // 单词节点样式
     {
