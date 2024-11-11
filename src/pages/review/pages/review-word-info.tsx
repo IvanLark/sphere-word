@@ -118,7 +118,7 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
       </div>
       <div className={`w-full fixed bottom-0 py-2 z-10 bg-transparent`}>
         <div className="w-full h-full absolute left-0 top-0 bg-gradient-to-t from-black to-transparent opacity-20"></div>
-        <button className="btn-scale btn-black w-3/4 h-10  relative left-1/2 -translate-x-1/2 text-3xl rounded-md" onClick={onNext}>
+        <button className="btn-scale btn-black w-3/4 h-10 relative left-1/2 -translate-x-1/2 text-3xl rounded-md" onClick={onNext}>
           下一个单词
         </button>
       </div>

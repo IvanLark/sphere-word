@@ -9,11 +9,7 @@ import Home from './pages/home/home.tsx';
 import ToastContainer from './common/utils/toast.util.tsx';
 import Auth from './pages/auth/auth.tsx';
 import Review from './pages/review/review.tsx';
-// import Test from "./pages/test/test.tsx";
-import ErrorTest from './common/components/ErrorBoundary/ErrorTest.tsx';
 import ErrorPage from './common/components/ErrorBoundary/ErrorPage.tsx';
-// import Test from "./pages/test/test.tsx";
-
 
 const queryClient = new QueryClient();
 
@@ -42,22 +38,9 @@ const router = createBrowserRouter([
         path: '/chat',
         element: <Chat />
       },
-      {
-        path: 'error-test',
-        element: <ErrorTest />
-      },
-
     ],
     errorElement: <ErrorPage />
-  },
-  {
-    path: '/auth',
-    element: <Auth />
-  },
-  // {
-  //   path: '/test',
-  //   element: <Test />
-  // }
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(

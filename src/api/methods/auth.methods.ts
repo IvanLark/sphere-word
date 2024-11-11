@@ -11,3 +11,6 @@ export const login =
 export const signup =
   (data: UserAuthData) =>
     alova.Post<string>('/user/sign_up', data)
+
+export const checkLogin =
+  () => alova.Get<null>('/user/check_login')

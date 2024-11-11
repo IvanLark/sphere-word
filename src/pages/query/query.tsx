@@ -22,7 +22,7 @@ export default function Query() {
   // 历史查询单词
   const storedHistory = sessionStorage.getItem('query:history');
   const initHistory = storedHistory ? JSON.parse(storedHistory) : {
-    nodes: [{id: getNodeId('Word', 'make'), key: 'make', type: 'Word', label: 'make'}], edges: []
+    nodes: [], edges: []
   };
   const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>(initHistory);
 
@@ -99,7 +99,10 @@ export default function Query() {
   }
 
   function scrollBackToTop() {
-    document.getElementById('scroll-container-start')!.scrollIntoView({behavior: 'smooth'});
+    const element = document.getElementById('scroll-container-start');
+    if (element) {
+      element.scrollIntoView({behavior: 'smooth'});
+    }
   }
 
   const [headLeftBtn, setHeadLeftBtn] = useState({
