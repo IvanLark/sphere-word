@@ -29,7 +29,7 @@ export default function QueryBlank({ handleSearch }: { handleSearch: (newWord: s
   }
 
   return (
-    <div className="w-[500px] h-16 w-scree mx-auto flex gap-2 bg-white fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div className="w-[500px] max-w-full h-16 w-scree mx-auto flex gap-2 bg-white fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
       {/* <div className="w-full flex items-center mx-auto"> */}
       <div className="size-16 p-3 h-full text-center text-lg rounded-md border-2 border-black">
         <SearchOutlined style={{ fontSize: "2.5rem" }} />

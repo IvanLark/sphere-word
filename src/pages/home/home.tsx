@@ -1,4 +1,5 @@
 import HomeNaviTab, { HomeNaviTabProps } from './components/home-navi-tab.tsx';
+import Icon from "../../../public/智臻.svg";
 
 export default function Home() {
 
@@ -14,7 +15,11 @@ export default function Home() {
 		<div className="w-screen h-screen relative">
 			<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
 			 flex flex-col items-center gap-4">
-				{/* TODO 加个菜单标题 */}
+				{/* dTODO 加个菜单标题 */}
+				<h1 className="w-full text-center mb-10 text-6xl font-bold">
+					<img src={Icon} alt="智臻" className="size-24 inline-block mr-2" />
+					智臻
+				</h1>
 				{
 					tabs.map((tab, index) =>
 						<HomeNaviTab key={index} {...tab} />

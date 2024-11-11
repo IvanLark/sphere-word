@@ -5,10 +5,10 @@ import { WordCard } from "../../../../common/components/card/word-card.tsx";
 import { toast } from "../../../../common/utils/toast.util.tsx";
 import * as React from "react";
 import ContinuousTabs from "../../../../common/components/tabs/continuous-tabs.tsx";
-import {useWatcher} from "alova/client";
-import {getWordData} from "../../../../api/methods/word-data.methods.ts";
-import {checkCollected, collectWord} from "../../../../api/methods/review.methods.ts";
-import {useState} from "react";
+import { useWatcher } from "alova/client";
+import { getWordData } from "../../../../api/methods/word-data.methods.ts";
+import { checkCollected, collectWord } from "../../../../api/methods/review.methods.ts";
+import { useState } from "react";
 import CollectButton from "./components/collect-button.tsx";
 
 /**
@@ -27,8 +27,8 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   // 单词core数据
   const { data, loading, error } = useWatcher(
     getWordData(word), [word], {
-      immediate: true
-    }
+    immediate: true
+  }
   );
 
   // 收藏
@@ -38,7 +38,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   }).onSuccess(() => { setCollected(true); })
     .onError(() => { setCollected(false); });
 
-  function handleCollect () {
+  function handleCollect() {
     collectWord(word).then(() => {
       toast.info('收藏成功');
       setCollected(true);
@@ -69,7 +69,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   return (
     <div className="w-full h-[calc(100vh-4rem)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar">
       <div id="scroll-container-start"
-           className="w-full h-[calc(100vh-400px)] flex- bg-transparent snap-start pointer-events-none">
+        className="w-full h-[calc(100vh-400px)] flex- bg-transparent snap-start pointer-events-none">
       </div>
       <div className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde">
 
@@ -90,7 +90,6 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
         </div>
 
         {/* Tabs */}
-        {/* // TODO 暂时搞不了sticky…… */}
         <div className="mx-2">
           <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={loading}>
             {

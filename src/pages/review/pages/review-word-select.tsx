@@ -1,12 +1,12 @@
-import {Mic} from "@mui/icons-material";
-import {ReviewWordData} from "../../../api/types/review.types.ts";
+import { Mic } from "@mui/icons-material";
+import { ReviewWordData } from "../../../api/types/review.types.ts";
 
 interface ReviewWordSelectProps {
   wordData: ReviewWordData;
   onSelected: (word: string, rating: number) => void;
 }
 
-export default function ReviewWordSelect ({ wordData, onSelected }: ReviewWordSelectProps) {
+export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSelectProps) {
 
   const colorMap = {
     '轻松': '#E0F9B5',
@@ -18,22 +18,21 @@ export default function ReviewWordSelect ({ wordData, onSelected }: ReviewWordSe
   return (
     <div className="w-full h-[calc(100vh-4rem)] flex flex-col">
       <div className="flex flex-1 flex-col gap-4 items-center justify-center">
-        <h2 className="text-7xl font-bold"> { wordData.word } </h2>
-        {/* // TODO 这里text不敢防太大，具体你那边看看效果再自己调调 */}
+        <h2 className="text-7xl font-bold"> {wordData.word} </h2>
         <div className="flex gap-4">
           <button
             className="btn-scale btn-trans px-8 py-1 text-lg text-center rounded-xl border-2 border-black"
             onClick={() => {
               new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${wordData.word}`).play();
             }}>
-            英<Mic/>
+            英<Mic />
           </button>
           <button
             className="btn-scale btn-trans px-8 py-1 text-lg text-center rounded-xl border-2 border-black"
             onClick={() => {
               new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${wordData.word}`).play();
             }}>
-            美<Mic/>
+            美<Mic />
           </button>
         </div>
       </div>
@@ -43,7 +42,7 @@ export default function ReviewWordSelect ({ wordData, onSelected }: ReviewWordSe
             <button
               key={index}
               className={`btn-scale btn-common-hover w-fit px-12 py-2 text-2xl text-nowrap rounded-lg bg-[${color}]`}
-              style={{backgroundColor: color}}
+              style={{ backgroundColor: color }}
               onClick={() => onSelected(wordData.word, wordData.review[key].rating)}>
               {key}
             </button>

@@ -74,8 +74,7 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
   }
 
   return (
-    // TODO 我也不理解，这里加不了flex，加了就会溢出，暂时先不加
-    <div className="w-full h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] fle flex-col items-center justify-center overflow-y-auto">
+    <div className="w-full h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] pb-14 fle flex-col items-center justify-center overflow-y-auto">
       {/* 顶部卡片 */}
       <WordCard word={word} data={data.core} button={
         <SkipButton onClick={() => navigate('/query', { state: { word: word } })} />
@@ -117,8 +116,9 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
           }
         </div>
       </div>
-      <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
-        <button className="w-8/12 h-10 btn-black text-3xl rounded-md" onClick={onNext}>
+      <div className={`w-full fixed bottom-0 py-2 z-10 bg-transparent`}>
+        <div className="w-full h-full absolute left-0 top-0 bg-gradient-to-t from-black to-transparent opacity-20"></div>
+        <button className="btn-scale btn-black w-3/4 h-10  relative left-1/2 -translate-x-1/2 text-3xl rounded-md" onClick={onNext}>
           下一个单词
         </button>
       </div>

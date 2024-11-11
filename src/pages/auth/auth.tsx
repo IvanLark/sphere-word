@@ -91,7 +91,7 @@ export default function Auth() {
 										<Input label="密码" type="password" required={true} value={userData.againPassword}
 											onChange={(value) => setUserData({ ...userData, againPassword: value })} />
 										{/* <div className="w-full flex items-center">
-											// TODO 麻了对checkbox不熟，你看看这里怎么改点击标签也能选中
+											// dTODO 麻了对checkbox不熟，你看看这里怎么改点击标签也能选中
 											<input title="isBYS" type="checkbox" className="size-6" checked={userData.isBYR}
 												onChange={(value) => setUserData({ ...userData, isBYR: value })} />
 											<label htmlFor="isBYS"> 我是北邮人 </label>
