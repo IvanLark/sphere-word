@@ -82,27 +82,29 @@ export default function Auth() {
 								}
 							}>
 								<Input label="用户名" type="text" required={true} value={userData.username}
-									onChange={(e) => setUserData({ ...userData, username: e.target.value })} />
+									onChange={(value) => setUserData({ ...userData, username: value })} />
 								<Input label="密码" type="password" required={true} value={userData.password}
-									onChange={(e) => setUserData({ ...userData, password: e.target.value })} />
+									onChange={(value) => setUserData({ ...userData, password: value })} />
 								{
 									value === 'signup' &&
 									<>
 										<Input label="密码" type="password" required={true} value={userData.againPassword}
-											onChange={(e) => setUserData({ ...userData, againPassword: e.target.value })} />
-										<div className="w-full flex items-center">
-											{/* // TODO 麻了对checkbox不熟，你看看这里怎么改点击标签也能选中 */}
+											onChange={(value) => setUserData({ ...userData, againPassword: value })} />
+										{/* <div className="w-full flex items-center">
+											// TODO 麻了对checkbox不熟，你看看这里怎么改点击标签也能选中
 											<input title="isBYS" type="checkbox" className="size-6" checked={userData.isBYR}
-												onChange={(e) => setUserData({ ...userData, isBYR: e.target.checked })} />
+												onChange={(value) => setUserData({ ...userData, isBYR: value })} />
 											<label htmlFor="isBYS"> 我是北邮人 </label>
-										</div>
-										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.isBYR ? 'h-40' : 'h-0'}`}>
+										</div> */}
+										<Input label="北邮人" type="checkbox-slide" required={true} value={userData.isBYR}
+											onChange={(value) => setUserData({ ...userData, isBYR: value })} />
+										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.isBYR ? 'h-52' : 'h-0'}`}>
 											<Input label="姓名" type="text" required={userData.isBYR} value={userData.studentName}
-												onChange={(e) => setUserData({ ...userData, studentName: e.target.value })} />
+												onChange={(value) => setUserData({ ...userData, studentName: value })} />
 											<Input label="学号" type="text" required={userData.isBYR} value={userData.studentId}
-												onChange={(e) => setUserData({ ...userData, studentId: e.target.value })} />
+												onChange={(value) => setUserData({ ...userData, studentId: value })} />
 											<Input label="班级" type="text" required={userData.isBYR} value={userData.classId}
-												onChange={(e) => setUserData({ ...userData, classId: e.target.value })} />
+												onChange={(value) => setUserData({ ...userData, classId: value })} />
 										</div>
 									</>
 								}

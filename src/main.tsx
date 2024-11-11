@@ -12,7 +12,7 @@ import Review from './pages/review/review.tsx';
 // import Test from "./pages/test/test.tsx";
 import ErrorTest from './common/components/ErrorBoundary/ErrorTest.tsx';
 import ErrorPage from './common/components/ErrorBoundary/ErrorPage.tsx';
-import Test from "./pages/test/test.tsx";
+// import Test from "./pages/test/test.tsx";
 
 
 const queryClient = new QueryClient();
@@ -54,10 +54,10 @@ const router = createBrowserRouter([
     path: '/auth',
     element: <Auth />
   },
-  {
-    path: '/test',
-    element: <Test />
-  }
+  // {
+  //   path: '/test',
+  //   element: <Test />
+  // }
 ]);
 
 createRoot(document.getElementById('root')!).render(
