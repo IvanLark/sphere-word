@@ -6,6 +6,7 @@ import { toast } from "../../common/utils/toast.util.tsx";
 import { useNavigate } from "react-router-dom";
 import { UserAuthData } from "../../api/types/auth.types.ts";
 import { login, signup } from "../../api/methods/auth.methods.ts";
+import Radio from "../../common/components/radio.tsx";
 
 export default function Auth() {
 
@@ -31,7 +32,7 @@ export default function Auth() {
 			setUserData(initUserData);
 			navigate('/');
 		}).catch(error => {
-			toast.error(`登录失败: ${error.response.data.msg}`);
+			toast.error(`登录失败: ${error.message}`);
 		}).finally(() => {
 		});
 	}
@@ -96,8 +97,8 @@ export default function Auth() {
 												onChange={(value) => setUserData({ ...userData, isBYR: value })} />
 											<label htmlFor="isBYS"> 我是北邮人 </label>
 										</div> */}
-										<Input label="北邮人" type="checkbox-slide" required={true} value={userData.isBYR}
-											onChange={(value) => setUserData({ ...userData, isBYR: value })} />
+										<Radio label="北邮人" value={userData.isBYR}
+													 onChange={ (value) => setUserData({ ...userData, isBYR: value }) } />
 										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.isBYR ? 'h-52' : 'h-0'}`}>
 											<Input label="姓名" type="text" required={userData.isBYR} value={userData.studentName}
 												onChange={(value) => setUserData({ ...userData, studentName: value })} />

@@ -1,14 +1,16 @@
 import HomeNaviTab, { HomeNaviTabProps } from './components/home-navi-tab.tsx';
+import {useNavigate} from "react-router-dom";
 
 export default function Home() {
+	const navigate = useNavigate();
 
 	const tabs: HomeNaviTabProps[] = [
-		{ title: '单词查询', icon: '🧐', path: '/query' },
-		{ title: 'AI对话', icon: '🤗', path: '/chat' },
-		{ title: '单词复习', icon: '🤓', path: '/review' },
-		{ title: '错误页面', icon: '❌', path: '/error-test' },
-		{ title: '测试页面', icon: '🥳', path: '/test' }
-	]
+		{ title: '单词查询', icon: '🧐', onClick: () => navigate('/query') },
+		{ title: 'AI对话', icon: '🤗', onClick: () => navigate('/chat') },
+		{ title: '单词复习', icon: '🤓', onClick: () => navigate('/review') },
+		{ title: '退出登录', icon: '😭', onClick: () => { localStorage.clear(); navigate('/auth'); } },
+		{ title: '联系作者', icon: '🤭', onClick: () => window.location.assign('https://bw4bdu09z49.feishu.cn/docx/ZQxMdLOy1oweE3xalXrc25nwnZO?from=from_copylink') },
+	];
 
 	return (
 		<div className="w-screen h-screen relative">

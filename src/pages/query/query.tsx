@@ -22,7 +22,7 @@ export default function Query() {
   // 历史查询单词
   const storedHistory = sessionStorage.getItem('query:history');
   const initHistory = storedHistory ? JSON.parse(storedHistory) : {
-    nodes: [{id: getNodeId('Word', 'make'), key: 'make', type: 'Word', label: 'make'}], edges: []
+    nodes: [], edges: []
   };
   const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>(initHistory);
 
