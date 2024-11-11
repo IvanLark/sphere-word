@@ -23,7 +23,8 @@ export default function QueryBlank ({handleSearch}: {handleSearch: (newWord: str
   function handleConfirm (word: string) {
     checkWordExisted(word).then(() => {
       handleSearch(word);
-    }).catch(() => {
+    }).catch((error: Error) => {
+      console.log(error);
       toast.error('不好意思，词库里没有这个词');
     });
   }

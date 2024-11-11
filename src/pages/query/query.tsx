@@ -99,7 +99,10 @@ export default function Query() {
   }
 
   function scrollBackToTop() {
-    document.getElementById('scroll-container-start')!.scrollIntoView({behavior: 'smooth'});
+    const element = document.getElementById('scroll-container-start');
+    if (element) {
+      element.scrollIntoView({behavior: 'smooth'});
+    }
   }
 
   const [headLeftBtn, setHeadLeftBtn] = useState({
