@@ -30,7 +30,7 @@ export default function Review() {
 				})
 			);
 		});
-		if (activePage === 'init') { nextPage(data); }
+		if (activePage === 'init' || activePage === 'blank') { nextPage(data); }
 	});
 
 	if (loading || data === undefined) {
@@ -70,7 +70,7 @@ export default function Review() {
 						<Menu style={{ fontSize: "2.5rem" }} />
 					</button>
 				}
-				middleElement={`还剩${words.length - index - 1}个单词`}
+				middleElement={words.length !== 0 ? `还剩${words.length-index-1}个单词` : '无剩余单词'}
 			/>
 			<ReviewPage />
 			<ReviewWordList index={index} words={words} open={wordListWinOpen} onClose={reverseWordListWinOpen} />

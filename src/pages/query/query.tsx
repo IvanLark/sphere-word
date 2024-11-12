@@ -6,7 +6,7 @@ import QueryHeader from "./pages/query-header.tsx";
 import { toast } from "../../common/utils/toast.util.tsx";
 import { checkWordExisted } from "../../api/methods/word-search.methods.ts";
 import {useLocation, useNavigate} from "react-router-dom";
-import {ArrowRight, HomeOutlined} from "@mui/icons-material";
+import {ArrowForward, HomeOutlined} from "@mui/icons-material";
 import QueryBlank from "./pages/query-blank.tsx";
 
 /**
@@ -115,9 +115,21 @@ export default function Query() {
   const location = useLocation();
   useEffect(() => {
     if (location.state !== null) {
-      handleSkipWord(location.state.word, '查询', '查询');
+      const newWord = location.state.word;
+      if (curWord !== '') {
+        handleSkipWord(newWord, '查询', '查询');
+      } else {
+        addNodesAndEdges([{
+          id: getNodeId('Word', newWord),
+          key: newWord,
+          type: 'Word',
+          label: newWord
+        } as Node], []);
+        setCurWord(newWord);
+        scrollBackToTop();
+      }
       setHeadLeftBtn({
-        icon: <ArrowRight style={{fontSize: "2.5rem"}}/>,
+        icon: <ArrowForward style={{fontSize: "2.5rem"}}/>,
         onClick: () => {
           navigate(-1);
         }

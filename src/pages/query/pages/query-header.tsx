@@ -75,7 +75,7 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 
 	return (
 		<>
-			<div className={`w-full  p-2 fixed z-10 bg-transparent flex gap-2 overflow-hidden 
+			<div className={`w-full  p-2 fixed z-40 bg-transparent flex gap-2 overflow-hidden
 											${searchData.searchInputBoxOpen ? '' : 'h-16'}`}>
 				{/* 搜索按钮 */}
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
@@ -134,16 +134,16 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 					AI
 				</button>
 			</div>
-			<div className="fixed bottom-[400px] right-2 z-10 flex flex-col gap-2">
+			{/*<div className="fixed bottom-[400px] right-2 z-10 flex flex-col gap-2">
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold"
-								onClick={() => {/** td to implement */ }}>
+								onClick={() => {}}>
 					<Add style={{ fontSize: '3rem' }} />
 				</button>
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold"
-								onClick={() => {/** td to implement */ }}>
+								onClick={() => {}}>
 					<Remove style={{ fontSize: '3rem' }} />
 				</button>
-			</div>
+			</div>*/}
 		</>
 	);
 }

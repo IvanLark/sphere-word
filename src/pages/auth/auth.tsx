@@ -26,6 +26,7 @@ export default function Auth() {
 
 	function handleLogin() {
 		login(userData).then(response => {
+			sessionStorage.setItem('login', 'true');
 			localStorage.setItem('token', response);
 			localStorage.setItem('tokenCreateTime', String(new Date().getTime()));
 			toast.info('登录成功');
@@ -44,6 +45,7 @@ export default function Auth() {
 			return;
 		}
 		signup(userData).then(response => {
+			sessionStorage.setItem('login', 'true');
 			localStorage.setItem('token', response);
 			localStorage.setItem('tokenCreateTime', String(new Date().getTime()));
 			toast.info('注册成功');
