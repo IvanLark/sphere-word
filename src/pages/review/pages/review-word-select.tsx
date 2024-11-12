@@ -16,7 +16,7 @@ export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSel
   }
 
   return (
-    <div className="w-full h-[calc(100vh-4rem)] flex flex-col">
+    <div className="w-full h-[calc(100vh-4rem)] pb-28 flex flex-col">
       <div className="flex flex-1 flex-col gap-4 items-center justify-center">
         <h2 className="text-7xl font-bold"> {wordData.word} </h2>
         <div className="flex gap-4">
@@ -36,12 +36,12 @@ export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSel
           </button>
         </div>
       </div>
-      <div className="w-fit h-44 p-4 mx-auto grid grid-cols-2 grid-rows-2 gap-5 place-items-center ">
+      <div className="w-fit h-44 p-4 mx-auto grid grid-cols-2 grid-rows-2 gap-6 place-items-center ">
         {
           Object.entries(colorMap).map(([key, color], index) => (
             <button
               key={index}
-              className={`btn-scale btn-common-hover w-fit px-12 py-2 text-2xl text-nowrap rounded-lg bg-[${color}]`}
+              className={`btn-scale btn-common-hover w-fit px-12 py-3 text-3xl text-nowrap rounded-lg bg-[${color}]`}
               style={{ backgroundColor: color }}
               onClick={() => onSelected(wordData.word, wordData.review[key].rating)}>
               {key}

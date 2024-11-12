@@ -69,12 +69,13 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   return (
     <div className="w-full h-[calc(100vh-4rem)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar">
       <div id="scroll-container-start"
-        className="w-full h-[calc(100vh-400px)] flex- bg-transparent snap-start pointer-events-none">
+        className="w-full h-[calc(100vh-400px)] h-ful flex- bg-transparent snap-star pointer-events-none">
+        {/* //！终于解决！可以直接定上面占位div的高度，下面不定，有瑕疵但总比遮挡好！ */}
       </div>
       <div className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde">
 
         {/* 分割 */}
-        <div className="h-[300px] snap-end">
+        <div className="h-[300px snap-end">
           {/* 装饰 */}
           <div className="w-full h-8 relative">
             <div className="w-56 h-4 rounded-full bg-gray-200 absolute left-1/2

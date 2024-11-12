@@ -16,7 +16,7 @@ export default function ReviewWordList({ index, words, onClose, open }: ReviewWo
       {
         words.map((wordData, mapIndex) =>
           <button key={mapIndex} className={`btn-scale btn-trans w-full py-4 text-center rounded-lg
-            ${index === mapIndex ? 'bg-black text-white' : ''}`}>
+            ${index === mapIndex ? 'bg-black text-white hover:bg-gray-900 active:bg-gray-800' : ''}`}>
             {wordData.word}
           </button>
         )
