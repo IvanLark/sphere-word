@@ -2,7 +2,7 @@ import { Add, ArrowForward, Close, HomeOutlined, Remove, SearchOutlined } from '
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "../../../common/utils/toast.util.tsx";
-import {checkWordExisted, getWordAutoComplete} from "../../../api/methods/word-search.methods.ts";
+import { checkWordExisted, getWordAutoComplete } from "../../../api/methods/word-search.methods.ts";
 
 interface ChatHeaderProps {
 	word: string;
@@ -28,10 +28,10 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 	const [searchData, setSearchData] = useState<SearchData>(initSearchData);
 
 	// 数据操作
-	function closeSearch () {
+	function closeSearch() {
 		setSearchData(initSearchData);
 	}
-	function openSearch () {
+	function openSearch() {
 		setSearchData({ ...initSearchData, searchInputBoxOpen: true });
 	}
 	function updateSearchText(text: string) {
@@ -88,9 +88,9 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 				</button>
 				{/* 搜索框 */}
 				<div className="flex-1 text-3xl flex items-start bg-white">
-					<div className={`border-black rounded-md shadow-md overflow-hidden duration-300 
-													${searchData.searchInputBoxOpen ? 'w-full px-2 border-2' : 'w-0'}`}
-							 style={{ transitionProperty: 'width,padding ' }}>
+					<div className={`border-black rounded-md shadow-md overflow-hidden duration-300
+													${searchData.searchInputBoxOpen ? 'w-[calc(100vw-7.5rem)] px-2 border-2' : 'w-0'}`}
+						style={{ transitionProperty: 'width,padding ' }}>
 						<input ref={inputRef} type="text" placeholder="搜索单词..."
 							className={`w-full h-full bg-transparent outline-none`}
 							value={searchData.searchText}
@@ -103,19 +103,20 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 						{
 							searchData.searchInputBoxOpen && searchData.autoCompleteList.map((completedWord, index) =>
 								<div className={`btn-white w-full p-2 border-t-2 border-black flex ${index === 0 ? 'border-x-' : ''}`}
-										 onClick={() => {
-											 handleSkipWord(completedWord, '查询', '查询');
-											 closeSearch();
-										 }}
-										 key={index}>
-									<span className='flex-1'>{completedWord}</span>
+									onClick={() => {
+										handleSkipWord(completedWord, '查询', '查询');
+										closeSearch();
+									}}
+									key={index}>
+									<span className='flex-1 overflow-hidden text-ellipsis'>{completedWord}</span>
 									<ArrowForward fontSize='large' />
 								</div>
 							)
 						}
 					</div>
 					{/* 当前选中单词 */}
-					<span className="h-fit flex-1  text-center overflow-hidden">
+					{/* //!阴阳差错实现了，这里如果加了动画进出曲线不同会导致Home按钮抽搐，不用动画用回flex-1就可极大缓解 */}
+					<span className={`h-fit flex-1  text-center overflow-hidden ${searchData.searchInputBoxOpen ? 'w-0' : 'w-[calc(100vw-7.5rem)] '}`}>
 						{word}
 					</span>
 				</div>
@@ -130,7 +131,7 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 			<div className="w-full h-16"></div>
 			<div className="fixed bottom-[400px] left-2 z-10">
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold"
-								onClick={() => navigate('/chat', { state: { objectsType: '单词', objects: [word] } })}>
+					onClick={() => navigate('/chat', { state: { objectsType: '单词', objects: [word] } })}>
 					AI
 				</button>
 			</div>
