@@ -7,3 +7,7 @@ export const checkWordExisted =
 export const getWordAutoComplete =
   (text: string) =>
     alova.Get<Array<string>>('/word/search/auto_complete', { params: { text: text } });
+
+export const getCnAutoComplete =
+  (text: string) =>
+    alova.Get<Array<string>>('/word/search/cn_auto_complete', { params: { text: text } });

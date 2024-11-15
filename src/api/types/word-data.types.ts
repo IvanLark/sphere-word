@@ -242,10 +242,27 @@ export interface Synset {
   relation: SynsetRelation;
 }
 
+interface Position {
+  sentenceIndex: number;
+  wordIndex: number;
+  sentence: Array<string>;
+}
+
+export interface WordArticle {
+  articleId: string;
+  topic: string;
+  title: string;
+  subtitle: string;
+  banner: string;
+  difficultyScore: number;
+  positions: Array<Position>;
+}
+
 export interface WordData {
   core: WordCore;
   relation: WordRelation;
   ai: WordAi;
+  article: Array<WordArticle>;
 }
 
 export interface Node {

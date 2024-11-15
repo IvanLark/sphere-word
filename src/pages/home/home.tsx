@@ -9,7 +9,7 @@ export default function Home() {
 		{ title: '单词查询', icon: '🧐', onClick: () => navigate('/query') },
 		{ title: 'AI对话', icon: '🤗', onClick: () => navigate('/chat') },
 		{ title: '单词复习', icon: '🤓', onClick: () => navigate('/review') },
-		{ title: '退出登录', icon: '😭', onClick: () => { localStorage.clear(); navigate('/auth'); } },
+		{ title: '退出登录', icon: '😭', onClick: () => { localStorage.clear(); sessionStorage.clear(); navigate('/auth'); } },
 		{ title: '联系作者', icon: '🤭', onClick: () => window.location.assign('https://bw4bdu09z49.feishu.cn/docx/ZQxMdLOy1oweE3xalXrc25nwnZO?from=from_copylink') },
 	];
 

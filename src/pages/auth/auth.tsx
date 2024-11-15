@@ -84,14 +84,14 @@ export default function Auth() {
 									}
 								}
 							}>
-								<Input label="用户名" type="text" required={true} value={userData.username}
+								<Input label="用户名" type="text" required={true} value={userData.username} placeholder="请输入用户名"
 									onChange={(value) => setUserData({ ...userData, username: value })} />
-								<Input label="密码" type="password" required={true} value={userData.password}
+								<Input label="密码" type="password" required={true} value={userData.password} placeholder="请输入密码"
 									onChange={(value) => setUserData({ ...userData, password: value })} />
 								{
 									value === 'signup' &&
 									<>
-										<Input label="密码" type="password" required={true} value={userData.againPassword}
+										<Input label="密码" type="password" required={true} value={userData.againPassword} placeholder="请再次输入密码"
 											onChange={(value) => setUserData({ ...userData, againPassword: value })} />
 										{/* <div className="w-full flex items-center">
 											// dTODO 麻了对checkbox不熟，你看看这里怎么改点击标签也能选中

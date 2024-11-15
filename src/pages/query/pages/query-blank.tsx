@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { ArrowForward, HomeOutlined, SearchOutlined } from "@mui/icons-material";
-import { checkWordExisted, getWordAutoComplete } from "../../../api/methods/word-search.methods.ts";
+import {checkWordExisted, getCnAutoComplete, getWordAutoComplete} from "../../../api/methods/word-search.methods.ts";
 import { toast } from "../../../common/utils/toast.util.tsx";
 import { useNavigate } from "react-router-dom";
+import isPureEn from "../../../common/utils/is-pure-en.util.ts";
+import isPureCn from "../../../common/utils/is-pure-cn.util.ts";
 
 export default function QueryBlank({ handleSearch }: { handleSearch: (newWord: string) => void }) {
   const navigate = useNavigate();
@@ -22,12 +24,20 @@ export default function QueryBlank({ handleSearch }: { handleSearch: (newWord: s
   }
 
   function handleConfirm(word: string) {
-    checkWordExisted(word).then(() => {
-      handleSearch(word);
-    }).catch((error: Error) => {
-      console.log(error);
-      toast.error('不好意思，词库里没有这个词');
-    });
+    if (isPureEn(word)) {
+      checkWordExisted(word).then(() => {
+        handleSearch(word);
+      }).catch((error: Error) => {
+        console.log(error);
+        toast.error('不好意思，词库里没有这个词');
+      });
+    } else if (isPureCn(word)) {
+      getCnAutoComplete(word).then(response => {
+        setAutoCompleteList(response);
+      });
+    } else {
+      toast.error('只能输入纯英文或纯中文');
+    }
   }
 
   return (<>

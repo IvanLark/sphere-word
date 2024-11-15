@@ -115,7 +115,7 @@ export default function Chat() {
           </button>
         }
         // 中间
-        middleElement='Lingo AI'
+        middleElement='GeekGen AI'
         // 菜单按钮
         trailingBtn={
           <button title="Menu" className="btn-trans size-16 rounded-md border-l-2 border-black group">

@@ -10,6 +10,7 @@ import { getWordData } from "../../../../api/methods/word-data.methods.ts";
 import { checkCollected, collectWord } from "../../../../api/methods/review.methods.ts";
 import { useState } from "react";
 import CollectButton from "./components/collect-button.tsx";
+import QueryDataArticle from "./pages/query-data-article.tsx";
 
 /**
  * 单词数据页面
@@ -58,11 +59,12 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   }
 
   /* 子页面：单词详情，单词关系，AI解析，阅读材料 */
-  type TabName = '单词详情' | '单词关系' | 'AI解析';
+  type TabName = '单词详情' | '单词关系' | 'AI解析'|'阅读材料';
   const pageTabs: Record<TabName, React.ReactNode> = {
     '单词详情': <QueryDataCore word={word} data={data.core} isLoading={loading}></QueryDataCore>,
     '单词关系': <QueryDataRelation word={word} data={data.relation} handleSkipWord={handleSkipWord}></QueryDataRelation>,
-    'AI解析': <QueryDataAi data={data.ai} ></QueryDataAi>
+    'AI解析': <QueryDataAi data={data.ai} ></QueryDataAi>,
+    '阅读材料': <QueryDataArticle data={data.article}></QueryDataArticle>
   };
 
   /* 请求中和请求成功用同一个JSX */
