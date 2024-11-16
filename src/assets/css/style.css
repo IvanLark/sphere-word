@@ -47,12 +47,28 @@ img {
 	@apply bg-teal-500 text-white transition-all hover:bg-teal-600 active:bg-teal-700
 }
 
+.btn-scale-sm {
+	@apply transition-all hover:scale-[1.02] active:scale-[0.98] group-hover:scale-105 group-active:scale-95
+}
 .btn-scale {
 	@apply transition-all hover:scale-105 active:scale-95 group-hover:scale-105 group-active:scale-95
 }
 
 .btn-scale-xl {
 	@apply transition-all hover:scale-110 active:scale-90 group-hover:scale-110 group-active:scale-90
+}
+
+/* //**----------------------------Anim----------------------------------------------------- */
+.anim-rotate{
+	animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 /* //**----------------------------Markdown----------------------------------------------------- */

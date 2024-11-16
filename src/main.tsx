@@ -10,6 +10,7 @@ import ToastContainer from './common/utils/toast.util.tsx';
 import Auth from './pages/auth/auth.tsx';
 import Review from './pages/review/review.tsx';
 import ErrorPage from './common/components/ErrorBoundary/ErrorPage.tsx';
+import Article from './pages/article/article.tsx';
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: '/chat',
         element: <Chat />
+      },
+      {
+        path: '/article',
+        element: <Article />
       },
     ],
     errorElement: <ErrorPage />
