@@ -6,11 +6,11 @@ import { WordCore } from "../../../api/types/word-data.types.ts";
 interface WordCardProps {
 	word: string;
 	data: WordCore | undefined;
-	button: JSX.Element;
-	isLoading: boolean;
+	button?: JSX.Element;
+	isLoading?: boolean;
 }
 
-export function WordCard({ word, data, button, isLoading }: WordCardProps) {
+export function WordCard({ word, data, button, isLoading = false }: WordCardProps) {
 	return (
 		<div className="bg-white p-4 flex-1 flex flex-col gap2 snap-end">
 			<div className="max-w-full flex items-center text-wrap">
