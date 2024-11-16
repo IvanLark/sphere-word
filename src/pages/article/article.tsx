@@ -46,10 +46,10 @@ export default function Article() {
 
   function SelectModeSwitch() {
     return (
-      <button title="SelectMode" className="btn-trans size-16 rounded-md border-l-2 border-black group">
-        <div className="btn-scale-xl text-2xl" onClick={() => {
-          setSelectWinOpen(!selectWinOpen)
-        }}>
+      <button title="SelectMode" className="btn-trans size-16 rounded-md border-l-2 border-black group" onClick={() => {
+        setSelectWinOpen(!selectWinOpen)
+      }}>
+        <div className="btn-scale-xl text-2xl" >
           {selectWord ? '词' : '句'}
         </div>
       </button>
@@ -62,7 +62,7 @@ export default function Article() {
       <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-4 bg-white rounded-lg shadow-md flex flex-col gap-2`}>
         <div className={`px-2 fixed right-0 top-16 overflow-hidden transition-all duration-300 ${selectWinOpen ? 'h-24' : 'h-0'}`}>
           {/*// ** selectWin */}
-          <div className="rounded-md border-black border-2 overflow-hidden ">
+          <div className="bg-white rounded-md border-black border-2 overflow-hidden backdrop-blur-sm bg-opacity-50">
             <p className="w-full text-center">选择模式</p>
             <button className={`btn-scale w-full text-center transition-all duration-300 ${selectWord ? 'bg-black text-white' : 'btn-trans bg-white text-black'}`} onClick={() => { setSelectWord(true); setSelectWinOpen(false) }}>选择单词</button>
             <button className={`btn-scale w-full text-center transition-all duration-300 ${!selectWord ? 'bg-black text-white' : 'btn-trans bg-white text-black'}`} onClick={() => { setSelectWord(false); setSelectWinOpen(false) }}>选择句子</button>
@@ -79,10 +79,10 @@ export default function Article() {
         <img src={article.banner} alt="" className="w-full h-[calc(40vw) object-cover" loading="lazy" />
         {/* <p className="">{article.text.map((</p> */}
         {/* //!此处padding放到外面无法生效 */}
-        <div className={`${wordCardWinOpen ? 'pb-[300px]' : ''}`}>
+        <div >
           {articleContent}
+          <div className={`w-1 transition-all duration-300 ${wordCardWinOpen ? 'h-[280px]' : 'h-10'}`}></div>
         </div>
-        <div className={`w-1 transition-all duration-300 ${wordCardWinOpen ? 'h-24' : 'h-0'}`}></div>
         <Tooltip id="hightlight-word" clickable={true} openOnClick={true} className="p-0"><button className="w-full h-full" onClick={() => { navigate('/chat',) }}>问问AI</button></Tooltip>
         <div className={`fixed bottom-0 overflow-hidden transition-all duration-300 ${wordCardWinOpen ? 'h-[250px]' : 'h-0'}`}>
           <button title="关闭" className="btn-scale btn-trans rounded-full absolute right-5 top-5 transition-all duration-300" onClick={() => setWordCardWinOpen(false)}><Close /></button>

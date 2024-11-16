@@ -36,7 +36,7 @@ export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSel
           </button>
         </div>
       </div>
-      <div className="w-fit h-44 p-4 mx-auto grid grid-cols-2 grid-rows-2 gap-6 place-items-center ">
+      <div className="w-fit h-fit p-4 mx-auto grid grid-cols-2 grid-rows-2 gap-6 place-items-center ">
         {
           Object.entries(colorMap).map(([key, color], index) => (
             <button
@@ -45,10 +45,11 @@ export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSel
               style={{ backgroundColor: color }}
               onClick={() => onSelected(wordData.word, wordData.review[key].rating)}>
               {key}
+              <p className="text-base text-gray-600">{1}天后</p>
             </button>
           ))
         }
       </div>
-    </div>
+    </div >
   );
 }
