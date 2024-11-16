@@ -81,7 +81,7 @@ export default function Article() {
         {/* //!此处padding放到外面无法生效 */}
         <div >
           {articleContent}
-          <div className={`w-1 transition-all duration-300 ${wordCardWinOpen ? 'h-[250px]' : 'h-10'}`}></div>
+          <div className={`w-1 transition-all duration-300 ${wordCardWinOpen ? 'h-[280px]' : 'h-10'}`}></div>
         </div>
         <Tooltip id="hightlight-word" clickable={true} openOnClick={true} className="p-0"><button className="w-full h-full" onClick={() => { navigate('/chat',) }}>问问AI</button></Tooltip>
         <div className={`fixed bottom-0 overflow-hidden transition-all duration-300 ${wordCardWinOpen ? 'h-[250px]' : 'h-0'}`}>
