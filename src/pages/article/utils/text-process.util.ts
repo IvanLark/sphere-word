@@ -1,7 +1,12 @@
-export function isPunct(char: string): boolean {
-	return /[.,!?;:]/.test(char);
+export function isWord(text: string): boolean {
+	return /^[a-zA-Z]+$/.test(text);
 }
-export function getWordTag(difficultyScore: number): string {
+
+export function isPunct(text: string): boolean {
+	return /^[.,!?;:]$/.test(text);
+}
+
+export function getDifficultyTag(difficultyScore: number): string {
 	// 高考(90-120DR)
 	// 四级(100-130DR)
 	// 六级(115-145DR)
@@ -27,5 +32,5 @@ export function getWordTag(difficultyScore: number): string {
 		res.push("高职A级");
 	if (difficultyScore >= 40 && difficultyScore <= 95)
 		res.push("高职B级");
-	return res.join(" ");
+	return res.join("&");
 }

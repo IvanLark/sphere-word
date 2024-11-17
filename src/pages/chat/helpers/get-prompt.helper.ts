@@ -3,9 +3,13 @@ import {ChatLocationState} from "../types.ts";
 export default function getPromptMap(data: ChatLocationState): Record<string, string> {
   switch (data.objectsType) {
     case '单词': {
-      const word = data.objects;
+      const word = data.objects[0];
+      let meaningPrompt = `单词${word}有哪些意思呢？什么意思比较常用呢？`;
+      if (data.context) {
+        meaningPrompt = `在句子 “${data.context}”中，单词${word}是什么意思呢？`;
+      }
       return {
-        '释义': `单词${word}有哪些意思呢？什么意思比较常用呢？`,
+        '释义': meaningPrompt,
         '生活场景': `单词${word}在生活中有哪些应用场景呢？`,
         '短语': `单词${word}的短语`,
         '例句': `单词${word}的例句`,
@@ -20,6 +24,12 @@ export default function getPromptMap(data: ChatLocationState): Record<string, st
         '相关': `单词${word}和哪些词相关？`,
         '上位': `单词${word}有哪些上位词？`,
         '下位': `单词${word}有哪些下位词？`
+      };
+    }
+    case '句子': {
+      const sentence = data.objects[0];
+      return {
+        '意思': `在上下文 “${data.context}” 中，句子 “${sentence}” 是什么意思？`
       };
     }
     default: {

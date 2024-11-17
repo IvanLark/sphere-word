@@ -242,7 +242,7 @@ export interface Synset {
   relation: SynsetRelation;
 }
 
-interface Position {
+export interface Position {
   paragraphIndex: number;
   sentenceIndex: number;
   wordIndex: number;
@@ -264,7 +264,7 @@ export interface WordData {
   core: WordCore;
   relation: WordRelation;
   ai: WordAi;
-  article: Array<WordArticle>;
+  article?: Array<WordArticle>;
 }
 
 export interface Node {

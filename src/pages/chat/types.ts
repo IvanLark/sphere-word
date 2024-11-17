@@ -8,17 +8,26 @@ export interface ChatHistory {
   state: 0 | 1;
 }
 
-export type ChatLocationState = ChatLocationStateWord | ChatLocationStateDefault;
+export type ChatLocationState = ChatLocationStateWord | ChatLocationStateSentence | ChatLocationStateDefault;
 
 export interface ChatLocationStateWord {
-  objectsType: '单词',
-  objects: [string],
+  objectsType: '单词';
+  objects: [string];
+  context?: string;
+  promptName: string | undefined;
+}
+
+export interface ChatLocationStateSentence {
+  objectsType: '句子';
+  objects: [string];
+  context: string;
   promptName: string | undefined;
 }
 
 export interface ChatLocationStateDefault {
-  objectsType: undefined,
-  objects: undefined,
+  objectsType: undefined;
+  objects: undefined;
+  context: undefined;
   promptName: undefined;
 }
 

@@ -33,6 +33,7 @@ export default function Chat() {
   let locationState = {
     objectsType: undefined,
     objects: undefined,
+    context: undefined,
     promptName: undefined
   } as ChatLocationState;
   if (location.state !== null) locationState = location.state;

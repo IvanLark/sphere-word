@@ -1,98 +1,253 @@
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useState} from "react";
 import { getArticle } from "../../api/methods/article.methods";
-import { Article as ArticleType } from "../../api/types/article.types";
-import { WordArticle } from "../../api/types/word-data.types";
+import {WordData} from "../../api/types/word-data.types";
 import SingleWordCard from "../../common/components/card/single-word-card";
 import Header from "../../common/components/header";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Close, More, Refresh } from "@mui/icons-material";
-import { getWordTag, isPunct } from "../../common/utils/text-process";
-import { useRequest, useWatcher } from "alova/client";
+import { Close, Refresh } from "@mui/icons-material";
+import {getDifficultyTag, isPunct, isWord} from "./utils/text-process.util.ts";
+import { useRequest } from "alova/client";
 import { Tooltip } from 'react-tooltip'
 import { WordCard } from "../../common/components/card/word-card";
 import { getWordData } from "../../api/methods/word-data.methods";
+import {ArticleLocationState} from "./types.ts";
+import {checkWordExisted} from "../../api/methods/word-search.methods.ts";
+import {toast} from "../../common/utils/toast.util.tsx";
+import SkipButton from "../review/components/skip-button.tsx";
 
-// !自己搞个类型吧()
-type SelectWord = {
-  word: string;
-  position: [number, number, number];
-}
 export default function Article() {
-  const [selectWord, setSelectWord] = useState(true);
-  const [selectWinOpen, setSelectWinOpen] = useState(false);
-  const [wordCardWinOpen, setWordCardWinOpen] = useState(false);
-  const [selectedWord, setSelectedWord] = useState<SelectWord[]>([]);
 
   const navigate = useNavigate();
 
-  const { articleId, position }: { articleId: string; position: string } = useLocation().state;
-  // const [article, setArticle] = useState<ArticleType>();
-  // useEffect(() => {
-  // getArticle(articleId).then((data) => { setArticle(data) }).catch((error) => { throw error; });
-  // })
-  const { data: article, error_article, loading_article } = useRequest(getArticle(articleId));
-  const { data: wordData, error_worddata, loading_worddata } = useWatcher(
-    getWordData('make'), ['make'], {
-    immediate: true
-  });
-  // !用reduce可以类似join的效果
-  const articleContent = useMemo(() => article?.text.map((paragraph, p_index) => paragraph.map((sentence, s_index) => sentence.map((word, w_index) =>
+  type SelectMode = '词' | '句';
+  const [selectMode, setSelectMode] = useState<SelectMode>('词');
+  const [selectWinOpen, setSelectWinOpen] = useState(false);
+  const [wordCardWinOpen, setWordCardWinOpen] = useState(false);
+  type Position = [number, number, number];
+  const [selectedPosition, setSelectedPosition] = useState<Position|null>(null);
+  const [wordData, setWordData] = useState<WordData|null>(null);
 
-    // TODO 数据结构和选中逻辑等你实现了，自行替换true
-    <span data-tooltip-id={true && !isPunct(word) ? 'hightlight-word' : ''} id={`word-${p_index}-${s_index}-${w_index}`} className={`w-fit ${true ? 'bg-lime-500 text-white' : ''}`} onClick={() => { if (true && !isPunct(word)) setWordCardWinOpen(true); }} >{isPunct(word) ? '' : ' '}{word}</span>)))
-    .reduce((prev, curr) => [...prev, [<div className="w-full h-3"></div>], ...curr])
-    , [article])
-  // .join('');
+  const { articleId, positions }: ArticleLocationState = useLocation().state;
+
+  const { data, error, loading } = useRequest(getArticle(articleId));
+
+  useEffect(() => {
+    if (positions && data) {
+      console.log('执行');
+      positions.forEach(position => {
+        const span = document.getElementById(`word-${position.paragraphIndex}-${position.sentence}-${position.wordIndex}`);
+        if (span) {
+          // TODO 不知道为什么修改无效
+          span.style.background = 'yellow';
+          span.style.color = 'white';
+        }
+      });
+    }
+  });
+
+  if (error) {
+    throw new Error('获取数据出错');
+  }
+  if (loading || data === undefined) {
+    return (
+      <div className="w-full min-h-[calc(100vh-4rem)] relative">
+        {/* //!这两个类名必须分开不然transform冲突 */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Refresh className="anim-rotate" style={{fontSize: "10rem"}}/>
+        </div>
+      </div>
+    );
+  }
+
+  function handleWordClick (word: string, position: Position) {
+    checkWordExisted(word).then(() => {
+      setSelectedPosition(position);
+      getWordData(word).then((data) => {
+        setWordData(data);
+        setWordCardWinOpen(true);
+      });
+    }).catch(() => {
+      toast.error('不好意思，词库里没有这个词');
+    });
+  }
+
+  function handleSentenceClick (position: Position) {
+    setSelectedPosition(position);
+  }
+
+  function checkSelected (position: Position) {
+    if (selectedPosition === null) {
+      return false;
+    }
+    if (selectMode === '词') {
+      return position[0] === selectedPosition[0] && position[1] === selectedPosition[1] && position[2] === selectedPosition[2];
+    } else if (selectMode === '句') {
+      return position[0] === selectedPosition[0] && position[1] === selectedPosition[1];
+    }
+  }
+
+  function getSentenceString (words: Array<string>) {
+    return words.reduce((curText, curWord, index) => {
+      if (index === 0) {
+        return curWord;
+      }
+      if (isPunct(curWord)) {
+        return curText + curWord;
+      } else {
+        return curText + ' ' + curWord;
+      }
+    }, '');
+  }
+
+  function getSelectedItem () {
+    if (selectedPosition === null) {
+      return null;
+    }
+    if (selectMode === '词') {
+      return {
+        item: data.text[selectedPosition[0]][selectedPosition[1]][selectedPosition[2]],
+        context: getSentenceString(data.text[selectedPosition[0]][selectedPosition[1]])
+      };
+    } else if (selectMode === '句') {
+      return {
+        item: getSentenceString(data.text[selectedPosition[0]][selectedPosition[1]]),
+        context: data.text[selectedPosition[0]].slice(selectedPosition[1]-1, selectedPosition[1]+2).reduce(
+          (curText, curWords) => {
+            return curText + getSentenceString(curWords) + ' ';
+          }
+        , '')
+      };
+    }
+  }
+
+  function getChatLocationState () {
+    if (selectMode === '词') {
+      const { item, context } = getSelectedItem() as { item: string, context: string };
+      return {
+        objectsType: '单词',
+        objects: [item],
+        context: context
+      }
+    } else if (selectMode === '句') {
+      const { item, context } = getSelectedItem() as { item: string, context: string };
+      return {
+        objectsType: '句子',
+        objects: [item],
+        context: context
+      }
+    }
+  }
+
+  function ArticleText() {
+    return (<>{
+      data?.text.map((paragraph, pIndex) => paragraph.map((sentence, sIndex) =>
+        <span className={selectMode === '句' && checkSelected([pIndex, sIndex, -1]) ? "bg-lime-500 text-white rounded-md" : ""}
+              onClick={() => { if (selectMode === '句') handleSentenceClick([pIndex, sIndex, -1]) }}>
+          {
+            sentence.map((word, wIndex) =>
+              <span data-tooltip-id={checkSelected([pIndex, sIndex, wIndex]) ? 'highlight-word' : ''}
+                    id={`word-${pIndex}-${sIndex}-${wIndex}`}
+                    className={`w-fit ${selectMode === '词' && checkSelected([pIndex, sIndex, wIndex]) ? 'bg-lime-500 text-white rounded-md' : ''}`}
+                    onClick={() => {
+                      if (selectMode === '词' && isWord(word)) handleWordClick(word, [pIndex, sIndex, wIndex]);
+                    }}>
+                {isPunct(word) ? '' : ' '}{word}
+              </span>
+            )
+          }
+        </span>
+      )).reduce((prev, curr) => [...prev, <div className="w-full h-3"></div>, ...curr])
+    }</>);
+  }
 
   function SelectModeSwitch() {
     return (
-      <button title="SelectMode" className="btn-trans size-16 rounded-md border-l-2 border-black group" onClick={() => {
-        setSelectWinOpen(!selectWinOpen)
-      }}>
-        <div className="btn-scale-xl text-2xl" >
-          {selectWord ? '词' : '句'}
+      <button title="SelectMode" className="btn-trans size-16 rounded-md border-l-2 border-black group"
+              onClick={() => {
+                setSelectWinOpen(!selectWinOpen);
+              }}>
+        <div className="btn-scale-xl text-2xl">
+          {selectMode}
         </div>
       </button>
-    )
+    );
+  }
+
+  function SelectModeWin () {
+    return (
+      <div
+        className={`px-2 fixed right-0 top-16 overflow-hidden transition-all duration-300 ${selectWinOpen ? 'h-24' : 'h-0'}`}>
+        {/* SelectWin */}
+        <div className="bg-white rounded-md border-black border-2 overflow-hidden backdrop-blur-sm bg-opacity-50">
+          <p className="w-full text-center">选择模式</p>
+          <button
+            className={`btn-scale w-full text-center transition-all duration-300 
+                        ${selectMode === '词' ? 'bg-black text-white' : 'btn-trans bg-white text-black'}`}
+            onClick={() => {
+              setSelectMode('词');
+              setSelectWinOpen(false);
+            }}>
+            选择单词
+          </button>
+          <button
+            className={`btn-scale w-full text-center transition-all duration-300 
+                        ${selectMode === '句' ? 'bg-black text-white' : 'btn-trans bg-white text-black'}`}
+            onClick={() => {
+              setSelectMode('句');
+              setSelectWinOpen(false);
+            }}>
+            选择句子
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function WordCardWin ({ data }: { data: WordData }) {
+    return (
+      <div
+        className={`fixed bottom-0 overflow-hidden transition-all duration-300 ${wordCardWinOpen ? 'h-[250px]' : 'h-0'}`}>
+        <button title="关闭"
+                className="btn-scale btn-trans rounded-full absolute right-5 top-5 transition-all duration-300"
+                onClick={() => setWordCardWinOpen(false)}><Close/></button>
+        <WordCard word={getSelectedItem()!.item} data={data.core}
+                  button={<SkipButton onClick={() => navigate('/query', { state: { word: getSelectedItem()!.item } })} />}/>
+      </div>
+    );
   }
 
   return <>
-    <Header trailingBtn={<SelectModeSwitch />} />
-    {article ?
-      <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-4 bg-white rounded-lg shadow-md flex flex-col gap-2`}>
-        <div className={`px-2 fixed right-0 top-16 overflow-hidden transition-all duration-300 ${selectWinOpen ? 'h-24' : 'h-0'}`}>
-          {/*// ** selectWin */}
-          <div className="bg-white rounded-md border-black border-2 overflow-hidden backdrop-blur-sm bg-opacity-50">
-            <p className="w-full text-center">选择模式</p>
-            <button className={`btn-scale w-full text-center transition-all duration-300 ${selectWord ? 'bg-black text-white' : 'btn-trans bg-white text-black'}`} onClick={() => { setSelectWord(true); setSelectWinOpen(false) }}>选择单词</button>
-            <button className={`btn-scale w-full text-center transition-all duration-300 ${!selectWord ? 'bg-black text-white' : 'btn-trans bg-white text-black'}`} onClick={() => { setSelectWord(false); setSelectWinOpen(false) }}>选择句子</button>
-          </div>
-        </div>
+    <Header trailingBtn={<SelectModeSwitch/>}/>
+    <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-4 bg-white rounded-lg shadow-md flex flex-col gap-2`}>
+      <SelectModeWin/>
 
-        <h2 className="text-2xl font-bold ">{article.title}</h2>
-        <h2 className="text-2xl font-bold ">{article.subtitle}</h2>
-        <div className="flex flex-wrap gap-2">
-          <SingleWordCard word={article.topic} />
-          <SingleWordCard word={getWordTag(article.difficultyScore)} />
-          <SingleWordCard word={`${article.wordCount}词`} />
-        </div>
-        <img src={article.banner} alt="" className="w-full h-[calc(40vw) object-cover" loading="lazy" />
-        {/* <p className="">{article.text.map((</p> */}
-        {/* //!此处padding放到外面无法生效 */}
-        <div >
-          {articleContent}
-          <div className={`w-1 transition-all duration-300 ${wordCardWinOpen ? 'h-[280px]' : 'h-10'}`}></div>
-        </div>
-        <Tooltip id="hightlight-word" clickable={true} openOnClick={true} className="p-0"><button className="w-full h-full" onClick={() => { navigate('/chat',) }}>问问AI</button></Tooltip>
-        <div className={`fixed bottom-0 overflow-hidden transition-all duration-300 ${wordCardWinOpen ? 'h-[250px]' : 'h-0'}`}>
-          <button title="关闭" className="btn-scale btn-trans rounded-full absolute right-5 top-5 transition-all duration-300" onClick={() => setWordCardWinOpen(false)}><Close /></button>
-          <WordCard word={'make'} data={wordData.core} />
-        </div>
-      </div> :
-      <div className="w-full min-h-[calc(100vh-4rem)] relative">
-        {/* //!这两个类名必须分开不然transform冲突 */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><Refresh className="anim-rotate" style={{ fontSize: "10rem" }} /></div>
+      <img src={data.banner} alt="" className="w-full h-[calc(35vw) object-cover" loading="lazy"/>
+
+      <h2 className="text-2xl font-bold ">{data.title}</h2>
+      <h2 className="text-2xl font-bold ">{data.subtitle}</h2>
+      <div className="flex flex-wrap gap-2">
+        <SingleWordCard word={data.topic}/>
+        <SingleWordCard word={getDifficultyTag(data.difficultyScore)}/>
+        <SingleWordCard word={`${data.wordCount}词`}/>
       </div>
-    }
+
+      <div className="w-full -mx- mx-auto border-dashed border-black border-[1px]"></div>
+
+      <div>
+        <ArticleText/>
+        <div className={`w-1 transition-all duration-300 ${wordCardWinOpen ? 'h-[280px]' : 'h-10'}`}></div>
+      </div>
+
+      <Tooltip id="highlight-word" clickable={true} openOnClick={true} className="p-0">
+        <button className="w-full h-full"
+                onClick={() => {
+                  navigate('/chat', {state: getChatLocationState()})
+                }}>
+          问问AI
+        </button>
+      </Tooltip>
+
+      {wordCardWinOpen && wordData && <WordCardWin data={wordData}/>}
+    </div>
   </>
 }
