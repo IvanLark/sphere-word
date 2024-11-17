@@ -21,7 +21,7 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 				{/* 发音 */}
 				{
 					data && data?.pron &&
-					<div className="flex items-center gap-2	">
+					<div className="flex flex-wrap items-center gap2">
 						{
 							data.pron?.ukPron &&
 							<PronItem title="英" pron={data.pron.ukPron}
