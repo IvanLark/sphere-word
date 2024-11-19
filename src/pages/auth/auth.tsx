@@ -4,28 +4,29 @@ import ContinuousTabs from "../../common/components/tabs/continuous-tabs.tsx";
 import Input from "../../common/components/input.tsx";
 import { toast } from "../../common/utils/toast.util.tsx";
 import { useNavigate } from "react-router-dom";
-import { UserAuthData } from "../../api/types/auth.types.ts";
+import { UserSignUpData } from "../../api/types/auth.types.ts";
 import { login, signup } from "../../api/methods/auth.methods.ts";
 import Radio from "../../common/components/radio.tsx";
 
 export default function Auth() {
 
-	const initUserData: UserAuthData = {
+	const initUserData = {
 		'username': '',
 		'password': '',
 		'againPassword': '',
-		'isBYR': false,
-		'studentId': '',
-		'studentName': '',
-		'classId': '',
+		'role': 0,
+		'schoolName': '',
+		'className': '',
+		'name': '',
+		'sid': ''
 	};
 
-	const [userData, setUserData] = useState<UserAuthData>(initUserData);
+	const [userData, setUserData] = useState(initUserData);
 
 	const navigate = useNavigate();
 
 	function handleLogin() {
-		login(userData).then(response => {
+		login(userData.username, userData.password).then(response => {
 			sessionStorage.setItem('login', 'true');
 			localStorage.setItem('token', response);
 			localStorage.setItem('tokenCreateTime', String(new Date().getTime()));
@@ -34,7 +35,6 @@ export default function Auth() {
 			navigate('/');
 		}).catch(error => {
 			toast.error(`登录失败: ${error.message}`);
-		}).finally(() => {
 		});
 	}
 
@@ -44,7 +44,16 @@ export default function Auth() {
 			toast.error('两次输入密码不同');
 			return;
 		}
-		signup(userData).then(response => {
+		const userSignUpData = {
+			username: userData.username,
+			password: userData.password,
+			role: userData.role,
+			schoolName: userData.schoolName,
+			className: userData.className,
+			name: userData.name,
+			sid: userData.sid
+		} as UserSignUpData;
+		signup(userSignUpData).then(response => {
 			sessionStorage.setItem('login', 'true');
 			localStorage.setItem('token', response);
 			localStorage.setItem('tokenCreateTime', String(new Date().getTime()));
@@ -53,7 +62,6 @@ export default function Auth() {
 			navigate('/');
 		}).catch((error: Error) => {
 			toast.error(`注册失败: ${error.message}`);
-		}).finally(() => {
 		});
 	}
 
@@ -61,6 +69,14 @@ export default function Auth() {
 		'登录': 'login',
 		'注册': 'signup'
 	};
+
+	const radioOptions = {
+		'普通用户': 0,
+		'北邮学生': 1,
+		'北邮老师': 2,
+		'学生': 3,
+		'老师': 4
+	}
 
 	return (
 		<div className="w-screen h-screen bg-white relative px-10 select-none">
@@ -74,7 +90,8 @@ export default function Auth() {
 					{/* 登录、注册页面 */}
 					<ContinuousTabs tabs={pageTabs} isLoading={false}>
 						{(value) =>
-							<form className="flex flex-col gap-4 items-center" action="" onSubmit={
+							<form className={`flex flex-col gap-4 items-center`}
+										action="" onSubmit={
 								(e: React.FormEvent<HTMLFormElement>) => {
 									e.preventDefault();
 									if (value === 'login') {
@@ -99,15 +116,21 @@ export default function Auth() {
 												onChange={(value) => setUserData({ ...userData, isBYR: value })} />
 											<label htmlFor="isBYS"> 我是北邮人 </label>
 										</div> */}
-										<Radio label="北邮人" value={userData.isBYR}
-													 onChange={ (value) => setUserData({ ...userData, isBYR: value }) } />
-										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.isBYR ? 'h-52' : 'h-0'}`}>
-											<Input label="姓名" type="text" required={userData.isBYR} value={userData.studentName}
-												onChange={(value) => setUserData({ ...userData, studentName: value })} />
-											<Input label="学号" type="text" required={userData.isBYR} value={userData.studentId}
-												onChange={(value) => setUserData({ ...userData, studentId: value })} />
-											<Input label="班级" type="text" required={userData.isBYR} value={userData.classId}
-												onChange={(value) => setUserData({ ...userData, classId: value })} />
+										<Radio<number> label="角色" value={userData.role} options={radioOptions}
+													 onChange={ (value) => setUserData({ ...userData, role: value }) } />
+										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.role !== 0 ? 'h-64' : 'h-0'}`}>
+											{
+												(userData.role === 3 || userData.role === 4) &&
+												<Input label="学校" type="text" required={userData.role === 3 || userData.role === 4} value={userData.schoolName}
+															 placeholder="请输入你所在的学校名称" onChange={(value) => setUserData({ ...userData, schoolName: value })} />
+											}
+											<Input label={userData.role === 1 || userData.role === 3 ? "班级" : "部门"} type="text" required={userData.role !== 0} value={userData.className}
+														 placeholder="请输入你所在的班级或部门" onChange={(value) => setUserData({ ...userData, className: value })} />
+											<Input label="姓名" type="text" required={userData.role !== 0} value={userData.name}
+														 placeholder="请输入你的真实名称" onChange={(value) => setUserData({ ...userData, name: value })} />
+											<Input label={userData.role === 1 || userData.role === 3 ? "学号" : "工号"} type="text" required={userData.role !== 0} value={userData.sid}
+														 placeholder="请输入你的学号或工号" onChange={(value) => setUserData({ ...userData, sid: value })} />
+
 										</div>
 									</>
 								}

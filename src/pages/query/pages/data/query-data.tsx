@@ -62,9 +62,11 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   /* 子页面：单词详情，单词关系，AI解析，阅读材料 */
   const pageTabs: Record<string, React.ReactNode> = {
     '单词详情': <QueryDataCore word={word} data={data.core} isLoading={loading}></QueryDataCore>,
-    '单词关系': <QueryDataRelation word={word} data={data.relation} handleSkipWord={handleSkipWord}></QueryDataRelation>,
-    'AI解析': <QueryDataAi data={data.ai} ></QueryDataAi>,
+    '单词关系': <QueryDataRelation word={word} data={data.relation} handleSkipWord={handleSkipWord}></QueryDataRelation>
   };
+  if (data.ai && (data.ai.Eudic || data.ai.DictionaryByGPT4)) {
+    pageTabs['AI解析'] = <QueryDataAi data={data.ai} ></QueryDataAi>;
+  }
   if (data.article && data.article.length > 0) {
     pageTabs['阅读材料'] = <QueryDataArticle data={data.article}></QueryDataArticle>;
   }

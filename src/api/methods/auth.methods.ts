@@ -1,15 +1,15 @@
 import alova from "../index.ts";
-import {UserAuthData} from "../types/auth.types.ts";
+import {UserSignUpData} from "../types/auth.types.ts";
 
 export const login =
-  (data: UserAuthData) =>
+  (username: string, password: string) =>
     alova.Post<string>('/user/login', {
-      username: data.username,
-      password: data.password
+      username: username,
+      password: password
     })
 
 export const signup =
-  (data: UserAuthData) =>
+  (data: UserSignUpData) =>
     alova.Post<string>('/user/sign_up', data)
 
 export const checkLogin =

@@ -2,7 +2,6 @@ import { getArticle } from "../../api/methods/article.methods";
 import SingleWordCard from "../../common/components/card/single-word-card";
 import Header from "../../common/components/header";
 import { useLocation, useNavigate } from "react-router-dom";
-import {Refresh} from "@mui/icons-material";
 import { getDifficultyTag } from "./utils/text-process.util.ts";
 import { useRequest } from "alova/client";
 import { ArticleLocationState } from "./types.ts";
@@ -114,7 +113,10 @@ export default function Article() {
       }
     </div>
 
-    <AiTooltip show={showSelected} targetId={getSelectedItemId()} scrollY={articleRef.current!.scrollTop}
-               onClick={() => { saveScroll(); navigate('/chat', { state: getChatLocationState(data) }); }}/>
+    {
+      articleRef.current &&
+      <AiTooltip show={showSelected} targetId={getSelectedItemId()} scrollY={articleRef.current.scrollTop}
+                 onClick={() => { saveScroll(); navigate('/chat', { state: getChatLocationState(data) }); }}/>
+    }
   </div>
 }

@@ -1,12 +1,14 @@
 import React from "react";
 
-interface RadioProps {
+interface RadioProps <T> {
   label: string;
-  value: boolean;
-  onChange: (value: boolean) => void;
+  value: T;
+  onChange: (value: T) => void;
+  options: Record<string, T>;
 }
 
-export default function Radio ({ label, value, onChange }: RadioProps) {
+export default function Radio <T> ({ label, value, onChange, options }: RadioProps<T>) {
+
   return (
     <div className="w-fit h-12 flex items-center rounded-md border-2 border-black self-start">
       {/* label */}
@@ -15,12 +17,15 @@ export default function Radio ({ label, value, onChange }: RadioProps) {
       </div>
       {/* input */}
       <div className=" h-12 relative flex items-center">
-        <div
-          className={`w-16 h-full bg-black pointer-events-none absolute top-0 transition-all duration-300 ${value ? 'left-16' : 'left-0'}`}></div>
-        <span className={`w-16 h-full py-3 relative text-center ${value ? '' : 'text-white'}`}
-              onClick={() => onChange(false)}>否</span>
-        <span className={`w-16 h-full py-3 relative text-center ${value ? 'text-white' : ''}`}
-              onClick={() => onChange(true)}>是</span>
+        {/* <div className={`w-16 h-full bg-black pointer-events-none absolute top-0 transition-all duration-300 ${value ? 'left-16' : 'left-0'}`}></div> */}
+        {
+          Object.entries(options).map(([optionName, optionValue], index) =>
+            <span className={`w-20 h-full px-2 py-3 relative text-center ${optionValue === value ? 'text-white bg-black' : ''}`}
+                  onClick={() => onChange(optionValue)} key={index}>
+              {optionName}
+            </span>
+          )
+        }
       </div>
     </div>
   );

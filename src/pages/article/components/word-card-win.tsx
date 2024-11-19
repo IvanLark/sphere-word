@@ -5,7 +5,7 @@ import SkipButton from "../../review/components/skip-button.tsx";
 import DataCard from "../../../common/components/card/data-card.tsx";
 import {useNavigate} from "react-router-dom";
 import React, {useEffect, useRef} from "react";
-import {useRequest} from "alova/client";
+import {useWatcher} from "alova/client";
 import {getWordData} from "../../../api/methods/word-data.methods.ts";
 import ScreenLoading from "../../../common/components/loader/screen-loading.tsx";
 
@@ -19,7 +19,7 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
   const navigate = useNavigate();
   const wordCardWinRef = useRef(null);
 
-  const {data, loading, error} = useRequest(getWordData(word));
+  const {data, loading, error} = useWatcher(getWordData(word), [word], {immediate: true});
 
   useEffect(() => {
     if (wordCardWinRef.current) (wordCardWinRef.current as HTMLDivElement).scrollTop = 300;

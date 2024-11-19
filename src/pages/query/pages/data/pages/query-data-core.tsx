@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 interface QueryDataCoreProps {
   word: string;
-  data: WordCore | undefined;
+  data: WordCore;
   isLoading: boolean;
 }
 
@@ -45,7 +45,7 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
       {
         name: '义项比例',
         type: 'pie',
-        radius: '55%',
+        radius: '50%',
         center: ['50%', '50%'],
         data: meaningProportionData,
         itemStyle: {
@@ -70,17 +70,20 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
     <div className="w-full rounded-b-xl bg-white p-2">
       <div className="flex flex-col gap-5">
         {/* 标签 */}
-        <DataCard title='标签' showMoreButton={true} isLoading={isLoading}>
-          <div className="mt-2 flex gap-2 text-black">
-            {
-              data?.tags.basic.slice(0, 3).map((tag, index) =>
-                <span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
+        {
+          data.tags.basic.length > 0 &&
+          <DataCard title='标签' showMoreButton={false} isLoading={isLoading}>
+            <div className="mt-2 flex gap-2 text-black">
+              {
+                data?.tags.basic.slice(0, 3).map((tag, index) =>
+                    <span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
                   {tag}
                 </span>
-              )
-            }
-          </div>
-        </DataCard>
+                )
+              }
+            </div>
+          </DataCard>
+        }
         {/* 释义 */}
         {
           Object.keys(definitionTabs).length > 0 &&
