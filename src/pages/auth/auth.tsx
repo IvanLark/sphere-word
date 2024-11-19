@@ -14,7 +14,8 @@ export default function Auth() {
 		'username': '',
 		'password': '',
 		'againPassword': '',
-		'role': 0,
+		'userRole': 0,
+		'schoolRole': 0,
 		'schoolName': '',
 		'className': '',
 		'name': '',
@@ -70,12 +71,15 @@ export default function Auth() {
 		'注册': 'signup'
 	};
 
-	const radioOptions = {
-		'普通用户': 0,
-		'北邮学生': 1,
-		'北邮老师': 2,
-		'学生': 3,
-		'老师': 4
+	const userRoleOptions = {
+		'用户': 0,
+		'北邮': 1,
+		'他校': 2
+	}
+
+	const schoolRoleOptions = {
+		'学生': 0,
+		'老师': 1
 	}
 
 	return (
@@ -116,19 +120,21 @@ export default function Auth() {
 												onChange={(value) => setUserData({ ...userData, isBYR: value })} />
 											<label htmlFor="isBYS"> 我是北邮人 </label>
 										</div> */}
-										<Radio<number> label="角色" value={userData.role} options={radioOptions}
-													 onChange={ (value) => setUserData({ ...userData, role: value }) } />
-										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.role !== 0 ? 'h-64' : 'h-0'}`}>
+										<Radio<number> label="角色" value={userData.userRole} options={userRoleOptions}
+													 onChange={ (value) => setUserData({ ...userData, userRole: value }) } />
+										<div className={`w-full flex flex-col gap-5 items-center overflow-hidden transition-all duration-300 ${userData.userRole !== 0 ? 'h-64' : 'h-0'}`}>
+											<Radio<number> label="身份" value={userData.schoolRole} options={schoolRoleOptions}
+																		 onChange={ (value) => setUserData({ ...userData, schoolRole: value }) } />
 											{
-												(userData.role === 3 || userData.role === 4) &&
-												<Input label="学校" type="text" required={userData.role === 3 || userData.role === 4} value={userData.schoolName}
+												userData.userRole === 2 &&
+												<Input label="学校" type="text" required={userData.userRole === 2} value={userData.schoolName}
 															 placeholder="请输入你所在的学校名称" onChange={(value) => setUserData({ ...userData, schoolName: value })} />
 											}
-											<Input label={userData.role === 1 || userData.role === 3 ? "班级" : "部门"} type="text" required={userData.role !== 0} value={userData.className}
+											<Input label={userData.schoolRole === 0 ? "班级" : "部门"} type="text" required={userData.userRole !== 0} value={userData.className}
 														 placeholder="请输入你所在的班级或部门" onChange={(value) => setUserData({ ...userData, className: value })} />
-											<Input label="姓名" type="text" required={userData.role !== 0} value={userData.name}
+											<Input label="姓名" type="text" required={userData.userRole !== 0} value={userData.name}
 														 placeholder="请输入你的真实名称" onChange={(value) => setUserData({ ...userData, name: value })} />
-											<Input label={userData.role === 1 || userData.role === 3 ? "学号" : "工号"} type="text" required={userData.role !== 0} value={userData.sid}
+											<Input label={userData.schoolRole === 0 ? "学号" : "工号"} type="text" required={userData.userRole !== 0} value={userData.sid}
 														 placeholder="请输入你的学号或工号" onChange={(value) => setUserData({ ...userData, sid: value })} />
 
 										</div>
