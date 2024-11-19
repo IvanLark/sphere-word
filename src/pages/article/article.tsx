@@ -8,11 +8,12 @@ import { ArticleLocationState } from "./types.ts";
 import WordCardWin from "./components/word-card-win.tsx";
 import AiTooltip from "./components/ai-tooltip.tsx";
 import ModeSwitchButton from "./components/mode-switch-button.tsx";
-import useArticleState, {Position} from "./hooks/use-article-state.ts";
+import useArticleState, { Position } from "./hooks/use-article-state.ts";
 import SelectModeWin from "./components/select-mode-win.tsx";
 import ArticleText from "./components/article-text.tsx";
-import {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import ScreenLoading from "../../common/components/loader/screen-loading.tsx";
+import gsap from "gsap";
 
 export default function Article() {
 
@@ -43,17 +44,20 @@ export default function Article() {
     }, 150);
   }, []);
 
-  function beforeSelected (target: HTMLElement) {
+  function beforeSelected(target: HTMLElement) {
     const targetY = target.getBoundingClientRect().y;
     if (targetY > 250 && articleRef.current) {
+      // gsap.to(articleRef.current, { duration: 0.5, scrollTo: { y: targetY - 250 } }).then(() => {
+
+      // });
       articleRef.current.scrollBy({
-        top: (targetY - 250)
-        //behavior: "smooth"
+        top: (targetY - 250),
+        behavior: "smooth"
       });
     }
   }
 
-  function saveScroll () {
+  function saveScroll() {
     if (articleRef.current) {
       sessionStorage.setItem(`article-${articleId}-scroll-y`, articleRef.current.scrollTop.toString());
     }
@@ -63,10 +67,10 @@ export default function Article() {
     throw new Error('获取数据出错');
   }
   if (loading || data === undefined) {
-    return <ScreenLoading/>;
+    return <ScreenLoading />;
   }
 
-  function getHighlightClass (position: Position) {
+  function getHighlightClass(position: Position) {
     if (positions === undefined) return '';
     for (let i = 0; i < positions.length; i++) {
       if (
@@ -81,7 +85,7 @@ export default function Article() {
   }
 
   return <div id="article" className="overflow-y-auto relative" ref={articleRef}>
-    <Header trailingBtn={<ModeSwitchButton text={selectMode} onClick={() => openSwitchModeWin()}/>}/>
+    <Header trailingBtn={<ModeSwitchButton text={selectMode} onClick={() => openSwitchModeWin()} />} />
     <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-6 bg-white rounded-lg shadow- flex flex-col gap-2`}>
       <SelectModeWin show={showSwitchModeWin} selectMode={selectMode} changeSelectMode={changeSelectMode} />
 
@@ -100,15 +104,15 @@ export default function Article() {
 
       <div className="h-full">
         <ArticleText data={data} selectMode={selectMode} checkSelected={checkSelected} getHighlightClass={getHighlightClass}
-                     handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick} beforeSelected={beforeSelected} />
+          handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick} beforeSelected={beforeSelected} />
         <div className={`w-1 transition-all duration-300 ${showWordCardWin ? 'h-[280px]' : 'h-10'}`}></div>
       </div>
 
       {
         showWordCardWin && selectedItem &&
         <WordCardWin word={selectedItem}
-                     onScroll={(event) => { if (event.currentTarget.scrollTop === 0) unselected(); }}
-                     onClick={() => { saveScroll(); navigate('/query', {state: {word: selectedItem}}); }}
+          onScroll={(event) => { if (event.currentTarget.scrollTop === 0) unselected(); }}
+          onClick={() => { saveScroll(); navigate('/query', { state: { word: selectedItem } }); }}
         />
       }
     </div>
@@ -116,7 +120,7 @@ export default function Article() {
     {
       articleRef.current &&
       <AiTooltip show={showSelected} targetId={getSelectedItemId()} scrollY={articleRef.current.scrollTop}
-                 onClick={() => { saveScroll(); navigate('/chat', { state: getChatLocationState(data) }); }}/>
+        onClick={() => { saveScroll(); navigate('/chat', { state: getChatLocationState(data) }); }} />
     }
   </div>
 }
