@@ -14,6 +14,7 @@ import { ChatClient } from "./helpers/chat-client.helper.ts";
 import SendButton from "./components/send-button.tsx";
 import PromptButton from "./components/prompt-button.tsx";
 import PromptObjectButton from "./components/prompt-object-button.tsx";
+import ScreenLoading from "../../common/components/loader/screen-loading.tsx";
 
 /**
  * AI对话页面
@@ -47,7 +48,7 @@ export default function Chat() {
 
   const chatClient = new ChatClient(setEmpty, setGenerating);
 
-  const { loading, error } = useRequest(getChatHistory())
+  const { loading, error } = useRequest(getChatHistory(), { force: true })
     .onSuccess(({ data }) => {
       const historyMessage = [
         { role: 'assistant', content: '我是你的英语AI助手，有英语问题尽管问我呀！' },
@@ -73,8 +74,7 @@ export default function Chat() {
     throw new Error('获取数据出错');
   }
   if (loading) {
-    // TODO
-    return (<>加载页面</>);
+    return <ScreenLoading/>;
   }
 
   // 输入按钮点击事件

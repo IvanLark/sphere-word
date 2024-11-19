@@ -6,6 +6,7 @@ import DiscreteTabs from "../../../common/components/tabs/discrete-tabs.tsx";
 import ListItem from "../../../common/components/item/list-item.tsx";
 import { useNavigate } from "react-router-dom";
 import SkipButton from "../components/skip-button.tsx";
+import ScreenLoading from "../../../common/components/loader/screen-loading.tsx";
 
 interface ReviewWordInfoProps {
   word: string;
@@ -20,8 +21,7 @@ export default function ReviewWordInfo({ word, onNext }: ReviewWordInfoProps) {
   });
 
   if (loading || data === undefined) {
-    // TODO
-    return (<>加载中...</>);
+    return <ScreenLoading/>;
   }
   if (error) {
     throw new Error('获取数据出错');

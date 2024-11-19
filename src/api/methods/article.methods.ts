@@ -3,4 +3,7 @@ import {Article} from "../types/article.types.ts";
 
 export const getArticle =
   (articleId: string) =>
-    alova.Get<Article>('/article', { params: { id: articleId } })
+    alova.Get<Article>('/article', {
+      params: { id: articleId },
+      meta: { cache: true, gzip: true }
+    })

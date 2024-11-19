@@ -11,6 +11,7 @@ import { checkCollected, collectWord } from "../../../../api/methods/review.meth
 import { useState } from "react";
 import CollectButton from "./components/collect-button.tsx";
 import QueryDataArticle from "./pages/query-data-article.tsx";
+import ScreenLoading from "../../../../common/components/loader/screen-loading.tsx";
 
 /**
  * 单词数据页面
@@ -55,7 +56,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
   /* 加载数据时 TODO 完善 */
   if (loading || data === undefined) {
-    return (<></>);
+    return <ScreenLoading/>;
   }
 
   /* 子页面：单词详情，单词关系，AI解析，阅读材料 */
@@ -64,7 +65,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
     '单词关系': <QueryDataRelation word={word} data={data.relation} handleSkipWord={handleSkipWord}></QueryDataRelation>,
     'AI解析': <QueryDataAi data={data.ai} ></QueryDataAi>,
   };
-  if (data.article) {
+  if (data.article && data.article.length > 0) {
     pageTabs['阅读材料'] = <QueryDataArticle data={data.article}></QueryDataArticle>;
   }
 

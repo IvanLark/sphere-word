@@ -23,8 +23,8 @@ export default function QueryDataRelation({ word, data, handleSkipWord }: QueryD
 
   // 语义关系Tabs
   const semanticTabs: Record<string, Array<string>> = {};
-  if (data?.Synonym) Object.assign(semanticTabs, { '同义': data.Synonym.slice(0, 10).map(item => item.word) });
-  if (data?.Similar) Object.assign(semanticTabs, { '近义': data.Similar.slice(0, 10).map(item => item.word) });
+  if (data?.Synonym) Object.assign(semanticTabs, { '近义': data.Synonym.slice(0, 10).map(item => item.word) });
+  if (data?.Similar) Object.assign(semanticTabs, { '相似': data.Similar.slice(0, 10).map(item => item.word) });
   if (data?.Antonym) Object.assign(semanticTabs, { '反义': data.Antonym.slice(0, 10).map(item => item.word) });
   if (data?.RelatedTo) Object.assign(semanticTabs, { '相关': data.RelatedTo.slice(0, 10).map(item => item.word) });
   if (data?.ClassOf) Object.assign(semanticTabs, { '上位': data.ClassOf.slice(0, 10).map(item => item.word) });

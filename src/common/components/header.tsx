@@ -12,7 +12,7 @@ export default function Header({ className, leadingBtn, middleElement, trailingB
 	const navigate = useNavigate();
 	return (
 		<>
-			<div className={`w-full h-16 fixed rounded-md border-2 border-black bg-white flex items-center overflow-hidden ${className}`}>
+			<div className={`w-full h-14 fixed rounded-md border-2 border-black bg-white flex items-center overflow-hidden ${className}`}>
 				{/* 左 */}
 				{
 					leadingBtn ? leadingBtn :

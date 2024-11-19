@@ -8,6 +8,7 @@ import ReviewWordInfo from "./pages/review-word-info.tsx";
 import { toast } from "react-toastify";
 import useReviewState from "./hooks/use-review-state.ts";
 import ReviewWordBlank from "./pages/review-word-blank.tsx";
+import ScreenLoading from "../../common/components/loader/screen-loading.tsx";
 
 export default function Review() {
 
@@ -34,8 +35,7 @@ export default function Review() {
 	});
 
 	if (loading || data === undefined) {
-		// TODO
-		return (<>加载中...</>);
+		return <ScreenLoading/>;
 	}
 	if (error) {
 		throw new Error('获取数据出错');

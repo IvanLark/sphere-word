@@ -28,6 +28,7 @@ export default function DiscreteTabs<T>({ title, showMore, tabs, children, isLoa
           Object.keys(tabs).map((tabName, index) =>
             <li key={index}
               className={`
+                tab-option-button
 								px-2 py-1 text-nowrap rounded-md list-none border-2 border-black transition-all
 								duration-300 ${pickedIndex === index ? 'text-white bg-black' : ''}
 							`}
