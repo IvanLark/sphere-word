@@ -48,12 +48,27 @@ export default function Auth() {
 		const userSignUpData = {
 			username: userData.username,
 			password: userData.password,
-			role: userData.role,
+			role: 0,
 			schoolName: userData.schoolName,
 			className: userData.className,
 			name: userData.name,
 			sid: userData.sid
 		} as UserSignUpData;
+
+		if (userData.userRole === 1) {
+			// 北邮
+			userSignUpData['role'] = 1;
+			if (userData.schoolRole === 1) {
+				userSignUpData['role'] = 2;
+			}
+		} else if (userData.userRole === 2) {
+			// 他校
+			userSignUpData['role'] = 3;
+			if (userData.schoolRole === 1) {
+				userSignUpData['role'] = 4;
+			}
+		}
+
 		signup(userSignUpData).then(response => {
 			sessionStorage.setItem('login', 'true');
 			localStorage.setItem('token', response);
