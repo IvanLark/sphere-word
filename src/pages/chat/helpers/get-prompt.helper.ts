@@ -29,7 +29,8 @@ export default function getPromptMap(data: ChatLocationState): Record<string, st
     case '句子': {
       const sentence = data.objects[0];
       return {
-        '意思': `在上下文 “${data.context}” 中，句子 “${sentence}” 是什么意思？`
+        '意思': `在上下文 “${data.context}” 中，句子 “${sentence}” 是什么意思？`,
+        '语法解析': `你是优秀的英语老师，帮我解析句子 “${sentence}” 的语法`
       };
     }
     default: {

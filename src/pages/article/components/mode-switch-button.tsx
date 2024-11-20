@@ -5,7 +5,9 @@ interface ModeSwitchButtonProps {
 
 export default function ModeSwitchButton ({text, onClick}: ModeSwitchButtonProps) {
   return (
-    <button title="SelectMode" className="btn-trans size-16 rounded-md border-l-2 border-black group"
+    <button title="SelectMode"
+            className="btn-scale btn-white size-12 rounded-md border-2 border-black
+                       flex items-center justify-center group"
             onClick={onClick} id="mode-switch-button">
       <div className="btn-scale-xl text-2xl">
         {text}

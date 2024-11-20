@@ -11,7 +11,7 @@ export const collectWord =
 
 export const getReviewWords =
   () =>
-    alova.Get<Array<ReviewWordData>>('/review/words')
+    alova.Get<Array<ReviewWordData>>('/review/words', { meta: { gzip: true } })
 
 export const reviewWord =
   (word: string, rating: number) =>

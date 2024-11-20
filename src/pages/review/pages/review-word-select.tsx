@@ -15,6 +15,27 @@ export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSel
     '忘记': '#FF8383',
   }
 
+  function getDueText (delta: number) {
+    if (delta <= 0) {
+      // TODO
+      return '';
+    }
+    // 秒级
+    if (delta < 60) {
+      return `${delta}秒后`;
+    }
+    // 分钟级
+    if (delta < 60 * 60) {
+      return `${Math.floor(delta / 60)}分钟后`;
+    }
+    // 小时级
+    if (delta < 60 * 60 * 24) {
+      return `${Math.floor(delta / (60 * 60))}小时后`;
+    }
+    // 天级
+    return `${Math.floor(delta / (60 * 60 * 24))}天后`;
+  }
+
   return (
     <div className="w-full h-[calc(100vh-4rem)] pb-28 flex flex-col">
       <div className="flex flex-1 flex-col gap-4 items-center justify-center">
@@ -45,7 +66,7 @@ export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSel
               style={{ backgroundColor: color }}
               onClick={() => onSelected(wordData.word, wordData.review[key].rating)}>
               {key}
-              <p className="text-base text-gray-600">{1}天后</p>
+              <p className="text-base text-gray-600">{getDueText(wordData.review[key].due)}</p>
             </button>
           ))
         }

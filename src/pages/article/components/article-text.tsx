@@ -15,18 +15,18 @@ interface ArticleTextProps {
 }
 
 export default function ArticleText({data, selectMode, getHighlightClass, checkSelected, handleWordClick, handleSentenceClick, beforeSelected}: ArticleTextProps) {
-  // TODO 依然有不少地方空格错误自行检查一下
 
   return <>
     {
       data?.text.map((paragraph, pIndex) => <Fragment key={pIndex}>
         {/* 段落开头空格 */}
-        <span className="inline-block w-8" key={pIndex}/>
+        <span className="inline-block w-4" key={pIndex}/>
         {
           paragraph.map((sentence, sIndex) =>
               <span key={sIndex} id={`sentence-${pIndex}-${sIndex}`}
-                    className={`text-xl leading-loose
+                    className={`leading-loose
                                 ${selectMode === '句' && checkSelected([pIndex, sIndex, -1]) ? "bg-lime-500 text-white rounded-md" : ""}`}
+                    style={{ fontSize: '16px' }}
                     onClick={(event) => {
                       beforeSelected(event.target as HTMLElement);
                       if (selectMode === '句') handleSentenceClick(sentence, [pIndex, sIndex, -1]);
@@ -35,17 +35,19 @@ export default function ArticleText({data, selectMode, getHighlightClass, checkS
             sentence.map((word, wIndex) =>
               <span key={wIndex}>
                 {/* 单词间空格 */}
-                <span>{isPunct(word) ? '' : ' '}</span>
+                <span>{isPunct(word) || word.includes("'") ? '' : ' '}</span>
                 <span data-tooltip-id={checkSelected([pIndex, sIndex, wIndex]) ? 'highlight-word' : ''}
                       id={`word-${pIndex}-${sIndex}-${wIndex}`}
-                      className={`w-fit px-1 py-1
+                      className={`w-fit ${isPunct(word) || word.includes("'") ? '' : 'px-0.5'} py-1 font-article
                                 ${selectMode === '词' && checkSelected([pIndex, sIndex, wIndex]) ? 'bg-lime-500 text-white rounded-md' : ''}
                                 ${getHighlightClass([pIndex, sIndex, wIndex])}`}
                       onClick={(event) => {
                         beforeSelected(event.target as HTMLElement);
                         if (selectMode === '词' && isWord(word)) handleWordClick(sentence, [pIndex, sIndex, wIndex]);
                       }}>
-                  {word}
+                  {
+                    word !== '``' && word !== '\'\'' ? word : '"'
+                  }
                 </span>
               </span>
             )

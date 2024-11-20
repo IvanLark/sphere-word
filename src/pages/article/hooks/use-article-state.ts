@@ -38,6 +38,8 @@ export default function useArticleState () {
     };
   });
 
+  function reverseSwitchModeWinOpen () { setShowSwitchModeWin(prevState => !prevState); }
+
   function openSwitchModeWin () { setShowSwitchModeWin(true); }
 
   function closeSwitchModeWin () { setShowSwitchModeWin(false); }
@@ -135,7 +137,7 @@ export default function useArticleState () {
 
   return {
     showSwitchModeWin, selectMode, showSelected, selectedPosition, selectedItem,
-    unselected, openSwitchModeWin, changeSelectMode, handleWordClick, handleSentenceClick,
+    unselected, openSwitchModeWin, reverseSwitchModeWinOpen, changeSelectMode, handleWordClick, handleSentenceClick,
     checkSelected, getChatLocationState, getSelectedItemId
   };
 }
