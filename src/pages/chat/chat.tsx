@@ -133,7 +133,7 @@ export default function Chat() {
       <div className={`w-full fixed bottom-0 px-4 py-2 bg-white z-10 `}>
         {/* 预设提示词部分 */}
         <div className={`pb-4 flex gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar transition-all duration-300
-          ${promptTabOpen ? 'w-full h-12' : 'size-0'}`}
+          ${promptTabOpen ? 'w-full h-[46px]' : 'size-0'}`}
           onWheel={(event) => { (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5 }}>
           {
             Object.entries(promptMap).map(([key, value], index) =>
@@ -147,13 +147,13 @@ export default function Chat() {
           locationState.objectsType &&
           <div className="flex gap-2">
             <div
-              className={`w-full px-3 border-black rounded-md flex items-center gap-2 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300
-                ${promptTabOpen ? 'h-12 border-2 border-b-0 rounded-b-none' : 'h-0'}`}
+              className={`w-full px-1.5 border-black rounded-md flex items-center gap-1 overflow-x-auto overflow-y-hidden hide-scrollbar duration-300
+                ${promptTabOpen ? 'h-10 border-2 border-b-0 rounded-b-none' : 'h-0'}`}
               style={{ transitionProperty: 'height' }} onWheel={(event) => {
                 (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5
               }}>
               {/* 单词/句子 */}
-              <span className="">{locationState.objectsType}: </span>
+              <span className="min-w-[35px] text-[16px]">{locationState.objectsType}: </span>
               {/* 针对对象 */}
               {
                 locationState.objects.map((word, index) =>
@@ -164,15 +164,16 @@ export default function Chat() {
               }
             </div>
             {/* 间隔 */}
-            <div className={`w-12 shrink-0 border-2 border-transparent duration-300 ${promptTabOpen ? 'h-12' : 'h-0'}`}
+            <div className={`w-12 shrink-0 border-2 border-transparent duration-300 ${promptTabOpen ? 'h-[36px]' : 'h-0'}`}
               style={{ transitionProperty: 'height' }}>
             </div>
           </div>
         }
         {/* 输入框 */}
-        <div className={`w-full h-12 flex gap-2 items-center`}>
-          <textarea className={`flex-1 h-12 p-3 rounded-md border-2 border-black hide-scrollbar
-                      transition-all duration-300 ${promptTabOpen ? 'rounded-t-none' : ''}`}
+        <div className={`w-full ${chatInput.length >= 18 ? 'h-[68px]' : 'h-[44px]'} flex gap-2 items-center`}>
+          <textarea className={`flex-1 px-1.5 py-1 rounded-md border-2 border-black hide-scrollbar text-[16px]
+                    ${chatInput.length >= 18 ? 'h-[68px]' : 'h-[44px]'}
+                    transition-all duration-500 ${promptTabOpen ? 'rounded-t-none' : ''}`}
             placeholder="有英语问题尽管问我~"
             disabled={chatStatus === "generating"}
             value={chatInput}

@@ -7,7 +7,7 @@ export default function ArticleCard({ wordArticle }: { wordArticle: WordArticle 
 	const navigate = useNavigate();
 
 	const exampleSentence = wordArticle.positions[0].sentence.map((word, index) =>
-		<span className={wordArticle.positions[0].wordIndex === index ? "text-red-400" : ""} key={index}>
+		<span className={wordArticle.positions[0].wordIndex === index ? "text-red-400 font-bold text-[18px]" : ""} key={index}>
 			{isPunct(word) ? '' : ' '}{word}
 		</span>
 	);
@@ -23,7 +23,7 @@ export default function ArticleCard({ wordArticle }: { wordArticle: WordArticle 
 				<SingleWordCard word={getDifficultyTag(wordArticle.difficultyScore)} />
 				<SingleWordCard word={`${wordArticle.wordCount}词`} />
 			</div>
-			<div className="w-full -mx- mx-auto border-dashed border-black border-[1px]"></div>
+			<div className="w-full -mx- mx-auto my-1 border-dashed border-black border-[1px]" />
 			<p className="">{exampleSentence}</p>
 		</div>
 	);

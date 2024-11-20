@@ -77,15 +77,16 @@ export default function QueryDataRelation({ word, data, handleSkipWord }: QueryD
     Object.assign(setTabs, {
       '话题':
         data.Topic.slice(0, 5).map((topicItem, index1) =>
-          <AccordionItem key={index1} title={topicItem.name} content={
-            <div className="flex flex-wrap gap-2">
-              {topicItem.words.map((relatedWord, index2) =>
-                <ButtonItem key={index1 * 10 + index2} content={relatedWord}
-                            onClick={() => { handleSkipWord(relatedWord, 'Topic', topicItem.name) }}
-                />
-              )}
-            </div>
-          } />
+          topicItem.words.length > 0 ?
+            <AccordionItem key={index1} title={topicItem.name} content={
+              <div className="flex flex-wrap gap-2">
+                {topicItem.words.map((relatedWord, index2) =>
+                  <ButtonItem key={index1 * 10 + index2} content={relatedWord}
+                              onClick={() => { handleSkipWord(relatedWord, 'Topic', topicItem.name) }}
+                  />
+                )}
+              </div>
+            } /> : <></>
         )
     })
   }

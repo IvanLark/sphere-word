@@ -2,6 +2,7 @@ import DiscreteTabs from "../../../../../common/components/tabs/discrete-tabs.ts
 import ContinuousTabs from "../../../../../common/components/tabs/continuous-tabs.tsx";
 import DataCard from "../../../../../common/components/card/data-card.tsx";
 import {WordAi} from "../../../../../api/types/word-data.types.ts";
+import Markdown from "react-markdown";
 
 /**
  * AI解析页面
@@ -17,6 +18,14 @@ export default function QueryDataAi({ data }: QueryDataAiProps) {
   /* 子页面：AI解析1，AI解析2，AI解析3 */
   const pageTabs: Record<string, JSX.Element> = {};
   if (data?.Eudic) {
+    if (Object.keys(data.Eudic).includes('例句')) {
+      const temp = data.Eudic['例句'];
+      delete data.Eudic['例句'];
+      data.Eudic = {
+        '释义': temp,
+        ...data.Eudic
+      };
+    }
     Object.assign(pageTabs, {
       'AI解析2':
         <DiscreteTabs<string> tabs={data.Eudic}>
@@ -25,8 +34,11 @@ export default function QueryDataAi({ data }: QueryDataAiProps) {
     });
   }
   if (data?.DictionaryByGPT4) {
+    //console.log(data.DictionaryByGPT4.replace(/\n +\n/g, ''))
     Object.assign(pageTabs, {
-      'AI解析3': <div className="whitespace-pre-line"> {data.DictionaryByGPT4.replace('\n\n', '')}</div>
+      'AI解析3': <div className="whitespace-pre-line text-justify">
+        <Markdown>{data.DictionaryByGPT4.replace(/\n +\n/g, '')}</Markdown>
+      </div>
     });
   }
 

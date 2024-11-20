@@ -10,8 +10,8 @@ export default function AiTooltip ({ show, targetId, onClick }: AiTooltipProps) 
   if (!targetElement) return (<></>);
   const targetRect = targetElement.getBoundingClientRect();
 
-  const tooltipWidth = 100;
-  const tooltipHeight = 40;
+  const tooltipWidth = 90;
+  const tooltipHeight = 35;
 
   const screenWidth = window.innerWidth;
 
@@ -31,7 +31,7 @@ export default function AiTooltip ({ show, targetId, onClick }: AiTooltipProps) 
     <button onClick={onClick} id="ai-tooltip"
             className={`absolute top-[${Math.floor(tooltipTop)}px] left-[${Math.floor(tooltipLeft)}px] 
                         w-[${tooltipWidth}px] h-[${tooltipHeight}px]
-                        text-black bg-white border-black border-4 rounded-md text-2xl active:bg-black active:text-white
+                        bg-white bg-opacity-90 border-black text-black border-2 rounded-3xl text-[18px] font-bold shadow-md active:bg-black active:text-white
                         ${ show ? 'visible' : 'hidden' }
                       `}
             style={{

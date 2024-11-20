@@ -141,7 +141,7 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
           </div>
         </div>
         {/* 占位div */}
-        <div className="w-full h-5"></div>
+        <div className="w-full h-10"></div>
       </div>
     </div>
   );

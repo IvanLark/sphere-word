@@ -14,7 +14,7 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 	return (
 		<div className="bg-white p-4 flex-1 flex flex-col gap2 snap-end">
 			<div className="max-w-full flex items-center text-wrap">
-				<span className={`font-bold flex-1 shrink ${word.length > 7 ? 'text-4xl' : 'text-6xl'}`}>{word}</span>
+				<span className={`font-bold flex-1 shrink ${word.length > 7 ? 'text-4xl' : 'text-5xl'}`}>{word}</span>
 				{button}
 			</div>
 			<SkeletonBuilder loading={isLoading}>
@@ -43,7 +43,7 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 				{/* 意思 */}
 				{
 					data && data?.simpleMeaning &&
-					<span className="font-bold">{data.simpleMeaning}</span>
+					<span className="font-bold text-[21px] my-1.5">{data.simpleMeaning}</span>
 				}
 				{/* 标签 */}
 				{/* <span className="ml-3 text-lg ">【{tags.basic.slice(0, 3).join(', ')}】</span> */}
@@ -51,7 +51,7 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 					data && data?.tags && data.tags?.basic &&
 					<div className="mt-2 flex gap-2 text-black">
 						{data.tags.basic.slice(0, 3).map((tag, index) =>
-							<span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
+							<span key={index} className="px-2 text-[16px] font-bold rounded-md border-2 border-black">
 								{tag}
 							</span>
 						)}
@@ -60,9 +60,9 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 				{/* 变形 */}
 				{
 					data && data?.exchange &&
-					<div className="mt-2 flex flex-wrap gap-2 text-sm">
+					<div className="mt-4 flex flex-wrap gap-2 text-[15px]">
 						{Object.entries(data.exchange)
-							.map(([key, value]) => key + value)
+							.map(([key, value]) => key + ' ' + value)
 							.join(' | ')
 						}
 					</div>
@@ -79,11 +79,11 @@ interface PronBuilderProps {
 }
 
 function PronItem({ title, pron, onClick }: PronBuilderProps) {
-	return <div className=" text-lg font-bold text-nowrap">{`${title} [${pron}]`}
+	return <div className=" text-[15px] font-bold text-nowrap">{`${title} [${pron}]`}
 		<Tooltip title='点击播放发音' arrow>
 			{/* //@ts-expect-error no title*/}
 			<button className='btn-scale-xl size-12' onClick={onClick}>
-				<Mic style={{ width: '35px', height: '35px' }} />
+				<Mic style={{ width: '30px', height: '30px' }} />
 			</button>
 		</Tooltip>
 	</div>;

@@ -117,7 +117,7 @@ export default function Article() {
       {/* 分割虚线 */}
       <div className="w-full -mx- mx-auto my-4 border-dashed border-black border-[1px]"></div>
 
-      <div className="h-full" >
+      <div className="h-full text-justify" >
         <ArticleText data={data} selectMode={selectMode} checkSelected={checkSelected}
                      getHighlightClass={getHighlightClass}
                      handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick}

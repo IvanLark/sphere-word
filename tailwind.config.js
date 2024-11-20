@@ -8,6 +8,6 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: []
 }
 

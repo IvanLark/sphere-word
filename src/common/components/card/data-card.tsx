@@ -12,13 +12,13 @@ export default function DataCard({title, showMoreButton = false, isLoading = fal
 	return (
 		isLoading ?
 		<Skeleton variant='rectangular' animation='wave' height={200} /> :
-		<div className="bg-white rounded-md p-2 pb-4 border-2 border-black">
+		<div className="bg-white rounded-md p-2 pb-2.5 border-2 border-black">
 			{/* 顶部 */}
 			{ title &&
 				<div className="w-full h-full py-0.5 flex items-center">
 					{/* 标题 */}
 					<div className="flex-1">
-						{<h2 className="text-xl font-bold">{title}</h2>}
+						{<h2 className="text-[18px] font-bold">{title}</h2>}
 					</div>
 					{/* 更多 */}
 					{

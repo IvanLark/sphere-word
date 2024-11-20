@@ -73,10 +73,10 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
         {
           data.tags.basic.length > 0 &&
           <DataCard title='标签' showMoreButton={false} isLoading={isLoading}>
-            <div className="mt-2 flex gap-2 text-black">
+            <div className="mt-2 flex gap-2 text-black text-[15px]">
               {
-                data?.tags.basic.slice(0, 3).map((tag, index) =>
-                    <span key={index} className="px-2 text-lg font-bold rounded-md border-2 border-black">
+                data?.tags.basic.slice(0, 5).map((tag, index) =>
+                    <span key={index} className="px-2 font-bold rounded-md border-2 border-black">
                   {tag}
                 </span>
                 )
@@ -98,7 +98,7 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
         }
         {/* 词频 */}
         <DataCard title="词频" showMoreButton={false} isLoading={isLoading}>
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1 text-[14px]">
             {data?.freq.examFrequency && <FrequencyBuilder title="真题" content={data?.freq.examFrequency.toString()} />}
             {data?.freq.bncFrequency && <FrequencyBuilder title="BNC" content={data?.freq.bncFrequency.toString()} />}
             {data?.freq.cocaFrequency && <FrequencyBuilder title="COCA" content={data?.freq.cocaFrequency.toString()} />}
@@ -121,7 +121,7 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
                 <h3 className="px-2 py-1 my-2 border-2 border-black rounded-2xl font-bold w-fit">
                   {etymologyItem.meaning}
                 </h3>
-                <p className="">
+                <p className="text-justify leading-loose">
                   {etymologyItem.etymology}
                 </p>
               </div>
@@ -135,7 +135,7 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
 
 function FrequencyBuilder({ title, content }: { title: string, content?: string }) {
   return (
-    <span className="px-2 py-1 m-1 border-2 border-black rounded-md font-bold">
+    <span className="px-1 py-0.5 m-0.5 border-2 border-black rounded-md font-bold">
       {title} {content}
     </span>
   );

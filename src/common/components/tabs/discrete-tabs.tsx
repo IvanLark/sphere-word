@@ -28,7 +28,7 @@ export default function DiscreteTabs<T>({ title, showMore, tabs, children, isLoa
           Object.keys(tabs).map((tabName, index) =>
             <li key={index}
               className={`
-                tab-option-button
+                tab-option-button text-[15px]
 								px-2 py-1 text-nowrap rounded-md list-none border-2 border-black transition-all
 								duration-300 ${pickedIndex === index ? 'text-white bg-black' : ''}
 							`}
@@ -50,7 +50,7 @@ export default function DiscreteTabs<T>({ title, showMore, tabs, children, isLoa
           {/* 标题 */}
           <div className="flex-1">
             {title &&
-              <h2 className="text-xl font-bold">{title}</h2>
+              <h2 className="text-[18px] font-bold">{title}</h2>
             }
             { !title &&
               <TabOptions></TabOptions>

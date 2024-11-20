@@ -40,7 +40,7 @@ export default function Header({ className, leadingBtn, middleElement, trailingB
 						</button>
 				}
 			</div>
-			<div className="w-full h-16"></div>
+			<div className="w-full h-14"></div>
 		</>
 	);
 }
