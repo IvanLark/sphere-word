@@ -153,7 +153,7 @@ export default function Chat() {
                 (event.currentTarget as HTMLDivElement).scrollLeft += event.deltaY * 0.5
               }}>
               {/* 单词/句子 */}
-              <span className="min-w-[35px] text-[16px]">{locationState.objectsType}: </span>
+              <span className="min-w-[38px] text-[16px]">{locationState.objectsType}: </span>
               {/* 针对对象 */}
               {
                 locationState.objects.map((word, index) =>
