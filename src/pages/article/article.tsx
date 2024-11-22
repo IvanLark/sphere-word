@@ -140,7 +140,7 @@ export default function Article() {
 
   return <div id="article" className="overflow-y-auto relative" ref={articleRef}>
     {/* 顶部 */}
-    <div className={`w-full  p-2 fixed z-40 bg-transparent flex gap-2 overflow-hidden`}>
+    <div className={`w-full  p-2 fixed z-10 bg-transparent flex gap-2 overflow-hidden`}>
       {/* 返回按钮 */}
       <button title="Back" className="btn-scale btn-white size-12 rounded-md border-2
                                       border-black flex items-center justify-center group"

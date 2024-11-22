@@ -80,8 +80,8 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
   }
 
   return (
-    <div ref={wordCardWinRef} className="w-full h-[calc(100vh-4rem)] z-20 px-2 fixed left-0 top-16 snap-y snap-mandatory overflow-y-auto hide-scrollbar pointer-events-none"
-         onScroll={onScroll} id="word-card-win">
+    <div ref={wordCardWinRef} className="w-full h-screen z-20 px-2 fixed left-0 top-0 snap-y snap-mandatory overflow-y-auto hide-scrollbar pointer-events-none"
+      onScroll={onScroll} id="word-card-win">
       {/* 占位 */}
       <div id="scroll-container-start"
            className="w-full h-[calc(100vh-4rem)] flex- bg-transparent snap-start pointer-events-none">

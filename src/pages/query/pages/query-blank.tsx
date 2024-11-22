@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ArrowForward, HomeOutlined, SearchOutlined } from "@mui/icons-material";
-import {checkWordExisted, getCnAutoComplete, getWordAutoComplete} from "../../../api/methods/word-search.methods.ts";
+import { checkWordExisted, getCnAutoComplete, getWordAutoComplete } from "../../../api/methods/word-search.methods.ts";
 import { toast } from "../../../common/utils/toast.util.tsx";
 import { useNavigate } from "react-router-dom";
 import isPureEn from "../../../common/utils/is-pure-en.util.ts";
@@ -42,13 +42,13 @@ export default function QueryBlank({ handleSearch }: { handleSearch: (newWord: s
 
   return (<>
     <div
-      className="w-[500px] max-w-full px-4 h-16 mx-auto flex gap-2 bg-white fixed left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2">
-      <div className="size-16 p-3 h-full text-center text-lg rounded-md border-2 border-black">
+      className="w-[500px] max-w-full px-4 h-12 mx-auto flex gap-2 bg-white fixed left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2">
+      <div className="size-12 p-1 h-full text-center text-lg rounded-md border-2 border-black">
         <SearchOutlined style={{ fontSize: "2.5rem" }} />
       </div>
       {/* 输入框 */}
-      <div className={`h-fi text-3xl flex-1 flex flex-col rounded-md border-2 border-black ${autoCompleteList.length === 0 ? 'h-16' : 'h-fit'}`}>
-        <div className="w-full h-16 shrink-0 fle items-center">
+      <div className={`h-fi text-3xl flex-1 flex flex-col rounded-md border-2 border-black ${autoCompleteList.length === 0 ? 'h-12' : 'h-fit'}`}>
+        <div className="w-full h-12 shrink-0 fle items-center">
           <input type="text" placeholder="搜索单词..."
             className={`w-full h-full bg-transparent outline-none flex-1 px-2 text-3xl rounded-md`}
             value={searchInput}
