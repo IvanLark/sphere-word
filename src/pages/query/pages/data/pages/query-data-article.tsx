@@ -8,7 +8,7 @@ interface QueryDataArticleProps {
 export default function QueryDataArticle({ data }: QueryDataArticleProps) {
   return (
     <div className="w-full rounded-b-xl bg-white p-2 flex flex-col gap-4">
-      {data.map((wordArticle, index) => <ArticleCard key={index} wordArticle={wordArticle}/>)}
+      {data.map((wordArticle, index) => <ArticleCard key={index} articleFace={wordArticle}/>)}
     </div>
   );
 }

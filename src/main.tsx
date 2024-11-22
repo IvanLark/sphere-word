@@ -11,6 +11,9 @@ import Auth from './pages/auth/auth.tsx';
 import Review from './pages/review/review.tsx';
 import ErrorPage from './common/components/ErrorBoundary/ErrorPage.tsx';
 import Article from './pages/article/article.tsx';
+import Read from "./pages/read/read.tsx";
+import ReadPublish from "./pages/read/pages/read-publish.tsx";
+import ReadInput from "./pages/read/pages/read-input.tsx";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +46,20 @@ const router = createBrowserRouter([
         path: '/article',
         element: <Article />
       },
+      {
+        path: '/read',
+        element: <Read />,
+        children: [
+          {
+            path: '/read',
+            element: <ReadPublish />
+          },
+          {
+            path: '/read/input',
+            element: <ReadInput />
+          }
+        ]
+      }
     ],
     errorElement: <ErrorPage />
   }

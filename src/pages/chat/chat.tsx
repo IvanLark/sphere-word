@@ -170,9 +170,9 @@ export default function Chat() {
           </div>
         }
         {/* 输入框 */}
-        <div className={`w-full ${chatInput.length >= 18 ? 'h-[68px]' : 'h-[44px]'} flex gap-2 items-center`}>
-          <textarea className={`flex-1 px-1.5 py-1 rounded-md border-2 border-black hide-scrollbar text-[16px]
-                    ${chatInput.length >= 18 ? 'h-[68px]' : 'h-[44px]'}
+        <div className={`w-full ${chatInput.length >= 18 ? 'h-[72px]' : 'h-[48px]'} flex gap-2 items-center`}>
+          <textarea className={`flex-1 px-1.5 py-1 rounded-md border-2 border-black hide-scrollbar text-[18px]
+                    ${chatInput.length >= 18 ? 'h-[72px]' : 'h-[48px]'}
                     transition-all duration-500 ${promptTabOpen ? 'rounded-t-none' : ''}`}
             placeholder="有英语问题尽管问我~"
             disabled={chatStatus === "generating"}

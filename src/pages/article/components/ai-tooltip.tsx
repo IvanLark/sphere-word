@@ -16,7 +16,6 @@ export default function AiTooltip ({ show, targetId, onClick }: AiTooltipProps) 
   const screenWidth = window.innerWidth;
 
   const tooltipTop = targetElement.offsetTop - tooltipHeight - 10;
-  console.log('tooltipTop', tooltipTop);
   let tooltipLeft = targetRect.x + (targetRect.width / 2) - (tooltipWidth / 2);
   // 右边超出
   if (tooltipLeft + tooltipWidth > screenWidth) {

@@ -1,5 +1,6 @@
 import { Mic } from "@mui/icons-material";
 import { ReviewWordData } from "../../../api/types/review.types.ts";
+import {useEffect} from "react";
 
 interface ReviewWordSelectProps {
   wordData: ReviewWordData;
@@ -35,6 +36,10 @@ export default function ReviewWordSelect({ wordData, onSelected }: ReviewWordSel
     // 天级
     return `${Math.floor(delta / (60 * 60 * 24))}天后`;
   }
+
+  useEffect(() => {
+    new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${wordData.word}`).play();
+  }, [wordData.word]);
 
   return (
     <div className="w-full h-[calc(100vh-4rem)] pb-28 flex flex-col">

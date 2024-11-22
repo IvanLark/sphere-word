@@ -7,6 +7,7 @@ export default function Home() {
 
 	const tabs: HomeNaviTabProps[] = [
 		{ title: '单词查询', icon: '🧐', onClick: () => navigate('/query') },
+		{ title: '来阅读呀', icon: '📖', onClick: () => navigate('/read') },
 		{ title: 'AI对话', icon: '🤗', onClick: () => navigate('/chat') },
 		{ title: '单词复习', icon: '🤓', onClick: () => navigate('/review') },
 		{ title: '退出登录', icon: '😭', onClick: () => { localStorage.clear(); sessionStorage.clear(); navigate('/auth'); } },

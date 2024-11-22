@@ -21,14 +21,11 @@ const alova = createAlova({
     // 缓存
     if (method.meta?.cache) {
       method.config.cacheFor = {
-        mode: 'memory',
+        mode: 'restore',
         expire: Infinity
-      }
+      };
     } else {
-      method.config.cacheFor = {
-        mode: 'memory',
-        expire: 0
-      }
+      method.config.cacheFor = null;
     }
     // gzip
     if (method.meta?.gzip) {

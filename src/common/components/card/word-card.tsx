@@ -14,7 +14,11 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 	return (
 		<div className="bg-white p-4 flex-1 flex flex-col gap2 snap-end">
 			<div className="max-w-full flex items-center text-wrap">
-				<span className={`font-bold flex-1 shrink ${word.length > 7 ? 'text-4xl' : 'text-5xl'}`}>{word}</span>
+				<span className={`font-bold flex-1 shrink 
+					${word.length > 7 ? ( word.length > 9 ? 'text-3xl' : 'text-4xl' ) : 'text-5xl'}
+				`}>
+					{word}
+				</span>
 				{button}
 			</div>
 			<SkeletonBuilder loading={isLoading}>

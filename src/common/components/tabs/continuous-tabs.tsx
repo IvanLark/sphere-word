@@ -38,7 +38,7 @@ export default function ContinuousTabs<T>({ tabs, children, isLoading = false }:
 							btn-common-hover text-[18px] h-10 py-2 relative flex-1 text-center rounded-md list-none
 							transition-all duration-300 ${index === pickedIndex ? 'text-white bg-blac' : ''}
 						`}
-							onClick={() => { setPickedIndex(index) }}>
+							onClick={() => { setPickedIndex(index); }}>
 							{tabName}
 						</li>
 					)}

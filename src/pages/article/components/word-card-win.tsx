@@ -26,8 +26,7 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
   })
 
   if (error) {
-    // TODO
-    return (<>出错了...</>);
+    throw new Error('获取数据出错');
   }
   if (loading || data === undefined) {
     return <ScreenLoading/>;

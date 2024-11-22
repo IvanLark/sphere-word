@@ -1,4 +1,10 @@
-import { getArticle } from "../../api/methods/article.methods";
+import {
+  getAdaptArticle,
+  getAnalyzeArticle,
+  getArticle,
+  getLinkArticle,
+  getTranslateArticle
+} from "../../api/methods/article.methods";
 import SingleWordCard from "../../common/components/card/single-word-card";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getDifficultyTag } from "./utils/text-process.util.ts";
@@ -10,9 +16,12 @@ import ModeSwitchButton from "./components/mode-switch-button.tsx";
 import useArticleState, { Position } from "./hooks/use-article-state.ts";
 import SelectModeWin from "./components/select-mode-win.tsx";
 import ArticleText from "./components/article-text.tsx";
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ScreenLoading from "../../common/components/loader/screen-loading.tsx";
 import {ArrowBack} from "@mui/icons-material";
+import axios from "axios";
+import {toast} from "../../common/utils/toast.util.tsx";
+import getSentenceString from "./utils/get-sentence-string.ts";
 
 export default function Article() {
 
@@ -26,17 +35,34 @@ export default function Article() {
 
   const showWordCardWin = selectMode === '词' && showSelected;
 
-  const { articleId, positions }: ArticleLocationState = useLocation().state;
+  const { type, article, level, positions }: ArticleLocationState = useLocation().state;
 
-  const { data, error, loading } = useRequest(getArticle(articleId));
+  const { data, error, loading } = useRequest(() => {
+    if (type === 'id') return getArticle(article);
+    else if (type === 'text') return getAnalyzeArticle(article);
+    else if (type === 'link') return getLinkArticle(article);
+    else if (type === 'adapt') return getAdaptArticle(article, level as number);
+    else return getTranslateArticle(article, level as number);
+  });
 
   const articleRef = useRef<HTMLDivElement>(null);
+
+  let articleKey: string = '';
+  if (type === 'id') articleKey = article;
+  else articleKey = article.slice(0, 50);
+
+  const savedTranslations = sessionStorage.getItem(`${articleKey}-translations`);
+  const initTranslations = savedTranslations ? JSON.parse(savedTranslations) as Array<string> : [];
+  const [translations, setTranslations] = useState<Array<string>>(initTranslations);
+  const savedShowTranslate = sessionStorage.getItem(`${articleKey}-show-translate`);
+  const initShowTranslate = savedShowTranslate ? JSON.parse(savedShowTranslate) as boolean : false;
+  const [showTranslate, setShowTranslate] = useState<boolean>(initShowTranslate);
 
   useEffect(() => {
     // TODO setTimeout是无奈之举，因为useEffect执行时 articleRef 为 null
     setTimeout(() => {
       // 恢复
-      const savedScrollY = sessionStorage.getItem(`article-${articleId}-scroll-y`);
+      const savedScrollY = sessionStorage.getItem(`article-${articleKey}-scroll-y`);
       if (savedScrollY !== null && articleRef.current) {
         articleRef.current.scrollTo(0, parseInt(savedScrollY, 10));
       }
@@ -58,7 +84,7 @@ export default function Article() {
 
   function saveScroll() {
     if (articleRef.current) {
-      sessionStorage.setItem(`article-${articleId}-scroll-y`, articleRef.current.scrollTop.toString());
+      sessionStorage.setItem(`article-${articleKey}-scroll-y`, articleRef.current.scrollTop.toString());
     }
   }
 
@@ -83,6 +109,35 @@ export default function Article() {
     return '';
   }
 
+  function handleTranslate () {
+    if (translations.length === 0) {
+      toast.info('正在获取翻译数据，请等待');
+      const paragraphs = data.text.map(paragraph => ({
+        text: paragraph.map(sentence => getSentenceString(sentence)).join(' ')
+      }));
+      axios.get<string>('https://edge.microsoft.com/translate/auth')
+        .then(response => {
+          const token = response.data;
+          axios.post('https://api.cognitive.microsofttranslator.com/translate?from=en&to=zh-Hans&api-version=3.0&includeSentenceLength=true',
+            paragraphs, {
+              headers: {'Authorization': 'Bearer ' + token}
+            }).then(response => {
+              const translationsData = response.data.map((item: { translations: Array<{text: string}> }) => item.translations[0].text);
+              sessionStorage.setItem(`${articleKey}-translations`, JSON.stringify(translationsData));
+              setTranslations(translationsData);
+              sessionStorage.setItem(`${articleKey}-show-translate`, JSON.stringify(true));
+              setShowTranslate(true);
+          }).catch(() => toast.error('翻译失败，请重试'));
+        }).catch(() => toast.error('翻译失败，请重试'));
+    } else if (showTranslate) {
+      sessionStorage.setItem(`${articleKey}-show-translate`, JSON.stringify(false));
+      setShowTranslate(false);
+    } else {
+      sessionStorage.setItem(`${articleKey}-show-translate`, JSON.stringify(true));
+      setShowTranslate(true);
+    }
+  }
+
   return <div id="article" className="overflow-y-auto relative" ref={articleRef}>
     {/* 顶部 */}
     <div className={`w-full  p-2 fixed z-40 bg-transparent flex gap-2 overflow-hidden`}>
@@ -100,28 +155,52 @@ export default function Article() {
       <ModeSwitchButton text={selectMode} onClick={() => reverseSwitchModeWinOpen()}/>
     </div>
 
+    {/* 翻译 */}
+    <button className="fixed right-2 bottom-8 btn-scale btn-white size-12 rounded-md
+      border-2 border-black flex items-center justify-center group text-3xl"
+      onClick={handleTranslate}>
+      { showTranslate ? '隐' : '译' }
+    </button>
+
     <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-6 bg-white rounded-lg shadow- flex flex-col gap-2`}>
       <SelectModeWin show={showSwitchModeWin} selectMode={selectMode} changeSelectMode={changeSelectMode}/>
 
-      <img src={data.banner} alt="" className="w-full h-[calc(35vw)] my-4 object-cover border-4 border-black rounded-md"
-           loading="lazy"/>
+      {
+        data.banner &&
+        <img src={data.banner} alt=""
+             className="w-full h-[calc(35vw)] my-4 object-cover border-4 border-black rounded-md"
+             loading="lazy"/>
+      }
 
-      <h2 className="text-xl font-bold font-article">{data.title}</h2>
-      <h2 className="text-xl font-bold mb-2 ">{data.subtitle}</h2>
-      <div className="flex flex-wrap gap-2">
-        <SingleWordCard word={data.topic}/>
-        <SingleWordCard word={getDifficultyTag(data.difficultyScore)}/>
-        <SingleWordCard word={`${data.wordCount}词`}/>
-      </div>
+      {data.title && <h2 className="text-xl font-bold font-article">{data.title}</h2>}
+      {data.subtitle && <h2 className="text-xl font-bold mb-2 ">{data.subtitle}</h2> }
+      {
+        (data.topic || data.wordCount || data.difficultyScore) &&
+        <div className="flex flex-wrap gap-2">
+          { data.topic && <SingleWordCard word={data.topic}/> }
+          { data.difficultyScore && <SingleWordCard word={getDifficultyTag(data.difficultyScore)}/> }
+          { data.wordCount && <SingleWordCard word={`${data.wordCount}词`}/> }
+        </div>
+      }
 
       {/* 分割虚线 */}
-      <div className="w-full -mx- mx-auto my-4 border-dashed border-black border-[1px]"></div>
+      {
+        (data.banner || data.title || data.subtitle || data.topic || data.wordCount || data.difficultyScore) &&
+        <div className="w-full -mx- mx-auto my-4 border-dashed border-black border-[1px]" />
+      }
 
-      <div className="h-full text-justify" >
-        <ArticleText data={data} selectMode={selectMode} checkSelected={checkSelected}
+      <div className="h-full text-justify">
+        {
+          type !== 'id' &&
+          <div className={`w-full h-[40px]`} />
+        }
+        <ArticleText text={data.text} selectMode={selectMode} checkSelected={checkSelected}
                      getHighlightClass={getHighlightClass}
                      handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick}
-                     beforeSelected={beforeSelected}/>
+                     beforeSelected={beforeSelected}
+                     showTranslate={showTranslate}
+                     translations={translations}
+        />
         <div className={`w-1 transition-all duration-300 h-[280px]`}></div>
       </div>
 

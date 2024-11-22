@@ -5,7 +5,7 @@ export default function getSentenceString(words: Array<string>) {
     if (index === 0) {
       return curWord;
     }
-    if (isPunct(curWord)) {
+    if (isPunct(curWord) || curWord.includes("'")) {
       return curText + curWord;
     } else {
       return curText + ' ' + curWord;
