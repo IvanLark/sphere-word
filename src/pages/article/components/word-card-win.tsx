@@ -107,7 +107,7 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
               {/* 释义 */}
               {
                 Object.keys(definitionTabs).length > 0 &&
-                <DataCard isLoading={false}>
+                <DataCard isLoading={false} className={"snap-start"}>
                   <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={false}
                                                showMore={() => {
                                                  navigate('/chat', {
@@ -127,20 +127,24 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
               {/* 表达关系 */}
               {
                 expressionTabs && Object.keys(expressionTabs).length > 0 &&
-                <DataCard>
-                  <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs}
-                                                             title='表达关系' showMore={(tabName) => {
-                    navigate('/chat', {state: {objectsType: '单词', objects: [word], promptName: tabName}})
-                  }}>
-                    {(_, value) => value}
-                  </DiscreteTabs>
-                </DataCard>
+                <>
+                  <DataCard isLoading={false} className={""}>
+                    <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs}
+                                                               title='表达关系' showMore={(tabName) => {
+                      navigate('/chat', {state: {objectsType: '单词', objects: [word], promptName: tabName}})
+                    }}>
+                      {(_, value) => value}
+                    </DiscreteTabs>
+                  </DataCard>
+                  {/* 占位div */}
+                  <div className="w-full h-10 snap-end"></div>
+                </>
               }
             </div>
           </div>
         </div>
         {/* 占位div */}
-        <div className="w-full h-10"></div>
+        <div className="w-full h-20 snap-end"></div>
       </div>
     </div>
   );

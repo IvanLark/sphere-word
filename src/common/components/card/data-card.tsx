@@ -6,13 +6,14 @@ interface DataCardProps {
 	showMoreButton?: boolean;
 	isLoading?: boolean;
 	children: JSX.Element|JSX.Element[];
+	className?: string;
 }
 
-export default function DataCard({title, showMoreButton = false, isLoading = false, children }: DataCardProps) {
+export default function DataCard({title, showMoreButton = false, isLoading = false, children, className }: DataCardProps) {
 	return (
 		isLoading ?
 		<Skeleton variant='rectangular' animation='wave' height={200} /> :
-		<div className="bg-white rounded-md p-2 pb-2.5 border-2 border-black">
+		<div className={`bg-white rounded-md p-2 pb-2.5 border-2 border-black ${className ? className : ''}`}>
 			{/* 顶部 */}
 			{ title &&
 				<div className="w-full h-full py-0.5 flex items-center">
