@@ -5,8 +5,8 @@ import { Edge, Node } from "../../api/types/word-data.types.ts";
 import QueryHeader from "./pages/query-header.tsx";
 import { toast } from "../../common/utils/toast.util.tsx";
 import { checkWordExisted } from "../../api/methods/word-search.methods.ts";
-import {useLocation, useNavigate} from "react-router-dom";
-import {ArrowForward, HomeOutlined} from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowForward, HomeOutlined } from "@mui/icons-material";
 import QueryBlank from "./pages/query-blank.tsx";
 
 /**
@@ -101,12 +101,12 @@ export default function Query() {
   function scrollBackToTop() {
     const element = document.getElementById('scroll-container-start');
     if (element) {
-      element.scrollIntoView({behavior: 'smooth'});
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
   const [headLeftBtn, setHeadLeftBtn] = useState({
-    icon: <HomeOutlined style={{fontSize: "2.5rem"}}/>,
+    icon: <HomeOutlined style={{ fontSize: "2.5rem" }} />,
     onClick: () => {
       navigate('/');
     }
@@ -129,7 +129,7 @@ export default function Query() {
         scrollBackToTop();
       }
       setHeadLeftBtn({
-        icon: <ArrowForward style={{fontSize: "2.5rem"}}/>,
+        icon: <ArrowForward style={{ fontSize: "2.5rem" }} />,
         onClick: () => {
           navigate(-1);
         }
@@ -152,18 +152,18 @@ export default function Query() {
   return (<>
     {
       curWord === '' ?
-      <QueryBlank handleSearch={handleSearch}/> :
-      <div className="w-screen h-[calc(100vh-4rem)]">
-        <QueryHeader word={curWord} handleSkipWord={handleSkipWord}
-                     leftBtnIcon={headLeftBtn.icon}
-                     leftBtnOnClick={headLeftBtn.onClick}/>
-        <QueryGraph word={curWord} history={history}
-                    handleSkipWord={(newWord) => {
-                      setCurWord(newWord);
-                      scrollBackToTop();
-                    }}></QueryGraph>
-        <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
-      </div>
+        <QueryBlank handleSearch={handleSearch} /> :
+        <div className="w-screen h-[calc(100vh)]">
+          <QueryHeader word={curWord} handleSkipWord={handleSkipWord}
+            leftBtnIcon={headLeftBtn.icon}
+            leftBtnOnClick={headLeftBtn.onClick} />
+          <QueryGraph word={curWord} history={history}
+            handleSkipWord={(newWord) => {
+              setCurWord(newWord);
+              scrollBackToTop();
+            }}></QueryGraph>
+          <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
+        </div>
     }
   </>);
 }

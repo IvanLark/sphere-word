@@ -56,7 +56,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
   /* 加载数据时 TODO 完善 */
   if (loading || data === undefined) {
-    return <ScreenLoading/>;
+    return <ScreenLoading />;
   }
 
   /* 子页面：单词详情，单词关系，AI解析，阅读材料 */
@@ -73,12 +73,12 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
   /* 请求中和请求成功用同一个JSX */
   return (
-    <div className="w-full h-[calc(100vh-4rem)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar">
+    <div className="w-full h-[calc(100vh)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar pointer-events-auto">
       <div id="scroll-container-start"
         className="w-full h-[calc(100vh-400px)] h-ful flex- bg-transparent snap-star pointer-events-none">
       </div>
       <div
-        className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde">
+        className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde pointer-events-auto">
 
         {/* 分割 */}
         <div className="h-[300px snap-end">
@@ -90,9 +90,9 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
           </div>
           {/* 顶部单词卡片 */}
           <WordCard word={word} data={data.core} isLoading={loading}
-                    button={
-                      <CollectButton isCollected={isCollected} onClick={handleCollect}/>
-                    }
+            button={
+              <CollectButton isCollected={isCollected} onClick={handleCollect} />
+            }
           />
         </div>
 
@@ -100,7 +100,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
         <div className="mx-2">
           <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={loading}>
             {
-              (value) => <div className="min-h-[calc(100vh-4rem)]">{value}</div>
+              (value) => <div className="min-h-[calc(100vh)]">{value}</div>
             }
           </ContinuousTabs>
           {/* 占位div */}

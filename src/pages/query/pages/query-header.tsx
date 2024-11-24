@@ -2,7 +2,7 @@ import { ArrowForward, Close, SearchOutlined } from '@mui/icons-material';
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "../../../common/utils/toast.util.tsx";
-import {checkWordExisted, getCnAutoComplete, getWordAutoComplete} from "../../../api/methods/word-search.methods.ts";
+import { checkWordExisted, getCnAutoComplete, getWordAutoComplete } from "../../../api/methods/word-search.methods.ts";
 import isPureEn from "../../../common/utils/is-pure-en.util.ts";
 import isPureCn from "../../../common/utils/is-pure-cn.util.ts";
 
@@ -30,10 +30,10 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 	const [searchData, setSearchData] = useState<SearchData>(initSearchData);
 
 	// 数据操作
-	function closeSearch () {
+	function closeSearch() {
 		setSearchData(initSearchData);
 	}
-	function openSearch () {
+	function openSearch() {
 		setSearchData({ ...initSearchData, searchInputBoxOpen: true });
 	}
 	function updateSearchText(text: string) {
@@ -85,7 +85,7 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 
 	return (
 		<>
-			<div className={`w-full  p-2 fixed z-40 bg-white flex gap-2 overflow-hidden
+			<div className={`w-full  p-2 fixed z-10 bg-white flex gap-2 overflow-hidden
 											${searchData.searchInputBoxOpen ? '' : 'h-16'}`}>
 				{/* 搜索按钮 */}
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
@@ -98,9 +98,9 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 				</button>
 				{/* 搜索框 */}
 				<div className="flex-1 text-3xl flex items-start bg-white">
-					<div className={`border-black rounded-md shadow-md overflow-hidden duration-300 
+					<div className={`border-black rounded-md shadow-md overflow-hidden duration-300
 													${searchData.searchInputBoxOpen ? 'w-full px-2 border-2' : 'w-0'}`}
-							 style={{ transitionProperty: 'width,padding ' }}>
+						style={{ transitionProperty: 'width,padding ' }}>
 						<input ref={inputRef} type="text" placeholder="搜索单词..."
 							className={`w-full h-full bg-transparent outline-none`}
 							value={searchData.searchText}
@@ -113,11 +113,11 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 						{
 							searchData.searchInputBoxOpen && searchData.autoCompleteList.map((completedWord, index) =>
 								<div className={`btn-white w-full p-2 border-t-2 border-black flex ${index === 0 ? 'border-x-' : ''}`}
-										 onClick={() => {
-											 handleSkipWord(completedWord, '查询', '查询');
-											 closeSearch();
-										 }}
-										 key={index}>
+									onClick={() => {
+										handleSkipWord(completedWord, '查询', '查询');
+										closeSearch();
+									}}
+									key={index}>
 									<span className='flex-1'>{completedWord}</span>
 									<ArrowForward fontSize='large' />
 								</div>
@@ -139,10 +139,10 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 				</button>
 			</div>
 			{/* 三个按钮 */}
-			<div className="w-full h-16"></div>
+			{/* <div className="w-full h-16"></div> */}
 			<div className="fixed bottom-[400px] left-2 z-10">
 				<button className="btn-scale btn-white size-14 rounded-md border-2 border-black text-2xl font-bold"
-								onClick={() => navigate('/chat', { state: { objectsType: '单词', objects: [word] } })}>
+					onClick={() => navigate('/chat', { state: { objectsType: '单词', objects: [word] } })}>
 					AI
 				</button>
 			</div>
