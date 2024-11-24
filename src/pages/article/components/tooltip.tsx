@@ -1,13 +1,15 @@
 interface AiTooltipProps {
   onAiClick: () => void;
   onHighlightClick: () => void;
+  onQueryClick: () => void;
   checkHighLight: () => boolean;
   showAi: boolean;
   showHighlight: boolean;
+  showQuery: boolean;
   targetId: string;
 }
 
-export default function Tooltip ({ showAi, showHighlight, targetId, onAiClick, onHighlightClick, checkHighLight }: AiTooltipProps) {
+export default function Tooltip ({ showAi, showHighlight, showQuery, targetId, onAiClick, onHighlightClick, onQueryClick, checkHighLight }: AiTooltipProps) {
 
   const targetElement = document.getElementById(targetId);
   if (!targetElement) return (<></>);
@@ -18,8 +20,9 @@ export default function Tooltip ({ showAi, showHighlight, targetId, onAiClick, o
 
   const screenWidth = window.innerWidth;
 
-  const tooltipTop = targetElement.offsetTop - tooltipHeight - 10;
-  const tooltipBottomTop = targetElement.offsetTop + targetRect.height + 10;
+  const aiTooltipTop = targetElement.offsetTop - tooltipHeight - 10;
+  const queryTooltipTop = targetElement.offsetTop + targetRect.height + 10;
+  const highlightTooltipTop = targetElement.offsetTop + (targetRect.height / 2) - (tooltipHeight / 2);
   let tooltipLeft = targetRect.x + (targetRect.width / 2) - (tooltipWidth / 2);
   // 右边超出
   if (tooltipLeft + tooltipWidth > screenWidth) {
@@ -30,15 +33,20 @@ export default function Tooltip ({ showAi, showHighlight, targetId, onAiClick, o
     tooltipLeft = 10;
   }
 
+  let highlightTooltipLeft = targetRect.x + targetRect.width + 12;
+  if (highlightTooltipLeft + tooltipWidth > screenWidth) {
+    highlightTooltipLeft = targetRect.x - 12 - tooltipWidth;
+  }
+
   return (<>
     <button onClick={onAiClick} id="ai-tooltip"
-            className={`absolute top-[${Math.floor(tooltipTop)}px] left-[${Math.floor(tooltipLeft)}px] 
+            className={`absolute top-[${Math.floor(aiTooltipTop)}px] left-[${Math.floor(tooltipLeft)}px] 
                         w-[${tooltipWidth}px] h-[${tooltipHeight}px]
                         bg-white bg-opacity-90 border-black text-black border-2 rounded-3xl text-[18px] font-bold shadow-md active:bg-black active:text-white
                         ${showAi ? 'visible' : 'hidden'}
                       `}
             style={{
-              top: `${Math.floor(tooltipTop)}px`,
+              top: `${Math.floor(aiTooltipTop)}px`,
               left: `${Math.floor(tooltipLeft)}px`,
               width: `${tooltipWidth}px`,
               height: `${tooltipHeight}px`,
@@ -47,18 +55,33 @@ export default function Tooltip ({ showAi, showHighlight, targetId, onAiClick, o
     </button>
 
     <button onClick={onHighlightClick} id="highlight-tooltip"
-            className={`absolute top-[${Math.floor(tooltipBottomTop)}px] left-[${Math.floor(tooltipLeft)}px] 
+            className={`absolute top-[${Math.floor(highlightTooltipTop)}px] left-[${Math.floor(highlightTooltipLeft)}px] 
                         w-[${tooltipWidth}px] h-[${tooltipHeight}px]
                         bg-white bg-opacity-90 border-black text-black border-2 rounded-3xl text-[18px] font-bold shadow-md active:bg-black active:text-white
                         ${showHighlight ? 'visible' : 'hidden'}
                       `}
             style={{
-              top: `${Math.floor(tooltipBottomTop)}px`,
+              top: `${Math.floor(highlightTooltipTop)}px`,
+              left: `${Math.floor(highlightTooltipLeft)}px`,
+              width: `${tooltipWidth}px`,
+              height: `${tooltipHeight}px`,
+            }}>
+      {checkHighLight() ? '取消高亮' : '高亮单词'}
+    </button>
+
+    <button onClick={onQueryClick} id="highlight-tooltip"
+            className={`absolute top-[${Math.floor(queryTooltipTop)}px] left-[${Math.floor(tooltipLeft)}px] 
+                        w-[${tooltipWidth}px] h-[${tooltipHeight}px]
+                        bg-white bg-opacity-90 border-black text-black border-2 rounded-3xl text-[18px] font-bold shadow-md active:bg-black active:text-white
+                        ${showQuery ? 'visible' : 'hidden'}
+                      `}
+            style={{
+              top: `${Math.floor(queryTooltipTop)}px`,
               left: `${Math.floor(tooltipLeft)}px`,
               width: `${tooltipWidth}px`,
               height: `${tooltipHeight}px`,
             }}>
-      { checkHighLight() ? '取消高亮' : '高亮单词' }
+      跳转查询
     </button>
   </>);
 }

@@ -3,8 +3,9 @@ import {checkWordInContext} from "../../../api/methods/word-search.methods.ts";
 import {toast} from "../../../common/utils/toast.util.tsx";
 import {Article} from "../../../api/types/article.types.ts";
 import getSentenceString from "../utils/get-sentence-string.ts";
+import getParagraphString from "../utils/get-paragraph-string.ts";
 
-export type SelectMode = '词' | '句';
+export type SelectMode = '词' | '句' | '段';
 export type Position = [number, number, number];
 
 export default function useArticleState () {
@@ -68,8 +69,12 @@ export default function useArticleState () {
     });
   }
 
-  function handleSentenceClick(sentence: Array<string>, position: Position) {
+  function handleSentenceClick (sentence: Array<string>, position: Position) {
     selected(getSentenceString(sentence), position);
+  }
+
+  function handleParagraphClick (sentences: Array<Array<string>>, position: number) {
+    selected(getParagraphString(sentences), [position, -1, -1]);
   }
 
   function unselected () {
@@ -87,6 +92,8 @@ export default function useArticleState () {
       return position[0] === selectedPosition[0] && position[1] === selectedPosition[1] && position[2] === selectedPosition[2];
     } else if (selectMode === '句') {
       return position[0] === selectedPosition[0] && position[1] === selectedPosition[1];
+    } else if (selectMode === '段') {
+      return position[0] === selectedPosition[0];
     } else {
       return false;
     }
@@ -100,6 +107,8 @@ export default function useArticleState () {
       return `word-${selectedPosition[0]}-${selectedPosition[1]}-${selectedPosition[2]}`;
     } else if (selectMode === '句') {
       return `sentence-${selectedPosition[0]}-${selectedPosition[1]}`;
+    } else if (selectMode === '段') {
+      return `paragraph-${selectedPosition[0]}`;
     } else {
       return '';
     }
@@ -112,15 +121,21 @@ export default function useArticleState () {
     if (selectMode === '词') {
       return getSentenceString(data.text[selectedPosition[0]][selectedPosition[1]]);
     } else if (selectMode === '句') {
-      let startIndex = selectedPosition[1] - 1;
+      let startIndex = selectedPosition[1] - 2;
       if (startIndex < 0) startIndex = 0;
-      let endIndex = selectedPosition[1] + 2;
+      let endIndex = selectedPosition[1] + 3;
       if (endIndex > data.text[selectedPosition[0]].length) endIndex = data.text[selectedPosition[0]].length;
       return data.text[selectedPosition[0]].slice(startIndex, endIndex).reduce(
         (curText, curWords) => {
           return curText + getSentenceString(curWords) + ' ';
         }
       , '');
+    } else if (selectMode === '段') {
+      let startIndex = selectedPosition[0] - 1;
+      if (startIndex < 0) startIndex = 0;
+      let endIndex = selectedPosition[0] + 2;
+      if (endIndex > data.text.length) endIndex = data.text.length;
+      return data.text.slice(startIndex, endIndex).map(sentences => getParagraphString(sentences)).join(' ');
     }
   }
 
@@ -137,12 +152,18 @@ export default function useArticleState () {
         objects: [selectedItem],
         context: getSelectedItemContext(data)
       };
+    } else if (selectMode === '段') {
+      return {
+        objectsType: '段落',
+        objects: [selectedItem],
+        context: getSelectedItemContext(data)
+      };
     }
   }
 
   return {
     showSwitchModeWin, selectMode, showSelected, selectedPosition, selectedItem, showWordCardWin,
     unselected, openSwitchModeWin, reverseSwitchModeWinOpen, changeSelectMode, handleWordClick, handleSentenceClick,
-    checkSelected, getChatLocationState, getSelectedItemId
+    checkSelected, getChatLocationState, getSelectedItemId, handleParagraphClick
   };
 }

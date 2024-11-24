@@ -30,7 +30,7 @@ export default function Article() {
   const {
     showSwitchModeWin, selectMode, showSelected, selectedItem, unselected, selectedPosition,
     reverseSwitchModeWinOpen, changeSelectMode, handleWordClick, handleSentenceClick,
-    checkSelected, getChatLocationState, getSelectedItemId, showWordCardWin
+    checkSelected, getChatLocationState, getSelectedItemId, showWordCardWin, handleParagraphClick
   } = useArticleState();
 
   const { type, article, level, positions }: ArticleLocationState = useLocation().state;
@@ -245,7 +245,7 @@ export default function Article() {
         }
         <ArticleText text={data.text} selectMode={selectMode} checkSelected={checkSelected}
                      getHighlightClass={getHighlightClass}
-                     handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick}
+                     handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick} handleParagraphClick={handleParagraphClick}
                      beforeSelected={beforeSelected}
                      showTranslate={showTranslate}
                      translations={translations}
@@ -269,14 +269,19 @@ export default function Article() {
 
     {
       articleRef.current &&
-      <Tooltip showAi={showSelected} showHighlight={selectMode === '词' && showSelected}
+      <Tooltip showAi={showSelected} showHighlight={selectMode === '词' && showSelected} showQuery={showWordCardWin}
                targetId={getSelectedItemId()}
                checkHighLight={checkHighLight}
                onHighlightClick={onHighLight}
                onAiClick={() => {
                    saveScroll();
                    navigate('/chat', {state: getChatLocationState(data)});
-                 }}/>
+                 }}
+               onQueryClick={() => {
+                 saveScroll();
+                 navigate('/query', {state: {word: selectedItem}});
+               }}
+      />
     }
   </div>
 }

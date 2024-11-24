@@ -1,13 +1,16 @@
-import ListItem from "../../../common/components/item/list-item.tsx";
-import DiscreteTabs from "../../../common/components/tabs/discrete-tabs.tsx";
 import {WordCard} from "../../../common/components/card/word-card.tsx";
-import SkipButton from "../../review/components/skip-button.tsx";
-import DataCard from "../../../common/components/card/data-card.tsx";
-import {useNavigate} from "react-router-dom";
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useWatcher} from "alova/client";
 import {getWordData} from "../../../api/methods/word-data.methods.ts";
 import ScreenLoading from "../../../common/components/loader/screen-loading.tsx";
+import {checkCollected, collectWord} from "../../../api/methods/review.methods.ts";
+import {toast} from "../../../common/utils/toast.util.tsx";
+import QueryDataCore from "../../query/pages/data/pages/query-data-core.tsx";
+import QueryDataRelation from "../../query/pages/data/pages/query-data-relation.tsx";
+import QueryDataAi from "../../query/pages/data/pages/query-data-ai.tsx";
+import QueryDataArticle from "../../query/pages/data/pages/query-data-article.tsx";
+import ContinuousTabs from "../../../common/components/tabs/continuous-tabs.tsx";
+import CollectButton from "../../query/pages/data/components/collect-button.tsx";
 
 interface WordCardWinProps {
   word: string;
@@ -15,11 +18,27 @@ interface WordCardWinProps {
   onClick: () => void;
 }
 
-export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProps) {
-  const navigate = useNavigate();
+export default function WordCardWin({ word, onScroll }: WordCardWinProps) {
+
   const wordCardWinRef = useRef(null);
 
   const {data, loading, error} = useWatcher(getWordData(word), [word], {immediate: true});
+
+  // 收藏
+  const [isCollected, setCollected] = useState<boolean>(false);
+  useWatcher(checkCollected(word), [word], {
+    immediate: true
+  }).onSuccess(() => { setCollected(true); })
+    .onError(() => { setCollected(false); });
+
+  function handleCollect() {
+    collectWord(word).then(() => {
+      toast.info('收藏成功');
+      setCollected(true);
+    }).catch((error: Error) => {
+      toast.error(`收藏失败，${error.message}`);
+    });
+  }
 
   useEffect(() => {
     if (wordCardWinRef.current) (wordCardWinRef.current as HTMLDivElement).scrollTop = 300;
@@ -32,51 +51,16 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
     return <ScreenLoading/>;
   }
 
-  // 中英释义Tabs
-  const definitionTabs: Record<string, Array<string>> = {};
-  if (data.core?.definition?.cn) Object.assign(definitionTabs, { '中英': data.core.definition.cn });
-  if (data.core?.definition?.en) Object.assign(definitionTabs, { '英英': data.core.definition.en });
-
-  // 表达关系Tabs
-  const expressionTabs: Record<string, JSX.Element | JSX.Element[]> = {};
-  if (data.relation?.Phrase) {
-    Object.assign(expressionTabs, {
-      '短语':
-        data.relation.Phrase.slice(0, 10).map((item, index) =>
-          <ListItem key={index} index={index} content={`${item.phrase} | ${item.meaning}`} />
-        )
-    })
+  /* 子页面：单词详情，单词关系，AI解析，阅读材料 */
+  const pageTabs: Record<string, React.ReactNode> = {
+    '单词详情': <QueryDataCore word={word} data={data.core} isLoading={loading}></QueryDataCore>,
+    '单词关系': <QueryDataRelation word={word} data={data.relation} handleSkipWord={() => {}}></QueryDataRelation>
+  };
+  if (data.ai && (data.ai.Eudic || data.ai.DictionaryByGPT4)) {
+    pageTabs['AI解析'] = <QueryDataAi data={data.ai} ></QueryDataAi>;
   }
-  if (data.relation?.Example) {
-    Object.assign(expressionTabs, {
-      '例句':
-        data.relation.Example.slice(0, 10).map((item, index) =>
-          <ListItem key={index} index={index} content={
-            <>
-              <p>{item.example}</p>
-              <p>{item.translation}</p>
-            </>
-          } />
-        )
-    })
-  }
-  if (data.relation?.Collocation) {
-    const collocationTabs: Record<string, Array<string>> = {};
-    data.relation.Collocation.forEach(collocationItem => {
-      Object.assign(collocationTabs, {
-        // 用 [] 包裹键名，ES6
-        [collocationItem.collocation]:
-          collocationItem.phrases.map(phraseItem => `${phraseItem.phrase} | ${phraseItem.translation}`)
-      });
-    });
-    Object.assign(expressionTabs, {
-      '搭配': <>
-        <div className="w-full h-[1px] bg-black mb-2">{/* 留空 */}</div>
-        <DiscreteTabs<Array<string>> tabs={collocationTabs}>
-          {(_, value) => value.map((phrase, index) => <ListItem index={index} content={phrase} />)}
-        </DiscreteTabs>
-      </>
-    });
+  if (data.article && data.article.length > 0) {
+    pageTabs['阅读材料'] = <QueryDataArticle data={data.article}></QueryDataArticle>;
   }
 
   return (
@@ -97,54 +81,23 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
           </div>
           {/* 顶部单词卡片 */}
           <WordCard word={word} data={data.core}
-                    button={<SkipButton onClick={onClick}/>}/>
+                    button={
+                      <CollectButton isCollected={isCollected} onClick={handleCollect}/>
+                    }/>
         </div>
 
         {/* Tabs */}
         <div className="mx-2">
-          <div className="w-full h-fit min-h-[calc(100vh-4rem)] rounded-b-xl bg-white p-2">
-            <div className="flex flex-col gap-5">
-              {/* 释义 */}
-              {
-                Object.keys(definitionTabs).length > 0 &&
-                <DataCard isLoading={false} className={"snap-start"}>
-                  <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={false}
-                                               showMore={() => {
-                                                 navigate('/chat', {
-                                                   state: {
-                                                     objectsType: '单词',
-                                                     objects: [word],
-                                                     promptName: '释义'
-                                                   }
-                                                 })
-                                               }}>
-                    {(_, value) => value.map((meaning, index) =>
-                      <ListItem key={index} index={index} content={meaning}></ListItem>
-                    )}
-                  </DiscreteTabs>
-                </DataCard>
-              }
-              {/* 表达关系 */}
-              {
-                expressionTabs && Object.keys(expressionTabs).length > 0 &&
-                <>
-                  <DataCard isLoading={false} className={""}>
-                    <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs}
-                                                               title='表达关系' showMore={(tabName) => {
-                      navigate('/chat', {state: {objectsType: '单词', objects: [word], promptName: tabName}})
-                    }}>
-                      {(_, value) => value}
-                    </DiscreteTabs>
-                  </DataCard>
-                  {/* 占位div */}
-                  <div className="w-full h-10 snap-end"></div>
-                </>
-              }
-            </div>
-          </div>
+          <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={loading}>
+            {
+              (value) => <div className="min-h-[calc(100vh-4rem)]">{value}</div>
+            }
+          </ContinuousTabs>
+          {/* 占位div */}
+          <div className="w-full h-10 snap-end"></div>
+          <div className="w-full h-10 snap-end"></div>
+          <div className="w-full h-5 snap-end"></div>
         </div>
-        {/* 占位div */}
-        <div className="w-full h-20 snap-end"></div>
       </div>
     </div>
   );

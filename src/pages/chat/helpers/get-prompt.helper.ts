@@ -33,6 +33,13 @@ export default function getPromptMap(data: ChatLocationState): Record<string, st
         '语法解析': `你是优秀的英语老师，帮我解析句子 “${sentence}” 的语法`
       };
     }
+    case '段落': {
+      const paragraph = data.objects[0];
+      return {
+        '意思': `在上下文 “${data.context}” 中，段落 “${paragraph}” 是什么意思？`,
+        '语法解析': `你是优秀的英语老师，帮我解析段落 “${paragraph}” 的语法`
+      };
+    }
     default: {
       return {
         '翻译': '请帮我翻译以下英文：',

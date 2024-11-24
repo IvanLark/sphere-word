@@ -30,8 +30,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   const { data, loading, error } = useWatcher(
     getWordData(word), [word], {
     immediate: true
-  }
-  );
+  });
 
   // 收藏
   const [isCollected, setCollected] = useState<boolean>(false);

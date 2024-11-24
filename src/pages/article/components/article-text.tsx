@@ -10,18 +10,26 @@ interface ArticleTextProps {
   checkSelected: (position: Position) => boolean;
   handleWordClick: (sentence: Array<string>, position: Position) => void;
   handleSentenceClick: (sentence: Array<string>, position: Position) => void;
+  handleParagraphClick: (sentences: Array<Array<string>>, position: number) => void;
   beforeSelected: (target: HTMLElement) => void;
   showTranslate: boolean;
   translations: Array<string>;
 }
 
-export default function ArticleText({text, selectMode, getHighlightClass, checkSelected, handleWordClick, handleSentenceClick, beforeSelected, showTranslate, translations}: ArticleTextProps) {
+export default function ArticleText({text, selectMode, getHighlightClass, checkSelected, handleWordClick, handleSentenceClick, handleParagraphClick, beforeSelected, showTranslate, translations}: ArticleTextProps) {
 
   return <>
     {
       text.map((paragraph, pIndex) => <Fragment key={pIndex}>
         {/* 段落开头空格 */}
         <span className="inline-block w-4" key={pIndex}/>
+        <span className={`${selectMode === '段' && checkSelected([pIndex, -1, -1]) ? "bg-lime-500 text-white rounded-md" : ""}`}
+              onClick={(event) => {
+                beforeSelected(event.target as HTMLElement);
+                if (selectMode === '段') handleParagraphClick(paragraph, pIndex);
+              }}
+              id={`paragraph-${pIndex}`}
+        >
         {
           paragraph.map((sentence, sIndex) =>
               <span key={sIndex} id={`sentence-${pIndex}-${sIndex}`}
@@ -56,6 +64,7 @@ export default function ArticleText({text, selectMode, getHighlightClass, checkS
         </span>
           )
         }
+        </span>
         {/* 段落间间隔 */}
         <div className="w-full h-5"/>
         {
