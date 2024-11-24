@@ -8,7 +8,6 @@ import {toast} from "../../../common/utils/toast.util.tsx";
 import QueryDataCore from "../../query/pages/data/pages/query-data-core.tsx";
 import QueryDataRelation from "../../query/pages/data/pages/query-data-relation.tsx";
 import QueryDataAi from "../../query/pages/data/pages/query-data-ai.tsx";
-import QueryDataArticle from "../../query/pages/data/pages/query-data-article.tsx";
 import ContinuousTabs from "../../../common/components/tabs/continuous-tabs.tsx";
 import CollectButton from "../../query/pages/data/components/collect-button.tsx";
 
@@ -16,9 +15,10 @@ interface WordCardWinProps {
   word: string;
   onScroll: (event: React.UIEvent) => void;
   onClick: () => void;
+  beforeSkip: () => void;
 }
 
-export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProps) {
+export default function WordCardWin({ word, onScroll, onClick, beforeSkip }: WordCardWinProps) {
 
   const wordCardWinRef = useRef(null);
 
@@ -54,14 +54,11 @@ export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProp
 
   /* 子页面：单词详情，单词关系，AI解析，阅读材料 */
   const pageTabs: Record<string, React.ReactNode> = {
-    '单词详情': <QueryDataCore word={word} data={data.core} isLoading={loading}></QueryDataCore>,
-    '单词关系': <QueryDataRelation word={word} data={data.relation} handleSkipWord={() => {}}></QueryDataRelation>
+    '单词详情': <QueryDataCore word={word} data={data.core} isLoading={loading} beforeSkip={beforeSkip} />,
+    '单词关系': <QueryDataRelation word={word} data={data.relation} handleSkipWord={() => {}} beforeSkip={beforeSkip} />
   };
   if (data.ai && (data.ai.Eudic || data.ai.DictionaryByGPT4)) {
-    pageTabs['AI解析'] = <QueryDataAi data={data.ai} ></QueryDataAi>;
-  }
-  if (data.article && data.article.length > 0) {
-    pageTabs['阅读材料'] = <QueryDataArticle data={data.article}></QueryDataArticle>;
+    pageTabs['AI解析'] = <QueryDataAi data={data.ai} />;
   }
 
   return (

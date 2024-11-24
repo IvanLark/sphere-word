@@ -16,9 +16,10 @@ interface QueryDataRelationProps {
   word: string;
   data: WordRelation;
   handleSkipWord: (newWord: string, relationType: string, relationLabel?: string) => void;
+  beforeSkip?: () => void;
 }
 
-export default function QueryDataRelation({ word, data, handleSkipWord }: QueryDataRelationProps) {
+export default function QueryDataRelation({ word, data, handleSkipWord, beforeSkip = () => {} }: QueryDataRelationProps) {
   const navigate = useNavigate();
 
   // 语义关系Tabs
@@ -119,7 +120,7 @@ export default function QueryDataRelation({ word, data, handleSkipWord }: QueryD
           semanticTabs && Object.keys(semanticTabs).length > 0 &&
           <DataCard>
             <DiscreteTabs<Array<string>> tabs={semanticTabs}
-                                         title='语义关系' showMore={(tabName) => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
+                                         title='语义关系' showMore={(tabName) => { beforeSkip(); navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
               {
                 (tabName, value) =>
                   <div className="flex flex-wrap gap-2">
@@ -139,7 +140,7 @@ export default function QueryDataRelation({ word, data, handleSkipWord }: QueryD
           expressionTabs && Object.keys(expressionTabs).length > 0 &&
           <DataCard>
             <DiscreteTabs<JSX.Element | JSX.Element[]> tabs={expressionTabs}
-                                                       title='表达关系' showMore={(tabName) => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
+                                                       title='表达关系' showMore={(tabName) => { beforeSkip(); navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
               {(_, value) => value}
             </DiscreteTabs>
           </DataCard>
@@ -150,7 +151,7 @@ export default function QueryDataRelation({ word, data, handleSkipWord }: QueryD
           setTabs && Object.keys(setTabs).length > 0 &&
           <DataCard>
             <DiscreteTabs<JSX.Element[]> tabs={setTabs}
-                                         title='集合关系' showMore={(tabName) => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
+                                         title='集合关系' showMore={(tabName) => { beforeSkip(); navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: tabName } }) } }>
               {(_, value) => value}
             </DiscreteTabs>
           </DataCard>

@@ -17,9 +17,10 @@ interface QueryDataCoreProps {
   word: string;
   data: WordCore;
   isLoading: boolean;
+  beforeSkip?: () => void;
 }
 
-export default function QueryDataCore({ word, data, isLoading }: QueryDataCoreProps) {
+export default function QueryDataCore({ word, data, isLoading, beforeSkip = () => {} }: QueryDataCoreProps) {
   const navigate = useNavigate();
 
   const definitionTabs: Record<string, Array<string>> = {}
@@ -97,7 +98,7 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
           Object.keys(definitionTabs).length > 0 &&
           <DataCard isLoading={isLoading}>
             <DiscreteTabs<Array<string>> tabs={definitionTabs} isLoading={isLoading}
-              showMore={() => { navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: '释义' } }) }}>
+              showMore={() => { beforeSkip(); navigate('/chat', { state: { objectsType: '单词', objects: [word], promptName: '释义' } }); }}>
               {(_, value) => value.map((meaning, index) =>
                 <ListItem key={index} index={index} content={meaning}></ListItem>
               )}

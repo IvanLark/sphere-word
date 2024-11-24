@@ -260,6 +260,7 @@ export default function Article() {
                        if (event.currentTarget.scrollTop === 0) unselected();
                      }}
                      onClick={onHighLight}
+                     beforeSkip={saveScroll}
         />
       }
     </div>
