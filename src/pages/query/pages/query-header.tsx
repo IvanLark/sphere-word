@@ -85,7 +85,7 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 
 	return (
 		<>
-			<div className={`w-full  p-2 fixed z-40 bg-transparent flex gap-2 overflow-hidden
+			<div className={`w-full  p-2 fixed z-40 bg-white flex gap-2 overflow-hidden
 											${searchData.searchInputBoxOpen ? '' : 'h-16'}`}>
 				{/* 搜索按钮 */}
 				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black
