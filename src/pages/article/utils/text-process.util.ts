@@ -1,5 +1,5 @@
 export function isWord(text: string): boolean {
-	return /^[a-zA-Z]+$/.test(text);
+	return /^[a-zA-Z-]+$/.test(text);
 }
 
 export function isPunct(text: string): boolean {

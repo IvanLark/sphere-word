@@ -77,7 +77,8 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
       <div id="scroll-container-start"
         className="w-full h-[calc(100vh-400px)] h-ful flex- bg-transparent snap-star pointer-events-none">
       </div>
-      <div className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde">
+      <div
+        className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde">
 
         {/* 分割 */}
         <div className="h-[300px snap-end">
@@ -89,9 +90,9 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
           </div>
           {/* 顶部单词卡片 */}
           <WordCard word={word} data={data.core} isLoading={loading}
-            button={
-              <CollectButton isCollected={isCollected} onClick={handleCollect} />
-            }
+                    button={
+                      <CollectButton isCollected={isCollected} onClick={handleCollect}/>
+                    }
           />
         </div>
 
@@ -102,6 +103,10 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
               (value) => <div className="min-h-[calc(100vh-4rem)]">{value}</div>
             }
           </ContinuousTabs>
+          {/* 占位div */}
+          <div className="w-full h-10 snap-end"></div>
+          <div className="w-full h-10 snap-end"></div>
+          <div className="w-full h-5 snap-end"></div>
         </div>
       </div>
     </div>

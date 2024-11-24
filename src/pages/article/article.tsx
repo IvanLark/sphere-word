@@ -11,7 +11,7 @@ import { getDifficultyTag } from "./utils/text-process.util.ts";
 import { useRequest } from "alova/client";
 import { ArticleLocationState } from "./types.ts";
 import WordCardWin from "./components/word-card-win.tsx";
-import AiTooltip from "./components/ai-tooltip.tsx";
+import Tooltip from "./components/tooltip.tsx";
 import ModeSwitchButton from "./components/mode-switch-button.tsx";
 import useArticleState, { Position } from "./hooks/use-article-state.ts";
 import SelectModeWin from "./components/select-mode-win.tsx";
@@ -28,12 +28,10 @@ export default function Article() {
   const navigate = useNavigate();
 
   const {
-    showSwitchModeWin, selectMode, showSelected, selectedItem, unselected,
+    showSwitchModeWin, selectMode, showSelected, selectedItem, unselected, selectedPosition,
     reverseSwitchModeWinOpen, changeSelectMode, handleWordClick, handleSentenceClick,
-    checkSelected, getChatLocationState, getSelectedItemId
+    checkSelected, getChatLocationState, getSelectedItemId, showWordCardWin
   } = useArticleState();
-
-  const showWordCardWin = selectMode === '词' && showSelected;
 
   const { type, article, level, positions }: ArticleLocationState = useLocation().state;
 
@@ -57,6 +55,10 @@ export default function Article() {
   const savedShowTranslate = sessionStorage.getItem(`${articleKey}-show-translate`);
   const initShowTranslate = savedShowTranslate ? JSON.parse(savedShowTranslate) as boolean : false;
   const [showTranslate, setShowTranslate] = useState<boolean>(initShowTranslate);
+
+  const savedHighlightPositions = sessionStorage.getItem(`${articleKey}-highlight-positions`);
+  const initHighlightPositions = savedHighlightPositions ? JSON.parse(savedHighlightPositions) as Array<Position> : [];
+  const [highlightPositions, setHighlightPositions] = useState<Array<Position>>(initHighlightPositions);
 
   useEffect(() => {
     // TODO setTimeout是无奈之举，因为useEffect执行时 articleRef 为 null
@@ -95,17 +97,64 @@ export default function Article() {
     return <ScreenLoading />;
   }
 
-  function getHighlightClass(position: Position) {
-    if (positions === undefined) return '';
-    for (let i = 0; i < positions.length; i++) {
-      if (
-        positions[i].paragraphIndex === position[0] &&
-        positions[i].sentenceIndex === position[1] &&
-        positions[i].wordIndex === position[2]
-      ) {
-        return 'bg-yellow-600 text-white rounded-md';
+  function positionEqual (position1: Position, position2: Position) {
+    return (
+      position1[0] === position2[0] &&
+      position1[1] === position2[1] &&
+      position1[2] === position2[2]
+    );
+  }
+
+  function checkHighLight () {
+    if (selectedPosition === null) return false;
+    for (let i = 0; i < highlightPositions.length; i++) {
+      const temp = highlightPositions[i];
+      if (positionEqual(temp, selectedPosition)) {
+        return true;
       }
     }
+    return false;
+  }
+
+  function onHighLight () {
+    if (selectedPosition !== null) {
+      if (!checkHighLight()) {
+        setHighlightPositions(prev => {
+          const newValue = [...prev, selectedPosition];
+          sessionStorage.setItem(`${articleKey}-highlight-positions`, JSON.stringify(newValue));
+          return newValue;
+        });
+      } else {
+        setHighlightPositions(prev => {
+          const newValue = prev.filter(position => !positionEqual(position, selectedPosition));
+          sessionStorage.setItem(`${articleKey}-highlight-positions`, JSON.stringify(newValue));
+          return newValue;
+        });
+      }
+    }
+  }
+
+  function getHighlightClass(position: Position) {
+    // 用户自己高亮
+    for (let i = 0; i < highlightPositions.length; i++) {
+      if (positionEqual(highlightPositions[i], position)) {
+        return 'bg-highlight-red text-white rounded-md';
+      }
+    }
+
+    // 单词查询相应单词高亮
+    if (positions !== undefined) {
+      for (let i = 0; i < positions.length; i++) {
+        if (
+          positions[i].paragraphIndex === position[0] &&
+          positions[i].sentenceIndex === position[1] &&
+          positions[i].wordIndex === position[2]
+        ) {
+          return 'bg-yellow-600 text-white rounded-md';
+        }
+      }
+    }
+
     return '';
   }
 
@@ -220,8 +269,11 @@ export default function Article() {
 
     {
       articleRef.current &&
-      <AiTooltip show={showSelected} targetId={getSelectedItemId()}
-                 onClick={() => {
+      <Tooltip showAi={showSelected} showHighlight={selectMode === '词' && showSelected}
+               targetId={getSelectedItemId()}
+               checkHighLight={checkHighLight}
+               onHighlightClick={onHighLight}
+               onAiClick={() => {
                    saveScroll();
                    navigate('/chat', {state: getChatLocationState(data)});
                  }}/>

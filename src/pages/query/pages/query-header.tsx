@@ -126,7 +126,7 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 					</div>
 					{/* 当前选中单词 */}
 					{/* //!阴阳差错实现了，这里如果加了动画进出曲线不同会导致Home按钮抽搐，不用动画用回flex-1就可极大缓解 */}
-					<span className={`h-full flex-1 text-center overflow-hidden
+					<span className={`h-full flex text-center items-center justify-center overflow-hidden ${word.length > 14 ? 'text-2xl' : ''}
 								${searchData.searchInputBoxOpen ? 'w-0' : 'border-black border-2 rounded-md w-[calc(100vw-7.5rem)] '}`}>
 						{word}
 					</span>

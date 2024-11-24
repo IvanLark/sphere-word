@@ -12,6 +12,7 @@ export default function useArticleState () {
   const [showSwitchModeWin, setShowSwitchModeWin] = useState<boolean>(false);
   const [selectMode, setSelectMode] = useState<SelectMode>('词');
   const [showSelected, setShowSelected] = useState<boolean>(false);
+  const [showWordCardWin, setShowWordCardWin] = useState<boolean>(false);
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
@@ -59,8 +60,11 @@ export default function useArticleState () {
   function handleWordClick (sentence: Array<string>, position: Position) {
     checkWordInContext(position[2], sentence).then(word => {
       selected(word, position);
+      setShowWordCardWin(true);
     }).catch(() => {
       toast.error('不好意思，词库里没有这个词');
+      selected(sentence[position[2]], position);
+      setShowWordCardWin(false);
     });
   }
 
@@ -72,6 +76,7 @@ export default function useArticleState () {
     setSelectedPosition(null);
     setSelectedItem(null);
     setShowSelected(false);
+    setShowWordCardWin(false);
   }
 
   function checkSelected (position: Position) {
@@ -136,7 +141,7 @@ export default function useArticleState () {
   }
 
   return {
-    showSwitchModeWin, selectMode, showSelected, selectedPosition, selectedItem,
+    showSwitchModeWin, selectMode, showSelected, selectedPosition, selectedItem, showWordCardWin,
     unselected, openSwitchModeWin, reverseSwitchModeWinOpen, changeSelectMode, handleWordClick, handleSentenceClick,
     checkSelected, getChatLocationState, getSelectedItemId
   };

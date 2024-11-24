@@ -23,7 +23,7 @@ export default function ReadInput () {
       toast.error('输入不能为空');
       return false;
     }
-    if (text.length > 2000) {
+    if (text.length > 4000) {
       toast.error('输入过长！');
       return false;
     }

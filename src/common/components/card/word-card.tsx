@@ -11,6 +11,11 @@ interface WordCardProps {
 }
 
 export function WordCard({ word, data, button, isLoading = false }: WordCardProps) {
+	let ukPron = undefined;
+	let usPron = undefined;
+	if (data && data.pron && data.pron.ukPron) ukPron = data.pron.ukPron;
+	if (data && data.pron && data.pron.usPron) usPron = data.pron.usPron;
+
 	return (
 		<div className="bg-white p-4 flex-1 flex flex-col gap2 snap-end">
 			<div className="max-w-full flex items-center text-wrap">
@@ -23,27 +28,18 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 			</div>
 			<SkeletonBuilder loading={isLoading}>
 				{/* 发音 */}
-				{
-					data && data?.pron &&
-					<div className="flex flex-wrap items-center gap2">
-						{
-							data.pron?.ukPron &&
-							<PronItem title="英" pron={data.pron.ukPron}
-								onClick={() => {
-									new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${word}`).play();
-								}}
-							/>
-						}
-						{
-							data.pron?.usPron &&
-							<PronItem title="美" pron={data.pron.usPron}
-								onClick={() => {
-									new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${word}`).play();
-								}}
-							/>
-						}
-					</div>
-				}
+				<div className="flex flex-wrap items-center gap2">
+					<PronItem title="英" pron={ukPron}
+										onClick={() => {
+											new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${word}`).play();
+										}}
+					/>
+					<PronItem title="美" pron={usPron}
+										onClick={() => {
+											new Audio(`http://dict.youdao.com/dictvoice?type=0&audio=${word}`).play();
+										}}
+					/>
+				</div>
 				{/* 意思 */}
 				{
 					data && data?.simpleMeaning &&
@@ -78,16 +74,16 @@ export function WordCard({ word, data, button, isLoading = false }: WordCardProp
 
 interface PronBuilderProps {
 	title: string;
-	pron?: string;
+	pron?: string | undefined;
 	onClick: () => void;
 }
 
-function PronItem({ title, pron, onClick }: PronBuilderProps) {
-	return <div className=" text-[15px] font-bold text-nowrap">{`${title} [${pron}]`}
+function PronItem({title, pron, onClick}: PronBuilderProps) {
+	return <div className=" text-[15px] font-bold text-nowrap">{`${title}${pron ? ` [${pron}]` : ''}`}
 		<Tooltip title='点击播放发音' arrow>
 			{/* //@ts-expect-error no title*/}
 			<button className='btn-scale-xl size-12' onClick={onClick}>
-				<Mic style={{ width: '30px', height: '30px' }} />
+				<Mic style={{width: '30px', height: '30px'}}/>
 			</button>
 		</Tooltip>
 	</div>;

@@ -5,6 +5,11 @@ export default {
     extend: {
       fontFamily: {
         article: 'source-serif-pro, Georgia, Cambria, "Times New Roman", Times, serif'
+      },
+      colors: {
+        //'highlight-red': '#ff9999'
+        //'highlight-red': '#EF9A9A'
+        'highlight-red': '#EF5350'
       }
     },
   },

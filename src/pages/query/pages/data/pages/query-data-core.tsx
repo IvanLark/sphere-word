@@ -23,8 +23,10 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
   const navigate = useNavigate();
 
   const definitionTabs: Record<string, Array<string>> = {}
-  if (data?.definition.cn) Object.assign(definitionTabs, { '中英': data.definition.cn });
-  if (data?.definition.en) Object.assign(definitionTabs, { '英英': data.definition.en });
+  if (data.definition) {
+    if (data?.definition.cn) Object.assign(definitionTabs, { '中英': data.definition.cn });
+    if (data?.definition.en) Object.assign(definitionTabs, { '英英': data.definition.en });
+  }
 
   interface EchartsDataItem {
     name: string;
@@ -32,9 +34,15 @@ export default function QueryDataCore({ word, data, isLoading }: QueryDataCorePr
   }
   let meaningProportionData: EchartsDataItem[] | undefined = undefined
   if (data?.proportion && data.proportion?.meaning) {
-    meaningProportionData = Object.values(data.proportion.meaning)[0]
-      .map(item => ({ name: item.meaning, value: item.proportion }))
-      .filter(item => item.value !== 100);
+    if (Object.values(data.proportion.meaning)[0].length > 1) {
+      meaningProportionData = Object.values(data.proportion.meaning)[0]
+        .map(item => ({ name: item.meaning, value: item.proportion }))
+        .filter(item => item.value !== 100);
+    } else if (Object.values(data.proportion.meaning).length > 1) {
+      meaningProportionData = Object.values(data.proportion.meaning)[1]
+        .map(item => ({ name: item.meaning, value: item.proportion }))
+        .filter(item => item.value !== 100);
+    }
   }
   const echartOption: EChartsOption = {
     tooltip: {
