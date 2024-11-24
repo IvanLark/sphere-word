@@ -259,10 +259,7 @@ export default function Article() {
                      onScroll={(event) => {
                        if (event.currentTarget.scrollTop === 0) unselected();
                      }}
-                     onClick={() => {
-                       saveScroll();
-                       navigate('/query', {state: {word: selectedItem}});
-                     }}
+                     onClick={onHighLight}
         />
       }
     </div>

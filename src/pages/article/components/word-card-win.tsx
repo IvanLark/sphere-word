@@ -18,7 +18,7 @@ interface WordCardWinProps {
   onClick: () => void;
 }
 
-export default function WordCardWin({ word, onScroll }: WordCardWinProps) {
+export default function WordCardWin({ word, onScroll, onClick }: WordCardWinProps) {
 
   const wordCardWinRef = useRef(null);
 
@@ -32,6 +32,7 @@ export default function WordCardWin({ word, onScroll }: WordCardWinProps) {
     .onError(() => { setCollected(false); });
 
   function handleCollect() {
+    onClick();
     collectWord(word).then(() => {
       toast.info('收藏成功');
       setCollected(true);
