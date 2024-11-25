@@ -34,7 +34,7 @@ export default function ReadPublish () {
           border-2 flex items-center justify-center hover:shadow-lg text-3xl font-bold"
            onClick={() => navigate('/read/keep')}
       >
-        保存文章
+        收藏文章
       </div>
       {/* 推荐文章 */}
       {

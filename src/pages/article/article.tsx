@@ -204,7 +204,7 @@ export default function Article() {
     if (keepData.time) delete keepData.time;
     if (keepData.nextId) delete keepData.nextId;
     keepArticle(keepData).then(() => {
-      toast.info('收藏成功');
+      toast.info(keep ? '保存成功' : '收藏成功');
     }).catch(() => {
       toast.error('收藏失败');
     });
@@ -305,7 +305,7 @@ export default function Article() {
                   active:bg-black active:text-white"
                   onClick={handleKeep}
           >
-            { keep ? '保存高亮' : '保存文章' }
+            { keep ? '保存高亮' : '收藏文章' }
           </button>
         </div>
         {/* 留空 */}

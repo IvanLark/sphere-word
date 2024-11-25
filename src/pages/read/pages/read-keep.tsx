@@ -18,7 +18,7 @@ export default function ReadKeep () {
   return (
     <div className="w-11/12 px-3 my-[72px] flex flex-col items-center gap-4">
       {/* 标题 */}
-      <p className="absolute top-5 w-full text-center text-3xl font-bold">保存文章</p>
+      <p className="absolute top-5 w-full text-center text-3xl font-bold">收藏文章</p>
       {/* 文章列表 */}
       {
         data.map((article, index) =>
