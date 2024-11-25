@@ -4,8 +4,17 @@ import SingleWordCard from "./single-word-card";
 import {ArticleFace} from "../../../api/types/article.types.ts";
 import {PositionItem} from "../../../api/types/word-data.types.ts";
 
-export default function ArticleCard({ articleFace }: { articleFace: ArticleFace }) {
+export default function ArticleCard({ articleFace, keep = false }: { articleFace: ArticleFace, keep?: boolean }) {
 	const navigate = useNavigate();
+
+	let timeTag = undefined;
+	if (articleFace.time) {
+		const date = new Date(articleFace.time * 1000);  // 将秒级时间戳转换为毫秒
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1);  // 月份从 0 开始
+		const day = String(date.getDate());
+		timeTag = `${year}年${month}月${day}日`;
+	}
 
 	function ExampleSentence ({position}: { position: PositionItem }) {
 		return (
@@ -25,19 +34,39 @@ export default function ArticleCard({ articleFace }: { articleFace: ArticleFace 
 	}
 
 	return (
-		<div className="btn-trans btn-scale-sm w-full p-2 my-2 bg-white rounded-lg shadow-md border-black border-2 flex flex-col gap-2 hover:shadow-lg"
-				 onClick={() => { navigate('/article', { state: { type: 'id', article: articleFace.articleId, positions: articleFace.positions } }) }}>
-			<img src={articleFace.banner} alt="" className="w-full h-[calc(35vw)] object-cover" loading="lazy" />
+		<div
+			className="btn-trans btn-scale-sm w-full p-2 my-2 bg-white rounded-lg shadow-md border-black border-2 flex flex-col gap-2 hover:shadow-lg"
+			onClick={() => {
+				navigate('/article', {
+					state: {
+						type: 'id',
+						article: articleFace.articleId,
+						positions: articleFace.positions,
+						keep: keep
+					}
+				})
+			}}>
+			{
+				articleFace.banner &&
+				<img src={articleFace.banner} alt="" className="w-full h-[calc(35vw)] object-cover" loading="lazy"/>
+			}
 			<h2 className="text-lg font-bold ">{articleFace.title}</h2>
-			<h2 className="text-lg font-bold ">{articleFace.subtitle}</h2>
-			<div className="flex flex-wrap gap-2">
-				<SingleWordCard word={articleFace.topic} />
-				<SingleWordCard word={getDifficultyTag(articleFace.difficultyScore)} />
-				<SingleWordCard word={`${articleFace.wordCount}词`} />
-			</div>
+			{
+				articleFace.subtitle &&
+				<h2 className="text-lg font-bold ">{articleFace.subtitle}</h2>
+			}
+			{
+				(articleFace.topic || articleFace.difficultyScore || articleFace.wordCount) &&
+				<div className="flex flex-wrap gap-2">
+					{ articleFace.topic && <SingleWordCard word={articleFace.topic}/> }
+					{ articleFace.difficultyScore && <SingleWordCard word={getDifficultyTag(articleFace.difficultyScore)}/> }
+					{ articleFace.wordCount && <SingleWordCard word={`${articleFace.wordCount}词`}/> }
+					{ timeTag && <SingleWordCard word={timeTag}/> }
+				</div>
+			}
 			{
 				articleFace.positions &&
-				<ExampleSentence position={articleFace.positions[0]} />
+				<ExampleSentence position={articleFace.positions[0]}/>
 			}
 		</div>
 	);

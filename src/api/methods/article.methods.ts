@@ -29,3 +29,14 @@ export const getTranslateArticle =
   (text: string, level: number) => alova.Post<Article>('/article/translate',
     { text: text, level: level }, { meta: { gzip: true, cache: true }, cacheFor: { mode:  'restore', expire: Infinity } })
 
+export const keepArticle =
+  (article: Article) => alova.Post<null>('/article/keep', article)
+
+export const getKeepArticle =
+  (articleId: string) => alova.Get<Article>('/article/keep', {
+    params: { articleId: articleId },
+    meta: { gzip: true, cache: false }
+  })
+
+export const getKeepArticleList =
+  () => alova.Get<Array<ArticleFace>>('/article/keep_list', { meta: { gzip: true } })

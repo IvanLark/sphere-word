@@ -1,9 +1,9 @@
 import {
   getAdaptArticle,
   getAnalyzeArticle,
-  getArticle,
+  getArticle, getKeepArticle,
   getLinkArticle,
-  getTranslateArticle
+  getTranslateArticle, keepArticle
 } from "../../api/methods/article.methods";
 import SingleWordCard from "../../common/components/card/single-word-card";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ import {ArrowBack} from "@mui/icons-material";
 import axios from "axios";
 import {toast} from "../../common/utils/toast.util.tsx";
 import getSentenceString from "./utils/get-sentence-string.ts";
+import getWordCount from "./utils/get-word-count.ts";
 
 export default function Article() {
 
@@ -33,14 +34,21 @@ export default function Article() {
     checkSelected, getChatLocationState, getSelectedItemId, showWordCardWin, handleParagraphClick
   } = useArticleState();
 
-  const { type, article, level, positions }: ArticleLocationState = useLocation().state;
+  const { type, article, level, positions, keep }: ArticleLocationState = useLocation().state;
 
-  const { data, error, loading } = useRequest(() => {
-    if (type === 'id') return getArticle(article);
+  const { data, error, loading, onSuccess } = useRequest(() => {
+    if (keep) return getKeepArticle(article);
+    else if (type === 'id') return getArticle(article);
     else if (type === 'text') return getAnalyzeArticle(article);
     else if (type === 'link') return getLinkArticle(article);
     else if (type === 'adapt') return getAdaptArticle(article, level as number);
     else return getTranslateArticle(article, level as number);
+  });
+
+  onSuccess(({data}) => {
+    if (savedHighlightPositions === null && data.highlight !== undefined) {
+      setHighlightPositions(data.highlight);
+    }
   });
 
   const articleRef = useRef<HTMLDivElement>(null);
@@ -66,9 +74,12 @@ export default function Article() {
       // 恢复
       const savedScrollY = sessionStorage.getItem(`article-${articleKey}-scroll-y`);
       if (savedScrollY !== null && articleRef.current) {
-        articleRef.current.scrollTo(0, parseInt(savedScrollY, 10));
+        articleRef.current.scrollTo({
+          top: parseInt(savedScrollY, 10),
+          //behavior: 'smooth'
+        });
       }
-    }, 150);
+    }, 100);
   }, []);
 
   function beforeSelected(target: HTMLElement) {
@@ -187,31 +198,67 @@ export default function Article() {
     }
   }
 
+  function handleKeep () {
+    const keepData = data;
+    keepData.highlight = highlightPositions;
+    if (keepData.time) delete keepData.time;
+    if (keepData.nextId) delete keepData.nextId;
+    keepArticle(keepData).then(() => {
+      toast.info('收藏成功');
+    }).catch(() => {
+      toast.error('收藏失败');
+    });
+  }
+
+  if (type !== 'id') {
+    if (!data.title) {
+      data.title = `${getSentenceString(data.text[0][0].slice(0, 10))}......`;
+    }
+    const topicMap = {
+      'text': '文本',
+      'link': '链接',
+      'adapt': '适配',
+      'translate': '翻译'
+    }
+    data.topic = topicMap[type];
+    data.wordCount = getWordCount(data.text);
+  }
+
+  let timeTag = undefined;
+  if (data.time) {
+    const date = new Date(data.time * 1000);  // 将秒级时间戳转换为毫秒
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1);  // 月份从 0 开始
+    const day = String(date.getDate());
+    timeTag = `${year}年${month}月${day}日`;
+  }
+
   return <div id="article" className="overflow-y-auto relative" ref={articleRef}>
     {/* 顶部 */}
-    <div className={`w-full  p-2 fixed z-10 bg-transparent flex gap-2 overflow-hidden`}>
+    <div className={`w-full  p-2 fixed z-10 bg-transparent flex gap-2 overflow-hidden pointer-events-none`}>
       {/* 返回按钮 */}
       <button title="Back" className="btn-scale btn-white size-12 rounded-md border-2
-                                      border-black flex items-center justify-center group"
+                                      border-black flex items-center justify-center group
+                                      pointer-events-auto"
               onClick={() => {
                 navigate(-1);
               }}>
         <div className="btn-scale-xl"><ArrowBack style={{fontSize: "2.5rem"}}/></div>
       </button>
       {/* 占位 */}
-      <div className="flex-1 text-3xl flex items-start bg-transparent"></div>
+      <div className="flex-1 text-3xl flex items-start bg-transparent pointer-events-none"></div>
       {/* 切换按钮 */}
       <ModeSwitchButton text={selectMode} onClick={() => reverseSwitchModeWinOpen()}/>
     </div>
 
     {/* 翻译 */}
     <button className="fixed right-2 bottom-8 btn-scale btn-white size-12 rounded-md
-      border-2 border-black flex items-center justify-center group text-3xl"
+      border-2 border-black flex items-center justify-center group text-3xl pointer-events-auto"
       onClick={handleTranslate}>
       { showTranslate ? '隐' : '译' }
     </button>
 
-    <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-6 bg-white rounded-lg shadow- flex flex-col gap-2`}>
+    <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-8 bg-white rounded-lg shadow- flex flex-col gap-2`}>
       <SelectModeWin show={showSwitchModeWin} selectMode={selectMode} changeSelectMode={changeSelectMode}/>
 
       {
@@ -229,6 +276,7 @@ export default function Article() {
           { data.topic && <SingleWordCard word={data.topic}/> }
           { data.difficultyScore && <SingleWordCard word={getDifficultyTag(data.difficultyScore)}/> }
           { data.wordCount && <SingleWordCard word={`${data.wordCount}词`}/> }
+          { timeTag && <SingleWordCard word={timeTag}/> }
         </div>
       }
 
@@ -241,16 +289,27 @@ export default function Article() {
       <div className="h-full text-justify">
         {
           type !== 'id' &&
-          <div className={`w-full h-[40px]`} />
+          <div className={`w-full h-[40px]`}/>
         }
         <ArticleText text={data.text} selectMode={selectMode} checkSelected={checkSelected}
                      getHighlightClass={getHighlightClass}
-                     handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick} handleParagraphClick={handleParagraphClick}
+                     handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick}
+                     handleParagraphClick={handleParagraphClick}
                      beforeSelected={beforeSelected}
                      showTranslate={showTranslate}
                      translations={translations}
         />
-        <div className={`w-1 transition-all duration-300 h-[280px]`}></div>
+        {/* 保存按钮 */}
+        <div className="w-full h-10 mt-20 flex items-center justify-center">
+          <button className="w-8/12 h-10 rounded-md text-3xl border-black border-2 text-black
+                  active:bg-black active:text-white"
+                  onClick={handleKeep}
+          >
+            { keep ? '保存高亮' : '保存文章' }
+          </button>
+        </div>
+        {/* 留空 */}
+        <div className={`w-1 transition-all duration-300 h-[200px]`}></div>
       </div>
 
       {
@@ -267,7 +326,8 @@ export default function Article() {
 
     {
       articleRef.current &&
-      <Tooltip showAi={showSelected} showHighlight={selectMode === '词' && showSelected} showQuery={showWordCardWin}
+      <Tooltip showAi={showSelected} showHighlight={selectMode === '词' && showSelected}
+               showQuery={showWordCardWin} showVoice={showSelected && selectMode !== '词'}
                targetId={getSelectedItemId()}
                checkHighLight={checkHighLight}
                onHighlightClick={onHighLight}
@@ -278,6 +338,9 @@ export default function Article() {
                onQueryClick={() => {
                  saveScroll();
                  navigate('/query', {state: {word: selectedItem}});
+               }}
+               onVoiceClick={() => {
+                 new Audio(`http://dict.youdao.com/dictvoice?type=1&audio=${selectedItem}`).play();
                }}
       />
     }

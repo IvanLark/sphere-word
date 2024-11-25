@@ -29,6 +29,13 @@ export default function ReadPublish () {
       >
         自己输入
       </div>
+      {/* 进入保存文章 */}
+      <div className="btn-trans btn-scale-sm w-full p-4 my-2 bg-white rounded-lg shadow-md border-black
+          border-2 flex items-center justify-center hover:shadow-lg text-3xl font-bold"
+           onClick={() => navigate('/read/keep')}
+      >
+        保存文章
+      </div>
       {/* 推荐文章 */}
       {
         data.map((article, index) =>

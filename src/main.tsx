@@ -14,6 +14,7 @@ import Article from './pages/article/article.tsx';
 import Read from "./pages/read/read.tsx";
 import ReadPublish from "./pages/read/pages/read-publish.tsx";
 import ReadInput from "./pages/read/pages/read-input.tsx";
+import ReadKeep from "./pages/read/pages/read-keep.tsx";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
           {
             path: '/read/input',
             element: <ReadInput />
+          },
+          {
+            path: '/read/keep',
+            element: <ReadKeep />
           }
         ]
       }

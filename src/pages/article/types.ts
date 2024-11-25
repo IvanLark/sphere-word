@@ -5,4 +5,5 @@ export interface ArticleLocationState {
   article: string;
   level?: number;
   positions?: Array<PositionItem>;
+  keep: boolean;
 }

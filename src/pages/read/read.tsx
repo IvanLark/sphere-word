@@ -17,13 +17,13 @@ export default function Read () {
         <button className="btn-scale btn-white size-14 rounded-md border-2 border-black
 													 flex items-center justify-center group pointer-events-auto"
                 onClick={() => {
-                  if (location.pathname === "/read/input") { navigate('/read'); }
-                  else { navigate('/'); }
+                  if (location.pathname === "/read") { navigate('/') }
+                  else { navigate('/read'); }
                 }}>
           {
-            location.pathname === '/read/input'
-            ? <ArrowBack style={{fontSize: "3rem"}}/>
-            : <HomeOutlined style={{fontSize: "3rem"}}/>
+            location.pathname === '/read'
+            ? <HomeOutlined style={{fontSize: "3rem"}}/>
+            : <ArrowBack style={{fontSize: "3rem"}}/>
           }
         </button>
       </div>
