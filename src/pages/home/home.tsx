@@ -1,6 +1,7 @@
 import HomeNaviTab, { HomeNaviTabProps } from './components/home-navi-tab.tsx';
 import { useNavigate } from "react-router-dom";
 import Icon from "../../../public/智臻.svg";
+import Select from '../article/components/select.tsx';
 
 export default function Home() {
 	const navigate = useNavigate();
@@ -27,6 +28,7 @@ export default function Home() {
 						<HomeNaviTab key={index} {...tab} />
 					)
 				}
+				<Select label='label' options={{ '选项一': 'value1', '选项二': 'value2' }} onChange={(value) => { console.log(value) }} />
 			</div>
 		</div>
 	);
