@@ -8,7 +8,7 @@ export default function Read () {
   const location = useLocation();
 
   return (
-    <div className="w-screen h-screen relative flex flex-col items-center overflow-y-auto">
+    <div className="w-screen h-screen relative flex flex-col items-center overflow-y-auto" id="read-container">
       <Outlet />
 
       {/* home 按钮 */}
@@ -18,7 +18,7 @@ export default function Read () {
 													 flex items-center justify-center group pointer-events-auto"
                 onClick={() => {
                   if (location.pathname === "/read") { navigate('/') }
-                  else { navigate('/read'); }
+                  else { navigate(-1) }
                 }}>
           {
             location.pathname === '/read'

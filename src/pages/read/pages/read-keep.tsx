@@ -21,9 +21,13 @@ export default function ReadKeep () {
       <p className="absolute top-5 w-full text-center text-3xl font-bold">收藏文章</p>
       {/* 文章列表 */}
       {
-        data.map((article, index) =>
-          <ArticleCard key={index} articleFace={article} keep={true}/>
-        )
+        data.length > 0 ?
+          data.map((article, index) =>
+            <ArticleCard key={index} articleFace={article} keep={true}/>
+          ) :
+          <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl">
+            你还没有收藏文章哦
+          </span>
       }
     </div>
   );

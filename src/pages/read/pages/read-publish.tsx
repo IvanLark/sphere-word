@@ -23,18 +23,25 @@ export default function ReadPublish () {
       {/* 标题 */}
       <p className="absolute top-5 w-full text-center text-3xl font-bold">阅读推送</p>
       {/* 进入自输入 */}
-      <div className="btn-trans btn-scale-sm w-full p-4 my-2 bg-white rounded-lg shadow-md border-black
+      <div className="btn-trans btn-scale-sm w-full p-4 bg-white rounded-lg shadow-md border-black
           border-2 flex items-center justify-center hover:shadow-lg text-3xl font-bold"
            onClick={() => navigate('/read/input')}
       >
         自己输入
       </div>
       {/* 进入保存文章 */}
-      <div className="btn-trans btn-scale-sm w-full p-4 my-2 bg-white rounded-lg shadow-md border-black
+      <div className="btn-trans btn-scale-sm w-full p-4 bg-white rounded-lg shadow-md border-black
           border-2 flex items-center justify-center hover:shadow-lg text-3xl font-bold"
            onClick={() => navigate('/read/keep')}
       >
         收藏文章
+      </div>
+      {/* 进入书籍阅读 */}
+      <div className="btn-trans btn-scale-sm w-full p-4 bg-white rounded-lg shadow-md border-black
+          border-2 flex items-center justify-center hover:shadow-lg text-3xl font-bold"
+           onClick={() => navigate('/read/books')}
+      >
+        原著小说
       </div>
       {/* 推荐文章 */}
       {

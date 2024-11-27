@@ -1,7 +1,7 @@
 import {
   getAdaptArticle,
   getAnalyzeArticle,
-  getArticle, getKeepArticle,
+  getArticle, getChapter, getKeepArticle,
   getLinkArticle,
   getTranslateArticle, keepArticle
 } from "../../api/methods/article.methods";
@@ -34,7 +34,7 @@ export default function Article() {
     checkSelected, getChatLocationState, getSelectedItemId, showWordCardWin, handleParagraphClick
   } = useArticleState();
 
-  const { type, article, level, positions, keep }: ArticleLocationState = useLocation().state;
+  const { type, article, level, positions, keep, bookName }: ArticleLocationState = useLocation().state;
 
   const { data, error, loading, onSuccess } = useRequest(() => {
     if (keep) return getKeepArticle(article);
@@ -42,7 +42,11 @@ export default function Article() {
     else if (type === 'text') return getAnalyzeArticle(article);
     else if (type === 'link') return getLinkArticle(article);
     else if (type === 'adapt') return getAdaptArticle(article, level as number);
-    else return getTranslateArticle(article, level as number);
+    else if (type === 'translate') return getTranslateArticle(article, level as number);
+    else {
+      const part = article.split(':');
+      return getChapter(part[0], part[1]);
+    }
   });
 
   onSuccess(({data}) => {
@@ -218,7 +222,8 @@ export default function Article() {
       'text': '文本',
       'link': '链接',
       'adapt': '适配',
-      'translate': '翻译'
+      'translate': '翻译',
+      'book': `小说: ${bookName}`
     }
     data.topic = topicMap[type];
     data.wordCount = getWordCount(data.text);
@@ -258,14 +263,29 @@ export default function Article() {
       { showTranslate ? '隐' : '译' }
     </button>
 
-    <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-8 bg-white rounded-lg shadow- flex flex-col gap-2`}>
+    <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-10 bg-white rounded-lg shadow- flex flex-col gap-2`}>
       <SelectModeWin show={showSwitchModeWin} selectMode={selectMode} changeSelectMode={changeSelectMode}/>
+
+      {
+        !data.banner &&
+        <div className={`w-full h-[10px]`}/>
+      }
 
       {
         data.banner &&
         <img src={data.banner} alt=""
              className="w-full h-[calc(35vw)] my-4 object-cover border-4 border-black rounded-md"
              loading="lazy"/>
+      }
+
+      {/* 回到小说 */}
+      {
+        data.articleId && data.articleId.startsWith('book:') && keep &&
+        <button className="w-full mb-6 btn-scale btn-white size-12 border-2 border-black rounded-md"
+                onClick={() => {navigate('/read/book', { state: { bookId: data.articleId!.split(':')[1] } })}}
+        >
+          回到{bookName ? `小说: ${bookName}` : data.topic}
+        </button>
       }
 
       {data.title && <h2 className="text-xl font-bold font-article">{data.title}</h2>}
@@ -287,10 +307,6 @@ export default function Article() {
       }
 
       <div className="h-full text-justify">
-        {
-          type !== 'id' &&
-          <div className={`w-full h-[40px]`}/>
-        }
         <ArticleText text={data.text} selectMode={selectMode} checkSelected={checkSelected}
                      getHighlightClass={getHighlightClass}
                      handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick}

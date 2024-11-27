@@ -20,62 +20,67 @@ export default function ArticleText({text, selectMode, getHighlightClass, checkS
 
   return <>
     {
-      text.map((paragraph, pIndex) => <Fragment key={pIndex}>
-        {/* 段落开头空格 */}
-        <span className="inline-block w-4" key={pIndex}/>
-        <span className={`${selectMode === '段' && checkSelected([pIndex, -1, -1]) ? "bg-lime-500 text-white rounded-md" : ""}`}
+      text.map((paragraph, pIndex) => <>{
+        paragraph[0][0].startsWith('https://enganglish.oss-cn-beijing.aliyuncs.com') ?
+          <img alt="" className="w-full h-[calc(35vw)] object-cover my-3" loading="lazy" src={paragraph[0][0]}/> :
+          <Fragment key={pIndex}>
+            {/* 段落开头空格 */}
+            <span className="inline-block w-4" key={pIndex}/>
+            <span
+              className={`${selectMode === '段' && checkSelected([pIndex, -1, -1]) ? "bg-lime-500 text-white rounded-md" : ""}`}
               onClick={(event) => {
                 beforeSelected(event.target as HTMLElement);
                 if (selectMode === '段') handleParagraphClick(paragraph, pIndex);
               }}
               id={`paragraph-${pIndex}`}
-        >
-        {
-          paragraph.map((sentence, sIndex) =>
-              <span key={sIndex} id={`sentence-${pIndex}-${sIndex}`}
-                    className={`leading-loose
-                                ${selectMode === '句' && checkSelected([pIndex, sIndex, -1]) ? "bg-lime-500 text-white rounded-md" : ""}`}
-                    style={{ fontSize: '16px' }}
-                    onClick={(event) => {
-                      beforeSelected(event.target as HTMLElement);
-                      if (selectMode === '句') handleSentenceClick(sentence, [pIndex, sIndex, -1]);
-                    }}>
-          {
-            sentence.map((word, wIndex) =>
-              <span key={wIndex}>
-                {/* 单词间空格 */}
-                <span>{isPunct(word) || word.includes("'") ? '' : ' '}</span>
-                <span data-tooltip-id={checkSelected([pIndex, sIndex, wIndex]) ? 'highlight-word' : ''}
-                      id={`word-${pIndex}-${sIndex}-${wIndex}`}
-                      className={`w-fit ${isPunct(word) || word.includes("'") ? '' : 'px-0.5'} py-1 font-article
-                                ${selectMode === '词' && checkSelected([pIndex, sIndex, wIndex]) ? 'bg-lime-500 text-white rounded-md' : ''}
-                                ${getHighlightClass([pIndex, sIndex, wIndex])}`}
-                      onClick={(event) => {
-                        beforeSelected(event.target as HTMLElement);
-                        if (selectMode === '词' && isWord(word)) handleWordClick(sentence, [pIndex, sIndex, wIndex]);
-                      }}>
-                  {
-                    word !== '``' && word !== '\'\'' ? word : '"'
-                  }
-                </span>
-              </span>
-            )
-          }
-        </span>
-          )
-        }
-        </span>
-        {/* 段落间间隔 */}
-        <div className="w-full h-5"/>
-        {
-          showTranslate && translations.length === text.length &&
-          <>
-            <span className="inline-block w-4"/>
-            <span className="leading-loose">{translations[pIndex]}</span>
+            >
+              {
+                paragraph.map((sentence, sIndex) =>
+                  <span key={sIndex} id={`sentence-${pIndex}-${sIndex}`}
+                        className={`leading-loose
+                                      ${selectMode === '句' && checkSelected([pIndex, sIndex, -1]) ? "bg-lime-500 text-white rounded-md" : ""}`}
+                        style={{fontSize: '16px'}}
+                        onClick={(event) => {
+                          beforeSelected(event.target as HTMLElement);
+                          if (selectMode === '句') handleSentenceClick(sentence, [pIndex, sIndex, -1]);
+                        }}>
+                        {
+                          sentence.map((word, wIndex) =>
+                            <span key={wIndex}>
+                              {/* 单词间空格 */}
+                              <span>{isPunct(word) || word.includes("'") ? '' : ' '}</span>
+                              <span data-tooltip-id={checkSelected([pIndex, sIndex, wIndex]) ? 'highlight-word' : ''}
+                                    id={`word-${pIndex}-${sIndex}-${wIndex}`}
+                                    className={`w-fit ${isPunct(word) || word.includes("'") ? '' : 'px-0.5'} py-1 font-article
+                                              ${selectMode === '词' && checkSelected([pIndex, sIndex, wIndex]) ? 'bg-lime-500 text-white rounded-md' : ''}
+                                              ${getHighlightClass([pIndex, sIndex, wIndex])}`}
+                                    onClick={(event) => {
+                                      beforeSelected(event.target as HTMLElement);
+                                      if (selectMode === '词' && isWord(word)) handleWordClick(sentence, [pIndex, sIndex, wIndex]);
+                                    }}>
+                                {
+                                  word !== '``' && word !== '\'\'' ? word : '"'
+                                }
+                              </span>
+                            </span>
+                          )
+                        }
+                      </span>
+                )
+              }
+            </span>
+            {/* 段落间间隔 */}
             <div className="w-full h-5"/>
-          </>
-        }
-      </Fragment>)
+            {
+              showTranslate && translations.length === text.length &&
+              <>
+                <span className="inline-block w-4"/>
+                <span className="leading-loose">{translations[pIndex]}</span>
+                <div className="w-full h-5"/>
+              </>
+            }
+          </Fragment>
+      }</>)
     }
   </>;
 }

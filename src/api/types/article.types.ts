@@ -27,3 +27,29 @@ export interface ArticleFace {
   positions?: Array<PositionItem>;
   time?: number;
 }
+
+export interface Book {
+  bookId: string;
+  bookName: string;
+  bookNameCn: string;
+  coverImg: string;
+  isBookSeries: string | number;
+  seriesBooks?: Array<Book>;
+}
+
+export interface BookInfo {
+  bookId: string;
+  bookName?: string;
+  bookNameCn: string;
+  authorName: string;
+  authorImg: string;
+  coverImg: string;
+  wordCount: number;
+  chapters: Array<Chapter>;
+}
+
+export interface Chapter {
+  chapterId: string;
+  title: string;
+  abbrev: string;
+}

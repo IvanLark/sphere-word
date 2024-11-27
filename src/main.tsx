@@ -15,6 +15,8 @@ import Read from "./pages/read/read.tsx";
 import ReadPublish from "./pages/read/pages/read-publish.tsx";
 import ReadInput from "./pages/read/pages/read-input.tsx";
 import ReadKeep from "./pages/read/pages/read-keep.tsx";
+import ReadBooks from "./pages/read/pages/read-books.tsx";
+import ReadBook from "./pages/read/pages/read-book.tsx";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +64,14 @@ const router = createBrowserRouter([
           {
             path: '/read/keep',
             element: <ReadKeep />
+          },
+          {
+            path: '/read/books',
+            element: <ReadBooks />
+          },
+          {
+            path: '/read/book',
+            element: <ReadBook />
           }
         ]
       }

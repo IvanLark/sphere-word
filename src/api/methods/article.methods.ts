@@ -1,5 +1,5 @@
 import alova from "../index.ts";
-import {Article, ArticleFace} from "../types/article.types.ts";
+import {Article, ArticleFace, Book, BookInfo} from "../types/article.types.ts";
 
 export const getArticle =
   (articleId: string) =>
@@ -40,3 +40,25 @@ export const getKeepArticle =
 
 export const getKeepArticleList =
   () => alova.Get<Array<ArticleFace>>('/article/keep_list', { meta: { gzip: true } })
+
+export const getBooks =
+  (level: string) => alova.Get<Array<Book>>('/article/books', {
+    params: { level: level },
+    meta: { gzip: true, cache: true },
+    cacheFor: { mode:  'restore', expire: Infinity }
+  })
+
+export const getBook =
+  (bookId: string) => alova.Get<BookInfo>('/article/book', {
+    params: { bookId: bookId },
+    meta: { gzip: true, cache: true },
+    cacheFor: { mode:  'restore', expire: Infinity }
+  })
+
+export const getChapter =
+  (bookId: string, chapterId: string) => alova.Get<Article>('/article/chapter', {
+    params: { bookId: bookId, chapterId: chapterId },
+    meta: { gzip: true, cache: true },
+    cacheFor: { mode:  'restore', expire: Infinity }
+  })
+
