@@ -1,7 +1,7 @@
 import {PositionItem} from "./word-data.types.ts";
 import {Position} from "../../pages/article/hooks/use-article-state.ts";
 
-export interface Article {
+export interface ArticleInfo {
   articleId?: string;
   topic?: string;
   title?: string;
@@ -14,6 +14,8 @@ export interface Article {
   text: Array<Array<Array<string>>>; // 层次分别为：段落 --> 句子 --> 单词
   time?: number;
   nextId?: string;
+  nextPage?: number;
+  type?: string;
 }
 
 export interface ArticleFace {

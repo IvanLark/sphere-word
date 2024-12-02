@@ -19,15 +19,13 @@ export default function Query() {
   const initCurWord = storedCurWord ? storedCurWord : '';
   const [curWord, setCurWord] = useState<string>(initCurWord);
 
-  // 历史查询单词
-  const storedHistory = sessionStorage.getItem('query:history');
-  const initHistory = storedHistory ? JSON.parse(storedHistory) : {
-    nodes: [], edges: []
-  };
-  const [history, setHistory] = useState<{ nodes: Array<Node>, edges: Array<Edge> }>(initHistory);
+  if (sessionStorage.getItem('query:graph:elements') === null) {
+    sessionStorage.setItem('query:graph:elements', JSON.stringify({
+      nodes: [], edges: []
+    }));
+  }
 
   useEffect(() => {
-    sessionStorage.setItem('query:history', JSON.stringify(history));
     sessionStorage.setItem('query:cur-word', curWord);
   }, [curWord, history]);
 
@@ -35,14 +33,20 @@ export default function Query() {
     return `${nodeType}@${nodeKey}`;
   }
 
+  type History = {
+    nodes: {data: Node}[],
+    edges: {data: Edge}[]
+  }
+
   // 添加节点和边
   function addNodesAndEdges(nodes: Array<Node>, edges: Array<Edge>) {
+    const history = JSON.parse(sessionStorage.getItem('query:graph:elements') as string) as History;
     const newNodes: Array<Node> = [];
     const newEdges: Array<Edge> = [];
     nodes.forEach((node) => {
       let isExisted = false;
       history.nodes.forEach(nodeItem => {
-        if (nodeItem.id === node.id) isExisted = true;
+        if (nodeItem.data.id === node.id) isExisted = true;
       })
       // 节点不存在则添加节点
       if (!isExisted) newNodes.push(node);
@@ -52,22 +56,22 @@ export default function Query() {
       const edgeId2 = `${edge.target}&${edge.source}`;
       let isExisted = false;
       history.edges.forEach(edgeItem => {
-        if (edgeItem.id === edgeId1 || edgeItem.id === edgeId2) isExisted = true;
+        if (edgeItem.data.id === edgeId1 || edgeItem.data.id === edgeId2) isExisted = true;
       });
       edge.id = edgeId1;
       // 边不存在则添加边
       if (!isExisted) newEdges.push(edge);
     })
-    setHistory({
+    sessionStorage.setItem('query:graph:elements', JSON.stringify({
       nodes: [
         ...history.nodes,
-        ...newNodes
+        ...newNodes.map(item => ({data: item}))
       ],
       edges: [
         ...history.edges,
-        ...newEdges
+        ...newEdges.map(item => ({data: item}))
       ]
-    });
+    }));
   }
 
   // 处理单词数据页面中点击单词事件
@@ -157,12 +161,19 @@ export default function Query() {
           <QueryHeader word={curWord} handleSkipWord={handleSkipWord}
             leftBtnIcon={headLeftBtn.icon}
             leftBtnOnClick={headLeftBtn.onClick} />
-          <QueryGraph word={curWord} history={history}
+          <QueryGraph word={curWord}
             handleSkipWord={(newWord) => {
               setCurWord(newWord);
               scrollBackToTop();
-            }}></QueryGraph>
-          <QueryData word={curWord} handleSkipWord={handleSkipWord}></QueryData>
+            }}
+            onLayoutStop={(data) => {
+              if (!Object.prototype.hasOwnProperty.call(data, 'edges')) {
+                data.edges = [];
+              }
+              sessionStorage.setItem('query:graph:elements', JSON.stringify(data));
+            }}
+          />
+          <QueryData word={curWord} handleSkipWord={handleSkipWord} />
         </div>
     }
   </>);

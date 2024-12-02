@@ -12,7 +12,7 @@ import Review from './pages/review/review.tsx';
 import ErrorPage from './common/components/ErrorBoundary/ErrorPage.tsx';
 import Article from './pages/article/article.tsx';
 import Read from "./pages/read/read.tsx";
-import ReadPublish from "./pages/read/pages/read-publish.tsx";
+import ReadMain from "./pages/read/pages/read-main.tsx";
 import ReadInput from "./pages/read/pages/read-input.tsx";
 import ReadKeep from "./pages/read/pages/read-keep.tsx";
 import ReadBooks from "./pages/read/pages/read-books.tsx";
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: '/read',
-            element: <ReadPublish />
+            element: <ReadMain />
           },
           {
             path: '/read/input',

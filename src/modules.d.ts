@@ -3,6 +3,10 @@
  */
 
 declare module 'cytoscape-cola';
+declare module 'cytoscape-klay';
+declare module 'cytoscape-dagre';
+declare module 'cytoscape-elk';
+
 
 declare module '*.svg' {
   const content: string;

@@ -74,7 +74,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
   return (
     <div className="w-full h-[calc(100vh)] px-2 relativ z-10 snap-y snap-mandatory overflow-y-auto hide-scrollbar pointer-events-auto">
       <div id="scroll-container-start"
-        className="w-full h-[calc(100vh-400px)] h-ful flex- bg-transparent snap-star pointer-events-none">
+        className="w-full h-[calc(100vh-300px)] h-ful flex- bg-transparent snap-star pointer-events-none">
       </div>
       <div
         className="w-[calc(100%-8px) w-full h-[300px relative z-10 bg-white snap-start rounded-lg border-2 border-black box-borde pointer-events-auto">

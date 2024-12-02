@@ -8,7 +8,7 @@ export interface ChatHistory {
   state: 0 | 1;
 }
 
-export type ChatLocationState = ChatLocationStateWord | ChatLocationStateSentence | ChatLocationStateParagraph | ChatLocationStateDefault;
+export type ChatLocationState = ChatLocationStateWord | ChatLocationStateSentence | ChatLocationStateParagraph | ChatLocationStateArticle | ChatLocationStateDefault;
 
 export interface ChatLocationStateWord {
   objectsType: '单词';
@@ -26,6 +26,13 @@ export interface ChatLocationStateSentence {
 
 export interface ChatLocationStateParagraph {
   objectsType: '段落';
+  objects: [string];
+  context: string;
+  promptName: string | undefined;
+}
+
+export interface ChatLocationStateArticle {
+  objectsType: '文章';
   objects: [string];
   context: string;
   promptName: string | undefined;

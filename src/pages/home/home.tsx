@@ -1,7 +1,6 @@
 import HomeNaviTab, { HomeNaviTabProps } from './components/home-navi-tab.tsx';
 import { useNavigate } from "react-router-dom";
 import Icon from "../../../public/智臻.svg";
-import Select from '../article/components/select.tsx';
 
 export default function Home() {
 	const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function Home() {
 
 	return (
 		<div className="w-screen h-screen relative">
-			<div className="absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2
+			<div className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2
 			 flex flex-col items-center gap-4">
 				<h1 className="w-full text-center pl-2 pr-10 mb-1 text-4xl font-bold">
 					<img src={Icon} alt="智臻" className="size-16 inline-block mr-2" />
@@ -28,7 +27,6 @@ export default function Home() {
 						<HomeNaviTab key={index} {...tab} />
 					)
 				}
-				<Select label='label' options={{ '选项一': 'value1', '选项二': 'value2' }} onChange={(value) => { console.log(value) }} />
 			</div>
 		</div>
 	);

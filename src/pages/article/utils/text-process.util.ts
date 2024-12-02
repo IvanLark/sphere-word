@@ -18,19 +18,21 @@ export function getDifficultyTag(difficultyScore: number): string {
 	// 根据上面的数据，可以得出以下的分类，注意可能包含多个tag
 	// TODO 优化分类算法
 	const res = [];
+	if (difficultyScore >= 125 && difficultyScore <= 150)
+		res.push("专八");
+	if (difficultyScore >= 115 && difficultyScore <= 140)
+		res.push("专四");
 	if (difficultyScore >= 119 && difficultyScore <= 150)
 		res.push("考研");
-	if (difficultyScore >= 115 && difficultyScore <= 130)
-		res.push("四六级");
-	else if (difficultyScore >= 115 && difficultyScore <= 145)
+	if (difficultyScore >= 115 && difficultyScore <= 145)
 		res.push("六级");
-	else if (difficultyScore >= 100 && difficultyScore <= 130)
+	if (difficultyScore >= 100 && difficultyScore <= 130)
 		res.push("四级");
 	if (difficultyScore >= 90 && difficultyScore <= 120)
 		res.push("高考");
 	if (difficultyScore >= 60 && difficultyScore <= 100)
-		res.push("高职A级");
+		res.push("初中");
 	if (difficultyScore >= 40 && difficultyScore <= 95)
-		res.push("高职B级");
+		res.push("小学");
 	return res.join("&");
 }

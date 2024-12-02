@@ -1,4 +1,5 @@
 import {
+  checkArticleKeep,
   getAdaptArticle,
   getAnalyzeArticle,
   getArticle, getChapter, getKeepArticle,
@@ -8,7 +9,7 @@ import {
 import SingleWordCard from "../../common/components/card/single-word-card";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getDifficultyTag } from "./utils/text-process.util.ts";
-import { useRequest } from "alova/client";
+import {useWatcher} from "alova/client";
 import { ArticleLocationState } from "./types.ts";
 import WordCardWin from "./components/word-card-win.tsx";
 import Tooltip from "./components/tooltip.tsx";
@@ -23,6 +24,10 @@ import axios from "axios";
 import {toast} from "../../common/utils/toast.util.tsx";
 import getSentenceString from "./utils/get-sentence-string.ts";
 import getWordCount from "./utils/get-word-count.ts";
+import CollectTrue from "../../common/components/icons/collect-true.tsx";
+import CollectFalse from "../../common/components/icons/collect-false.tsx";
+import getParagraphString from "./utils/get-paragraph-string.ts";
+import {ArticleInfo} from "../../api/types/article.types.ts";
 
 export default function Article() {
 
@@ -34,10 +39,49 @@ export default function Article() {
     checkSelected, getChatLocationState, getSelectedItemId, showWordCardWin, handleParagraphClick
   } = useArticleState();
 
-  const { type, article, level, positions, keep, bookName }: ArticleLocationState = useLocation().state;
+  const { type, article, level, positions, bookName }: ArticleLocationState = useLocation().state;
 
-  const { data, error, loading, onSuccess } = useRequest(() => {
-    if (keep) return getKeepArticle(article);
+  let articleKey: string = '';
+  if (type === 'id' || type === 'book' || type === 'keep') articleKey = article;
+  else articleKey = article.slice(0, 50);
+
+  // 翻译
+  const savedTranslations = sessionStorage.getItem(`${articleKey}-translations`);
+  const initTranslations = savedTranslations ? JSON.parse(savedTranslations) as Record<number, Array<string>> : {};
+  const [translations, setTranslations] = useState<Record<string, Array<string>>>(initTranslations);
+
+  const savedShowTranslate = sessionStorage.getItem(`${articleKey}-show-translate`);
+  const initShowTranslate = savedShowTranslate ? JSON.parse(savedShowTranslate) as boolean : false;
+  const [showTranslate, setShowTranslate] = useState<boolean>(initShowTranslate);
+
+  // 高亮
+  const savedHighlightPositions = sessionStorage.getItem(`${articleKey}-highlight-positions`);
+  const initHighlightPositions = savedHighlightPositions ? JSON.parse(savedHighlightPositions) as Array<Position> : [];
+  const [highlightPositions, setHighlightPositions] = useState<Array<Position>>(initHighlightPositions);
+
+  // 第几页
+  const savedPage = sessionStorage.getItem(`${articleKey}-page`);
+  const initPage = savedPage ? Number(savedPage) : 0;
+  const [page, setPage] = useState<number>(initPage);
+
+  // 音频
+  const savedShowAudio = sessionStorage.getItem(`${articleKey}-show-audio`);
+  const initShowAudio = savedShowAudio ? JSON.parse(savedShowAudio) as boolean : false;
+  const [showAudio, setShowAudio] = useState<boolean>(initShowAudio);
+
+  // 收藏
+  const savedCollected = sessionStorage.getItem(`${articleKey}-collected`);
+  const initCollected = savedCollected ? JSON.parse(savedCollected) as boolean : false;
+  const [collected, setCollected] = useState<boolean>(initCollected);
+
+  const { data, error, loading, onSuccess } = useWatcher(() => {
+    if (type === 'keep') {
+      if (article.startsWith('book:')) {
+        return getKeepArticle(`${article}:${page}`);
+      } else {
+        return getKeepArticle(article);
+      }
+    }
     else if (type === 'id') return getArticle(article);
     else if (type === 'text') return getAnalyzeArticle(article);
     else if (type === 'link') return getLinkArticle(article);
@@ -45,32 +89,23 @@ export default function Article() {
     else if (type === 'translate') return getTranslateArticle(article, level as number);
     else {
       const part = article.split(':');
-      return getChapter(part[0], part[1]);
+      return getChapter(part[0], part[1], page);
     }
+  }, [page, article], {
+    immediate: true
   });
 
   onSuccess(({data}) => {
     if (savedHighlightPositions === null && data.highlight !== undefined) {
       setHighlightPositions(data.highlight);
     }
+
+    if ((type === 'id' || type === 'book') && page === 0) {
+      checkArticleKeep(data.articleId as string).then(() => setCollected(true))
+    }
   });
 
   const articleRef = useRef<HTMLDivElement>(null);
-
-  let articleKey: string = '';
-  if (type === 'id') articleKey = article;
-  else articleKey = article.slice(0, 50);
-
-  const savedTranslations = sessionStorage.getItem(`${articleKey}-translations`);
-  const initTranslations = savedTranslations ? JSON.parse(savedTranslations) as Array<string> : [];
-  const [translations, setTranslations] = useState<Array<string>>(initTranslations);
-  const savedShowTranslate = sessionStorage.getItem(`${articleKey}-show-translate`);
-  const initShowTranslate = savedShowTranslate ? JSON.parse(savedShowTranslate) as boolean : false;
-  const [showTranslate, setShowTranslate] = useState<boolean>(initShowTranslate);
-
-  const savedHighlightPositions = sessionStorage.getItem(`${articleKey}-highlight-positions`);
-  const initHighlightPositions = savedHighlightPositions ? JSON.parse(savedHighlightPositions) as Array<Position> : [];
-  const [highlightPositions, setHighlightPositions] = useState<Array<Position>>(initHighlightPositions);
 
   useEffect(() => {
     // TODO setTimeout是无奈之举，因为useEffect执行时 articleRef 为 null
@@ -100,6 +135,7 @@ export default function Article() {
   }
 
   function saveScroll() {
+    sessionStorage.setItem(`${articleKey}-page`, String(page));
     if (articleRef.current) {
       sessionStorage.setItem(`article-${articleKey}-scroll-y`, articleRef.current.scrollTop.toString());
     }
@@ -116,7 +152,8 @@ export default function Article() {
     return (
       position1[0] === position2[0] &&
       position1[1] === position2[1] &&
-      position1[2] === position2[2]
+      position1[2] === position2[2] &&
+      position1[3] === position2[3]
     );
   }
 
@@ -161,9 +198,9 @@ export default function Article() {
     if (positions !== undefined) {
       for (let i = 0; i < positions.length; i++) {
         if (
-          positions[i].paragraphIndex === position[0] &&
-          positions[i].sentenceIndex === position[1] &&
-          positions[i].wordIndex === position[2]
+          positions[i].paragraphIndex === position[1] &&
+          positions[i].sentenceIndex === position[2] &&
+          positions[i].wordIndex === position[3]
         ) {
           return 'bg-yellow-600 text-white rounded-md';
         }
@@ -174,7 +211,7 @@ export default function Article() {
   }
 
   function handleTranslate () {
-    if (translations.length === 0) {
+    if (!Object.prototype.hasOwnProperty.call(translations, String(page))) {
       toast.info('正在获取翻译数据，请等待');
       const paragraphs = data.text.map(paragraph => ({
         text: paragraph.map(sentence => getSentenceString(sentence)).join(' ')
@@ -186,9 +223,13 @@ export default function Article() {
             paragraphs, {
               headers: {'Authorization': 'Bearer ' + token}
             }).then(response => {
-              const translationsData = response.data.map((item: { translations: Array<{text: string}> }) => item.translations[0].text);
-              sessionStorage.setItem(`${articleKey}-translations`, JSON.stringify(translationsData));
-              setTranslations(translationsData);
+              const translationsData = response.data.map((item: { translations: Array<{text: string}> }) => item.translations[0].text) as string[];
+              setTranslations(prevState => {
+                const nowValue = {...prevState};
+                nowValue[String(page)] = translationsData;
+                sessionStorage.setItem(`${articleKey}-translations`, JSON.stringify(nowValue));
+                return nowValue;
+              });
               sessionStorage.setItem(`${articleKey}-show-translate`, JSON.stringify(true));
               setShowTranslate(true);
           }).catch(() => toast.error('翻译失败，请重试'));
@@ -203,12 +244,23 @@ export default function Article() {
   }
 
   function handleKeep () {
-    const keepData = data;
-    keepData.highlight = highlightPositions;
-    if (keepData.time) delete keepData.time;
-    if (keepData.nextId) delete keepData.nextId;
+    let keepType = 'input';
+    if (type === 'id') keepType = 'essay';
+    if (type === 'book') keepType = 'book';
+
+    const keepData = {
+      'type': keepType,
+      'articleId': data.articleId,
+      'title': data.title,
+      'topic': data.topic,
+      'wordCount': data.wordCount,
+      'highlight': highlightPositions
+    } as ArticleInfo;
+    if (type !== 'id' && type !== 'book') keepData.text = data.text;
     keepArticle(keepData).then(() => {
-      toast.info(keep ? '保存成功' : '收藏成功');
+      toast.info(type === 'keep' ? '保存成功' : '收藏成功');
+      setCollected(true);
+      sessionStorage.setItem(`${articleKey}-collected`, JSON.stringify(true));
     }).catch(() => {
       toast.error('收藏失败');
     });
@@ -223,10 +275,16 @@ export default function Article() {
       'link': '链接',
       'adapt': '适配',
       'translate': '翻译',
-      'book': `小说: ${bookName}`
+      'book': `小说: ${bookName}`,
+      'keep': '收藏'
     }
-    data.topic = topicMap[type];
-    data.wordCount = getWordCount(data.text);
+
+    if (!data.topic) {
+      data.topic = topicMap[type];
+    }
+    if (!data.wordCount || (type === 'keep' && article.startsWith('book:'))) {
+      data.wordCount = getWordCount(data.text);
+    }
   }
 
   let timeTag = undefined;
@@ -257,10 +315,49 @@ export default function Article() {
     </div>
 
     {/* 翻译 */}
-    <button className="fixed right-2 bottom-8 btn-scale btn-white size-12 rounded-md
+    <button className="fixed right-2 bottom-8 btn-scale btn-white size-12 rounded-md z-10
       border-2 border-black flex items-center justify-center group text-3xl pointer-events-auto"
       onClick={handleTranslate}>
       { showTranslate ? '隐' : '译' }
+    </button>
+
+    {/* 发音 */}
+    <button className="fixed right-2 bottom-24 btn-scale btn-white size-12 rounded-md z-10
+      border-2 border-black flex items-center justify-center group text-3xl pointer-events-auto"
+            onClick={() => {
+              if (showAudio) {
+                setShowAudio(false);
+                sessionStorage.setItem(`${articleKey}-show-audio`, JSON.stringify(false));
+              }
+              else {
+                setShowAudio(true);
+                sessionStorage.setItem(`${articleKey}-show-audio`, JSON.stringify(true));
+              }
+            }}>
+      { showAudio ? '隐' : '音' }
+    </button>
+
+    {/* 收藏 */}
+    <button className="fixed left-2 bottom-8 btn-scale btn-white size-12 rounded-md z-10
+      border-2 border-black flex items-center justify-center group text-3xl pointer-events-auto"
+            onClick={() => { handleKeep() }}>
+      {
+        type === 'keep' ? '存' : collected ?
+        <CollectTrue className="size-10" /> : <CollectFalse className="size-10" />
+      }
+    </button>
+
+    {/* AI */}
+    <button className="fixed left-2 bottom-24 btn-scale btn-white size-12 rounded-md font-bold z-10
+      border-2 border-black flex items-center justify-center group text-3xl pointer-events-auto"
+            onClick={() => {
+              saveScroll();
+              navigate('/chat', {state: {
+                objectsType: '文章',
+                objects: [data.text.map(paragraph => getParagraphString(paragraph)).join(' ')]
+              }});
+            }}>
+      AI
     </button>
 
     <div className={`w-full min-h-[calc(100vh-4rem)] p-8 my-10 bg-white rounded-lg shadow- flex flex-col gap-2`}>
@@ -280,15 +377,22 @@ export default function Article() {
 
       {/* 回到小说 */}
       {
-        data.articleId && data.articleId.startsWith('book:') && keep &&
+        data.articleId && data.articleId.startsWith('book:') && type === 'keep' &&
         <button className="w-full mb-6 btn-scale btn-white size-12 border-2 border-black rounded-md"
-                onClick={() => {navigate('/read/book', { state: { bookId: data.articleId!.split(':')[1] } })}}
+                onClick={() => { saveScroll(); navigate('/read/book', { state: { bookId: data.articleId!.split(':')[1] } }); }}
         >
           回到{bookName ? `小说: ${bookName}` : data.topic}
         </button>
       }
 
-      {data.title && <h2 className="text-xl font-bold font-article">{data.title}</h2>}
+      {data.title &&
+        <h2 className="text-xl font-bold font-article">
+          {
+            (type === 'book' || article.startsWith('book:')) && page !== 0 ?
+            `第${page+1}页` : data.title
+          }
+        </h2>
+      }
       {data.subtitle && <h2 className="text-xl font-bold mb-2 ">{data.subtitle}</h2> }
       {
         (data.topic || data.wordCount || data.difficultyScore) &&
@@ -312,20 +416,64 @@ export default function Article() {
                      handleWordClick={handleWordClick} handleSentenceClick={handleSentenceClick}
                      handleParagraphClick={handleParagraphClick}
                      beforeSelected={beforeSelected}
+                     showAudio={showAudio}
                      showTranslate={showTranslate}
                      translations={translations}
+                     page={page}
         />
-        {/* 保存按钮 */}
-        <div className="w-full h-10 mt-20 flex items-center justify-center">
-          <button className="w-8/12 h-10 rounded-md text-3xl border-black border-2 text-black
-                  active:bg-black active:text-white"
-                  onClick={handleKeep}
-          >
-            { keep ? '保存高亮' : '收藏文章' }
-          </button>
-        </div>
+
+        {/* 翻页按钮 */}
+        {
+          data.articleId && data.articleId.startsWith('book:') &&
+          <div className="w-full h-12 mt-20 relative">
+            {
+              page !== 0 &&
+              <button className="w-[40%] h-full rounded-md text-3xl border-black border-2 text-black
+                  active:bg-black active:text-white absolute bottom-0 left-0"
+                  onClick={() => {
+                    if (articleRef.current) {
+                      articleRef.current.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                      });
+                    }
+                    sessionStorage.setItem(`article-${articleKey}-scroll-y`, '0');
+                    setShowTranslate(false);
+                    sessionStorage.setItem(`${articleKey}-show-translate`, JSON.stringify(false));
+                    setShowAudio(false);
+                    sessionStorage.setItem(`${articleKey}-show-audio`, JSON.stringify(false));
+                    setPage(prevState => prevState - 1);
+                  }}
+              >
+                上一页
+              </button>
+            }
+            {
+              data.nextPage !== undefined && data.nextPage !== null &&
+              <button className="w-[40%] h-full rounded-md text-3xl border-black border-2 text-black
+                  active:bg-black active:text-white absolute bottom-0 right-0"
+                  onClick={() => {
+                    if (articleRef.current) {
+                      articleRef.current.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                      });
+                    }
+                    sessionStorage.setItem(`article-${articleKey}-scroll-y`, '0');
+                    setShowTranslate(false);
+                    sessionStorage.setItem(`${articleKey}-show-translate`, JSON.stringify(false));
+                    setShowAudio(false);
+                    sessionStorage.setItem(`${articleKey}-show-audio`, JSON.stringify(false));
+                    setPage(data.nextPage as number);
+                  }}
+              >
+                下一页
+              </button>
+            }
+          </div>
+        }
         {/* 留空 */}
-        <div className={`w-1 transition-all duration-300 h-[200px]`}></div>
+        <div className={`w-1 transition-all duration-300 h-[320px]`}></div>
       </div>
 
       {

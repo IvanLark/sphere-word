@@ -140,8 +140,8 @@ export default function QueryHeader({ word, handleSkipWord, leftBtnOnClick, left
 			</div>
 			{/* 三个按钮 */}
 			{/* <div className="w-full h-16"></div> */}
-			<div className="fixed bottom-[400px] left-2 z-10">
-				<button className="btn-scale btn-white size-14 rounded-md border-2 border-black text-2xl font-bold"
+			<div className="fixed top-[65px] left-2 z-10">
+				<button className="btn-scale btn-white size-12 rounded-md border-2 border-black text-2xl font-bold"
 					onClick={() => navigate('/chat', { state: { objectsType: '单词', objects: [word] } })}>
 					AI
 				</button>

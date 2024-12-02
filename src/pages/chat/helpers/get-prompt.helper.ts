@@ -40,6 +40,13 @@ export default function getPromptMap(data: ChatLocationState): Record<string, st
         '语法解析': `你是优秀的英语老师，帮我解析段落 “${paragraph}” 的语法`
       };
     }
+    case '文章': {
+      const text = data.objects[0];
+      return {
+        '总结': `请使用中文总结以下英语文章的内容：\n${text}`,
+        '结构分析': `请使用中文分析以下英语文章的结构：\n${text}`
+      }
+    }
     default: {
       return {
         '翻译': '请帮我翻译以下英文：',

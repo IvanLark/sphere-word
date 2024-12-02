@@ -4,7 +4,12 @@ import SingleWordCard from "./single-word-card";
 import {ArticleFace} from "../../../api/types/article.types.ts";
 import {PositionItem} from "../../../api/types/word-data.types.ts";
 
-export default function ArticleCard({ articleFace, keep = false }: { articleFace: ArticleFace, keep?: boolean }) {
+interface ArticleCardProps {
+	articleFace: ArticleFace;
+	keep?: boolean;
+}
+
+export default function ArticleCard({ articleFace, keep = false }: ArticleCardProps) {
 	const navigate = useNavigate();
 
 	let timeTag = undefined;
@@ -39,10 +44,9 @@ export default function ArticleCard({ articleFace, keep = false }: { articleFace
 			onClick={() => {
 				navigate('/article', {
 					state: {
-						type: 'id',
+						type: keep !== undefined && keep ? 'keep' : 'id',
 						article: articleFace.articleId,
-						positions: articleFace.positions,
-						keep: keep
+						positions: articleFace.positions
 					}
 				})
 			}}>

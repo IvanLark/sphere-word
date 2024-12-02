@@ -1,7 +1,9 @@
 import { Edge, Node } from "../../../../api/types/word-data.types.ts";
 import cytoscape from 'cytoscape';
 import cola from 'cytoscape-cola';
-import { useEffect } from "react";
+import dagre from 'cytoscape-dagre';
+import elk from 'cytoscape-elk';
+import React, {useEffect, useState} from "react";
 
 /**
  * 单词图谱页面
@@ -10,27 +12,26 @@ import { useEffect } from "react";
  */
 
 interface History {
-  nodes: Array<Node>;
-  edges: Array<Edge>;
+  nodes: Array<{data: Node}>;
+  edges: Array<{data: Edge}>;
 }
 
 interface QueryGraphProps {
   word: string;
-  history: History;
   handleSkipWord: (newWord: string) => void;
+  onLayoutStop: (data: History) => void;
 }
 
-export default function QueryGraph({ word, history, handleSkipWord }: QueryGraphProps) {
+type LayoutType = 'cola' | 'dagre' | 'radial' | 'layered' | 'mrtree' | 'stress';
+
+export default function QueryGraph({ word, handleSkipWord, onLayoutStop }: QueryGraphProps) {
+
+  const data = JSON.parse(sessionStorage.getItem('query:graph:elements') as string) as History;
 
   const elements = [
-    ...history.nodes.map(nodeItem => ({ data: nodeItem })),
-    ...history.edges.map(edgeItem => ({ data: edgeItem }))
+    ...data.nodes,
+    ...data.edges
   ];
-
-  const layoutData = {
-    name: 'cola',
-    nodeSpacing: 25 // 节点间最小距离
-  };
 
   const styleData = [
     // 单词节点样式
@@ -84,36 +85,35 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
     }
   ];
 
-  cytoscape.use(cola);
+  const layoutOptions = [
+    {value: 'cola', label: 'cola'},
+    {value: 'dagre', label: 'dagre'},
+    {value: 'radial', label: 'radial'},
+    {value: 'layered', label: 'layered'},
+    {value: 'mrtree', label: 'mrtree'},
+    {value: 'stress', label: 'stress'}
+  ]
+
+  const [layoutType, setLayoutType] = useState<LayoutType>('dagre');
+
+  const [showSelectLayout, setShowSelectLayout] = useState<boolean>(false);
+
+  function handleClickOutside (event: MouseEvent) {
+    if (event.target instanceof HTMLElement) {
+      if (showSelectLayout && !event.target.closest('#select-layout-win') && !event.target.closest('#select-layout-button') && !event.target.closest('#select-layout-select')) {
+        setShowSelectLayout(false);
+      }
+    }
+  }
 
   useEffect(() => {
-    const cy = cytoscape({
-      container: document.getElementById('cy'),
-      elements, // 节点和边数据
-      style: styleData, // 样式数据
-      layout: layoutData, // 布局数据
-      wheelSensitivity: 0.1, // 缩放灵敏度
-      minZoom: 0.1, // 最小缩放
-      maxZoom: 2 // 最大缩放
-    });
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  });
 
-    // 动态调整节点大小以适应标签长度
-    /*
-    cy.nodes().forEach(function (node) {
-      const labelText = node.data('label');
-      const fontSize = node.style('font-size');
-      const labelWidth = labelText.length * fontSize * 0.6; // 假设一个字符的平均宽度大约是字体大小的0.6倍
-      const labelHeight = fontSize * 1.5; // 假设标签的高度大约是字体大小的1.5倍
-
-      node.style({
-        'width': labelWidth + 'px',
-        'height': labelHeight + 'px',
-        'min-width': labelWidth + 'px',
-        'min-height': labelHeight + 'px'
-      });
-    });
-    */
-
+  function select (cy: cytoscape.Core) {
     // 设置选中单词为黑色背景白色字
     // 遍历每个节点并更新样式
     cy.nodes().forEach(function (node) {
@@ -122,18 +122,177 @@ export default function QueryGraph({ word, history, handleSkipWord }: QueryGraph
           'background-color': 'black', // 黑色背景
           'color': 'white' // 白色字
         });
+        cy.zoom(1)
         cy.center(node);
       }
     });
+  }
+
+  if (layoutType === 'cola') {
+    cytoscape.use(cola);
+  } else if (layoutType === 'dagre') {
+    cytoscape.use( dagre );
+  } else {
+    cytoscape.use( elk );
+  }
+
+
+  const colaLayout = {
+    name: 'cola',
+    nodeSpacing: 30, // 节点间最小距离
+    animate: false, // 禁止动画
+    ungrabifyWhileSimulating: true, // 在布局运行时禁止拖动节点
+    nodeDimensionsIncludeLabels: true, // 在计算节点空间时包括标签
+    avoidOverlap: true, // 避免节点重叠
+    convergenceThreshold: 0.005, // 布局收敛的阈值。较低的阈值可以提高布局质量，但可能会增加计算时间
+    centerGraph: true,
+  };
+
+  const stressLayout = {
+    name: 'elk',
+    animate: false,
+    elk: {
+      algorithm: 'stress',
+      desiredEdgeLength: 180.0
+    }
+  }
+
+  const mrtreeLayout = {
+    name: 'elk',
+    animate: false,
+    elk: {
+      algorithm: 'mrtree',
+      'elk.spacing.nodeNode': 100,
+      'elk.spacing.edgeNode': 200
+    }
+  }
+
+  const layeredLayout = {
+    name: 'elk',
+    animate: false,
+    elk: {
+      algorithm: 'layered',
+      'elk.spacing.nodeNode': 50,
+      'elk.spacing.edgeNode': 50,
+      'elk.direction': 'RIGHT',
+      'nodePlacement.strategy': 'LINEAR_SEGMENTS',
+      'elk.spacing.edgeLabel': 4,
+      'spacing.edgeNodeBetweenLayers': 30
+    }
+  }
+
+  const radialLayout = {
+    name: 'elk',
+    animate: false,
+    elk: {
+      algorithm: 'radial',
+      'elk.spacing.nodeNode': 10,
+      radius: 150
+    }
+  }
+
+  const dagreLayout = {
+    name: 'dagre',
+    animate: false,
+    rankSep: 80
+  }
+
+  let layout = undefined;
+  switch (layoutType) {
+    case 'cola': {
+      layout = colaLayout;
+      break;
+    }
+    case 'dagre': {
+      layout = dagreLayout;
+      break;
+    }
+    case 'radial': {
+      layout = radialLayout;
+      break;
+    }
+    case 'layered': {
+      layout = layeredLayout;
+      break;
+    }
+    case 'mrtree': {
+      layout = mrtreeLayout;
+      break;
+    }
+    case 'stress': {
+      layout = stressLayout;
+      break;
+    }
+    default: {
+      layout = dagreLayout;
+    }
+  }
+
+  useEffect(() => {
+    const cy = cytoscape({
+      container: document.getElementById('cy'),
+      elements, // 节点和边数据
+      style: styleData, // 样式数据
+      layout: {
+        stop: () => {
+          if (layoutType !== 'cola' && layoutType !== 'dagre') select(cy);
+        },
+        ...layout
+      }, // 布局数据
+      wheelSensitivity: 0.1, // 缩放灵敏度
+      minZoom: 0.1, // 最小缩放
+      maxZoom: 3 // 最大缩放
+    });
+
+    if (layoutType === 'cola' || layoutType === 'dagre') select(cy);
+
+
+    setTimeout(() => {
+      const cyJson = cy.json() as {elements: History};
+      onLayoutStop(cyJson.elements);
+    }, 1500)
 
     // 监听节点点击事件
     cy.on('tap', 'node', function (event) {
       const node = event.target; // 获取被点击的节点
       handleSkipWord(node.data('key'));
     });
+
   })
 
-  return (
+  return (<>
     <div id='cy' className="w-screen h-[calc(100vh-300px)] fixed bg-white"></div>
-  );
+
+    <div id="select-layout-win"
+      className="flex flex-row gap-0 active:scale-105 fixed top-[65px] right-2 z-10 transition-all duration-300">
+      {
+        !showSelectLayout ?
+          <button id="select-layout-button"
+            className="btn-scale btn-white size-12 rounded-md border-2 border-black text-xl font-bold"
+            onClick={() => setShowSelectLayout(true)}>
+            布局
+          </button> :
+          <select
+            id="select-layout-select"
+            className={`block pl-2 pr-2 py-2 text-xl border-2 border-black rounded-md`}
+            value={layoutType}
+            onChange={(event) => {
+              setLayoutType(event.target.value as LayoutType);
+              setShowSelectLayout(false);
+            }}
+            onBlur={() => setShowSelectLayout(false)}
+          >
+            {layoutOptions.map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+                className="cursor-pointer select-none relative"
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+      }
+    </div>
+  </>);
 }
