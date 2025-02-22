@@ -21,7 +21,7 @@ export default function ReadBooks () {
       {/* 标题 */}
       <p className="absolute top-5 w-full text-center text-3xl font-bold">原著小说</p>
 
-      <ContinuousTabs<string> tabs={tabPages} isLoading={false}>
+      <ContinuousTabs<string> tabs={tabPages} isLoading={false} id="read-books">
         {(value) => <LevelBooks level={value} />}
       </ContinuousTabs>
     </div>

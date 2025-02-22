@@ -48,7 +48,7 @@ export default function ReadMain () {
         </div>
       </div>
 
-      <ContinuousTabs<JSX.Element|JSX.Element[]> tabs={pageTabs} isLoading={false} >
+      <ContinuousTabs<JSX.Element|JSX.Element[]> tabs={pageTabs} isLoading={false} id="read-main">
         { (value) => value }
       </ContinuousTabs>
     </div>
@@ -57,8 +57,12 @@ export default function ReadMain () {
 
 function ReadSearch () {
 
-  const [level, setLevel] = useState<string>('小学');
-  const [topic, setTopic] = useState<string>('真题');
+  const savedLevel = sessionStorage.getItem("read-main:level");
+  const initLevel = savedLevel ? savedLevel : '小学'
+  const [level, setLevel] = useState<string>(initLevel);
+  const savedTopic = sessionStorage.getItem("read-main:topic");
+  const initTopic = savedTopic ? savedTopic : '真题';
+  const [topic, setTopic] = useState<string>(initTopic);
 
   const levelOptions = [
     {value: '小学', label: '小学'},
@@ -104,9 +108,15 @@ function ReadSearch () {
 
   return (<>
     <div className="w-full flex flex-row items-center justify-between gap-1">
-      <Select label="难度" value={level} onChange={setLevel} options={levelOptions}
+      <Select label="难度" value={level} onChange={(value) => {
+        sessionStorage.setItem("read-main:level", value);
+        setLevel(value);
+      }} options={levelOptions}
               selectClassName="pr-1.5 pl-0.5 w-fit h-[42px]" spanClassName="w-fit h-[42px] text-nowrap shrink-0" />
-      <Select label="话题" value={topic} onChange={setTopic} options={topicOptions}
+      <Select label="话题" value={topic} onChange={(value) => {
+        sessionStorage.setItem("read-main:topic", value);
+        setTopic(value);
+      }} options={topicOptions}
               selectClassName="pr-1 pl-0 w-fit h-[42px]" spanClassName="w-fit h-[42px] text-nowrap shrink-0" />
       <span className="h-[42px] w-[50px] flex items-center justify-center border-2 border-black rounded-md active:scale-105 active:bg-gray-300"
             onClick={() => send(true)}

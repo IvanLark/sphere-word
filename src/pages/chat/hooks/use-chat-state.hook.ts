@@ -20,7 +20,6 @@ export default function useChatState () {
   }
 
   function updateInput (text: string) {
-    text = text.trim();
     if (text === '') {
       setChatStatus('empty');
     } else {

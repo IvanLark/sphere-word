@@ -482,7 +482,15 @@ export default function Article() {
                      onScroll={(event) => {
                        if (event.currentTarget.scrollTop === 0) unselected();
                      }}
-                     onClick={onHighLight}
+                     onClick={() => {
+                       if (selectedPosition !== null && !checkHighLight()) {
+                         setHighlightPositions(prev => {
+                           const newValue = [...prev, selectedPosition];
+                           sessionStorage.setItem(`${articleKey}-highlight-positions`, JSON.stringify(newValue));
+                           return newValue;
+                         });
+                       }
+                     }}
                      beforeSkip={saveScroll}
         />
       }

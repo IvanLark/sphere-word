@@ -56,6 +56,7 @@ export default function Auth() {
 		} as UserSignUpData;
 
 		if (userData.userRole === 1) {
+			userSignUpData.schoolName = '北京邮电大学';
 			// 北邮
 			userSignUpData['role'] = 1;
 			if (userData.schoolRole === 1) {
@@ -145,13 +146,18 @@ export default function Auth() {
 												<Input label="学校" type="text" required={userData.userRole === 2} value={userData.schoolName}
 													placeholder="请输入你所在的学校名称" onChange={(value) => setUserData({ ...userData, schoolName: value })} />
 											}
-											<Input label={userData.schoolRole === 0 ? "班级" : "部门"} type="text" required={userData.userRole !== 0} value={userData.className}
-												placeholder="请输入你所在的班级或部门" onChange={(value) => setUserData({ ...userData, className: value })} />
+											{
+												userData.userRole !== 0 && userData.schoolRole === 0 &&
+												<Input label="班级" type="text" required={userData.userRole !== 0 && userData.schoolRole === 0} value={userData.className}
+															 placeholder="请输入你所在的班级" onChange={(value) => setUserData({ ...userData, className: value })} />
+											}
 											<Input label="姓名" type="text" required={userData.userRole !== 0} value={userData.name}
 												placeholder="请输入你的真实名称" onChange={(value) => setUserData({ ...userData, name: value })} />
-											<Input label={userData.schoolRole === 0 ? "学号" : "工号"} type="text" required={userData.userRole !== 0} value={userData.sid}
-												placeholder="请输入你的学号或工号" onChange={(value) => setUserData({ ...userData, sid: value })} />
-
+											{
+												userData.userRole !== 0 && userData.schoolRole === 0 &&
+												<Input label="学号" type="text" required={userData.userRole !== 0 && userData.schoolRole === 0} value={userData.sid}
+															 placeholder="请输入你的学号或工号" onChange={(value) => setUserData({ ...userData, sid: value })} />
+											}
 										</div>
 									</>
 								}

@@ -97,7 +97,7 @@ export default function QueryData({ word, handleSkipWord }: QueryDataProps) {
 
         {/* Tabs */}
         <div className="mx-2">
-          <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={loading}>
+          <ContinuousTabs<React.ReactNode> tabs={pageTabs} isLoading={loading} id="query-data">
             {
               (value) => <div className="min-h-[calc(100vh)]">{value}</div>
             }
